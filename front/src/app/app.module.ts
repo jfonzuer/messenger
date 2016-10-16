@@ -22,6 +22,8 @@ import {ConversationUserFilter} from "./pipes/conversation-user-filter.pipe";
 import { LocalStorageService, LOCAL_STORAGE_SERVICE_CONFIG } from 'angular-2-local-storage';
 import {AuthenticationService} from "./service/authentication.service";
 import {SharedService} from "./service/shared.service";
+import {UserComponent} from "./component/user/user.component";
+import {ParametersComponent} from "./component/parameters/parameters.component";
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
 let localStorageServiceConfig = {
@@ -42,7 +44,9 @@ let localStorageServiceConfig = {
     MessageComponent,
     SendComponent,
     ErrorComponent,
-    ConversationUserFilter
+    ConversationUserFilter,
+    UserComponent,
+    ParametersComponent,
   ],
   imports: [
     BrowserModule,

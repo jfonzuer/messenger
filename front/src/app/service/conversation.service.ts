@@ -46,6 +46,18 @@ export class ConversationService {
       .catch(this.handleError);
   }
 
+  getUnreadNumberConversations() {
+    let headers = this.authenticationService.getHeaders();
+
+    return this.http.get(this.baseUrl + 'conversations/unread', {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.handleResponse(response);
+        return response.json();
+      })
+      .catch(this.handleError);
+  }
+
   post(userMessage:UserMessage) {
 
     let headers = this.authenticationService.getHeaders();

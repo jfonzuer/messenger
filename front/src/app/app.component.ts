@@ -20,32 +20,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
 
-    /*
-    if (this.localStorageService.get('token')) {
-      this.sharedService.authenticated();
-    }
-    else {
-      console.log("no token");
-      //this.sharedService.logout();
-    }
-
-    //this.router.navigateByUrl('efze');
-    //this.authenticated = this._sharedService.authenticated();
-    this.subscription = this._sharedService.authenticatedChange$.subscribe(
-      authenticated => this.selectedAuthenticated(authenticated));
-      */
-  }
-  /*
-  selectedAuthenticated(authenticated: boolean) {
-    this.authenticated = authenticated;
-  }
-  */
-  /*
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-  */
 
   get connected () {
     return this.sharedService.isConnected() && (this.router.url !== '/login');

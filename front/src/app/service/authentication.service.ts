@@ -9,11 +9,8 @@ import { LocalStorageService } from 'angular-2-local-storage';
  * Created by pgmatz on 10/10/16.
  */
 
-
-
 @Injectable()
 export class AuthenticationService {
-
   private baseUrl:string;
 
   constructor (private http:Http, private router: Router, private localStorageService: LocalStorageService) {

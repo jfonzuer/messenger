@@ -1,9 +1,12 @@
 package com.jfonzuer.controllers;
 
+import com.jfonzuer.dto.ProfileDto;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtUser;
+import com.jfonzuer.service.UserService;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +26,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -35,7 +40,6 @@ public class UserController {
         // TODO : validation via annotation and exception handling
         return saveOrUpdate(JwtUser);
     }
-
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<JwtUser> getAll(Pageable p) {
@@ -48,10 +52,14 @@ public class UserController {
         return UserMapper.toDto(userRepository.findOne(id));
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public JwtUser update(@RequestBody JwtUser JwtUser) {
+    @RequestMapping(value = "/profile", method = RequestMethod.PUT)
+    public JwtUser update(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
+        User user = userService.getUserFromToken(request);
         // TODO : validation via annotation and exception handling
-        return saveOrUpdate(JwtUser);
+
+        user.setDescription(jwtUser.getDescription());
+
+        return UserMapper.toDto(userRepository.save(user));
     }
 
     private JwtUser saveOrUpdate(JwtUser JwtUser) {

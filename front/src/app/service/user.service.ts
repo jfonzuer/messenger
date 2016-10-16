@@ -8,6 +8,7 @@ import {Router} from "@angular/router";
 import {environment} from "../environments/environment";
 import {User} from "../model/user";
 import {AuthenticationService} from "./authentication.service";
+import {Profile} from "../model/profile";
 
 @Injectable()
 export class UserService {
@@ -41,6 +42,19 @@ export class UserService {
       .then(response => {
         this.handleResponse(response);
         return response.json() as User;
+      })
+      .catch(this.handleError);
+  }
+
+  updateProfile(profile : Profile) {
+    let headers = this.authenticationService.getHeaders();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.put(this.baseUrl + 'users/profile', profile, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.handleResponse(response);
+        return response.json();
       })
       .catch(this.handleError);
   }

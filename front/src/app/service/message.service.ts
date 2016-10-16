@@ -35,7 +35,6 @@ export class MessageService {
   }
 
   post(message:Message) {
-
     let headers = this.authenticationService.getHeaders();
     headers.append('Content-Type', 'application/json');
 

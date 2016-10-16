@@ -4,6 +4,8 @@ import {RegisterComponent} from "./component/register/register.component";
 import {HomeComponent} from "./component/home/home.component";
 import {ProfileComponent} from "./component/profile/profile.component";
 import {MessengerComponent} from "./component/messenger/messenger.component";
+import {UserComponent} from "./component/user/user.component";
+import {ParametersComponent} from "./component/parameters/parameters.component";
 
 /**
  * Created by pgmatz on 28/09/16.
@@ -33,6 +35,14 @@ const appRoutes: Routes = [
   {
     path: 'conversation/:id',
     component: MessengerComponent
+  },
+  {
+    path : 'profile',
+    component: UserComponent
+  },
+  {
+    path : 'parameters',
+    component: ParametersComponent
   },
   {
     path: '',

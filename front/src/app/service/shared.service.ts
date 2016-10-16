@@ -15,6 +15,10 @@ export class SharedService {
   constructor (private localStorageService: LocalStorageService, private router: Router) {
   }
 
+  getUser() {
+    return this.localStorageService.get('user');
+  }
+
   redirectLogin() {
     if (!this.isConnected()) {
       this.router.navigateByUrl('login');
@@ -29,7 +33,6 @@ export class SharedService {
 
   logout() {
     this.localStorageService.set('token', null);
-    this.router.navigateByUrl('login');
   }
 
   isConnected() {

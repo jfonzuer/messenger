@@ -40,11 +40,10 @@ export class LoginComponent implements OnInit {
         console.log(response.token);
 
         this.router.navigateByUrl('home');
-        //this.sharedService.authenticated();
 
         // TODO call service to get rights
 
-        //this.authenticationService.getAuthenticatedUser().then(response => console.log(response));
+        this.authenticationService.getAuthenticatedUser().then(user => { this.localStorageService.set('user', user);  console.log(user); });
 
       })
         .catch(error => {

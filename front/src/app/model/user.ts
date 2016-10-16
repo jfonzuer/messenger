@@ -7,6 +7,4 @@ export class User {
   email: string;
   username: string;
   description: string;
-  userOne: User;
-  userTwo: User;
 }
