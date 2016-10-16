@@ -1,0 +1,18 @@
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+
+<app-error [error]="error"></app-error>
+
+<div class="container">
+
+  <div class="row">
+    <app-conversation [conversations]="conversations" (setConversation)="setConversationListener($event)"></app-conversation>
+
+    <div class="message-wrap col-sm-8">
+
+      <app-message [messages]="messages" [selectedConversation]="selectedConversation" (deleteConversationEmitter)="deleteConversationListener($event)" ></app-message>
+
+      <app-send [selectedConversation]="selectedConversation" (addConversation)="addConversationListener($event)" (addMessage)="addMessageListener($event)"></app-send>
+    </div>
+  </div>
+</div>

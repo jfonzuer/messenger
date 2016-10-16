@@ -1,0 +1,12 @@
+<app-header *ngIf="connected"></app-header>
+<div class="jumbotron" *ngIf="connected">
+  <div class="container">
+    <h2> Messenger</h2>
+  </div>
+</div>
+
+<hr>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
