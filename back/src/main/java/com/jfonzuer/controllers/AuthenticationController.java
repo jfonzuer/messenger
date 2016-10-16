@@ -6,7 +6,6 @@ import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.security.JwtUser;
 import com.jfonzuer.dto.JwtAuthenticationResponse;
 import com.jfonzuer.security.JwtUserFactory;
-import com.jfonzuer.security.annotation.RequireValidUser;
 import com.jfonzuer.service.JwtUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,28 +36,8 @@ public class AuthenticationController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private UserRepository userRepository;
 
-    @RequestMapping(value = "user", method = RequestMethod.GET)
-    public JwtUser getAuthenticatedUser(HttpServletRequest request) {
-
-        /*
-        String token = request.getHeader(tokenHeader);
-        System.out.println("token "+ token);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-        */
-        // TODO : voir pour récupérer les roles (éventuellement transcationnal)
-        return null;
-    }
-
-    @RequestMapping(value = "login", method = RequestMethod.GET)
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok(new JwtAuthenticationResponse("ok"));
-    }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequest, Device device) throws AuthenticationException {
@@ -75,12 +54,17 @@ public class AuthenticationController {
         // Reload password post-security so we can generate token
         JwtUser jwtUser = JwtUserFactory.create(userRepository.findByEmail(authenticationRequest.getEmail()));
 
-        //final JwtUser userDetails = (JwtUser) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-
         final String token = jwtTokenUtil.generateToken(jwtUser, device);
 
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+    }
+
+    @RequestMapping(value = "user", method = RequestMethod.GET)
+    public JwtUser getCurrentUser(HttpServletRequest request) {
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        return JwtUserFactory.create(this.userRepository.findByEmail(username));
     }
 
     @RequestMapping(value = "refresh", method = RequestMethod.GET)
@@ -88,7 +72,7 @@ public class AuthenticationController {
         String token = request.getHeader(tokenHeader);
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
+        JwtUser user = JwtUserFactory.create(userRepository.findByEmail(username));
 
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);

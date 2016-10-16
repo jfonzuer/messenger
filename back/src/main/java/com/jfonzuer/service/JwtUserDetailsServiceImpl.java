@@ -25,24 +25,9 @@ import java.util.Set;
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
-
     @Autowired
     private UserRepository userRepository;
 
-//    @Override
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        User user = userRepository.findByEmail(email);
-//
-//        if (user == null) {
-//            throw new UsernameNotFoundException(String.format("No user found with email '%s'.", email));
-//        } else {
-//            JwtUser jwtUser =  JwtUserFactory.create(user);
-//            System.out.println("jwtuser = " + jwtUser);
-//            return jwtUser;
-//        }
-//    }
-
-    @Transactional(readOnly=true)
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         com.jfonzuer.entities.User user = userRepository.findByEmail(username);

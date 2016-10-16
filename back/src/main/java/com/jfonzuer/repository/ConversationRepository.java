@@ -24,4 +24,8 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
 
     List<Conversation> findTop1ByIdAndUserOneOrUserTwo(Long id, User userOne, User userTwo);
     List<Conversation> findTop1ByUserOneAndUserTwoOrUserTwoAndUserOne(User userOne, User userTwo, User userOne1, User userTwo1);
+
+    //Long countByUserOneAndIsReadByUserOneOrUserTwoIsReadByUserTwo(User userOne, Boolean isReadByUserOne, User userTwo, Boolean isReadByUserTwo);
+    Long countByUserOneAndIsReadByUserOne(User userOne, Boolean isReadByUserOne);
+    Long countByUserTwoAndIsReadByUserTwo(User userTwo, Boolean isReadByUserTwo);
 }

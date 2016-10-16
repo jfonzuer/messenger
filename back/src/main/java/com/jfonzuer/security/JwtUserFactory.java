@@ -15,7 +15,16 @@ public final class JwtUserFactory {
     }
 
     public static JwtUser create(User user) {
-        return new JwtUser.JwtUserBuilder().setId(user.getId()).setUsername(user.getUsername()).setEmail(user.getEmail()).setPassword(user.getPassword()).setLastPasswordResetDate(user.getLastPasswordResetDate()).setAuthorities(mapToGrantedAuthorities(user.getUserRoles())).setEnabled(user.getEnabled()).createJwtUser();
+        return new JwtUser.JwtUserBuilder()
+                .setId(user.getId())
+                .setUsername(user.getUsername())
+                .setEmail(user.getEmail())
+                .setDescription(user.getDescription())
+                .setPassword(user.getPassword())
+                .setLastPasswordResetDate(user.getLastPasswordResetDate())
+                .setAuthorities(mapToGrantedAuthorities(user.getUserRoles()))
+                .setEnabled(user.getEnabled())
+                .createJwtUser();
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(Set<UserRole> userRoles) {

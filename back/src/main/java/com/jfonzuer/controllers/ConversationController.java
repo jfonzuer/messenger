@@ -12,7 +12,9 @@ import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ConversationRepository;
 import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.repository.UserRepository;
+import com.jfonzuer.service.UserService;
 import com.jfonzuer.utils.MessengerUtils;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,20 +33,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/conversations")
 @CrossOrigin(origins = "*", maxAge = 3600)
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class ConversationController {
 
     private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
+    private final UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConversationController.class);
 
     @Autowired
-    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, MessageRepository messageRepository) {
+    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, MessageRepository messageRepository, UserService userService) {
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
+        this.userService = userService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -119,5 +123,11 @@ public class ConversationController {
         else {
             conversationRepository.save(conversation);
         }
+    }
+
+    @RequestMapping(value = "/unread", method = RequestMethod.GET)
+    public Long getUnreadNumerConversations(HttpServletRequest request) {
+        User user = this.userService.getUserFromToken(request);
+        return this.conversationRepository.countByUserOneAndIsReadByUserOne(user, false) +  this.conversationRepository.countByUserTwoAndIsReadByUserTwo(user, false);
     }
 }
