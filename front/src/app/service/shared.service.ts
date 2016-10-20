@@ -12,7 +12,23 @@ import {Router} from "@angular/router";
 @Injectable()
 export class SharedService {
 
+  unreadNumberConversationsRefresh: Observable<boolean>;
+  unseenNumberVisitsRefresh: Observable<boolean>;
+  private unreadNumberConversationsObserver: Observer<boolean>;
+  private unseenVisitsObserver: Observer<boolean>;
+
+
   constructor (private localStorageService: LocalStorageService, private router: Router) {
+    this.unreadNumberConversationsRefresh = new Observable<boolean>(observer => this.unreadNumberConversationsObserver = observer).share();
+    this.unseenNumberVisitsRefresh = new Observable<boolean>(observer => this.unseenVisitsObserver = observer).share();
+  }
+
+  refreshUnreadNumberConversations() {
+    this.unreadNumberConversationsObserver.next(true);
+  }
+
+  refreshUnseenNumberVisits() {
+    this.unseenVisitsObserver.next(true);
   }
 
   getUser() {
@@ -37,5 +53,9 @@ export class SharedService {
 
   isConnected() {
     return (this.localStorageService.get('token') != null);
+  }
+
+  getLocalizations() {
+      return this.localStorageService.get('localizations');
   }
 }

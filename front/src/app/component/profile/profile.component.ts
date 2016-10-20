@@ -3,7 +3,7 @@ import {UserService} from "../../service/user.service";
 import {User} from "../../model/user";
 import {ActivatedRoute, Params} from "@angular/router";
 import {ConversationService} from "../../service/conversation.service";
-import {Conversation} from "../../model/conversation";
+import * as moment from 'moment/moment';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
       let id = +params['id'];// (+) converts string 'id' to a number
-      this.userService.getUserById(id).then(user => { this.user = user; this.loading = false});
+      this.userService.getUserById(id).then(user => { console.log(user); this.user = user; this.loading = false; });
     })
   }
 }

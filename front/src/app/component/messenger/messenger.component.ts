@@ -32,7 +32,9 @@ export class MessengerComponent implements OnInit {
   messageTimer:Observable<number>;
   conversationTimer:Observable<number>;
 
-  constructor(private route:ActivatedRoute, private userService:UserService,private conversationService: ConversationService, private messageService:MessageService, private  sharedService: SharedService) { }
+  constructor(private route:ActivatedRoute, private userService:UserService,
+              private conversationService: ConversationService,
+              private messageService:MessageService, private  sharedService: SharedService) { }
 
   ngOnInit() {
     this.sharedService.redirectLogin();
@@ -99,7 +101,7 @@ export class MessengerComponent implements OnInit {
   private getMessages(userId : number) {
     this.loading = true;
     console.log("get messages");
-    this.messageService.getMessages(userId).then(response => { this.formatMessages(response); this.loading = false; }).catch(e => this.error = e);
+    this.messageService.getMessages(userId).then(response => { this.formatMessages(response); this.loading = false; this.sharedService.refreshUnreadNumberConversations(); }).catch(e => this.error = e);
   }
 
   private formatMessages(response: any) {

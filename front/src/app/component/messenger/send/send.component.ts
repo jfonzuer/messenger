@@ -52,6 +52,7 @@ export class SendComponent implements OnInit {
       // sinon envoi simple d'un message une conversation est sélectionnée
       else {
         this.message.conversation = this.selectedConversation;
+        console.log(this.message);
         this.messageService.post(this.message)
           .then(response => { this.addMessage.emit(response); this.message.content = '' })
           // si erreur on fixe le message d'erreur et on set un timeout

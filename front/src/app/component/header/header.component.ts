@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {User} from "../../model/user";
 import {ConversationService} from "../../service/conversation.service";
 import {Observable} from "rxjs";
+import {VisitService} from "../../service/visit.service";
 
 @Component({
   selector: 'app-header',
@@ -15,19 +16,34 @@ import {Observable} from "rxjs";
 export class HeaderComponent implements OnInit {
 
   unreadConversations:number;
+  unseenVisits:number;
+
+  // subscriptions
+  conversationRefreshSubscription: any;
+  visitsRefreshSubscription:any;
   // timers
   unreadConversationsTimer:Observable<number>;
+  unseenVisitsTimer:Observable<number>;
 
-  constructor(private localStorageService: LocalStorageService, private authenticationService: AuthenticationService, private sharedService: SharedService, private conversationService: ConversationService, private  router: Router) { }
+  constructor(private localStorageService: LocalStorageService, private authenticationService: AuthenticationService,
+              private sharedService: SharedService, private conversationService: ConversationService,
+              private  router: Router, private visitService: VisitService) { }
 
   ngOnInit() {
+
+    this.conversationRefreshSubscription = this.sharedService.unreadNumberConversationsRefresh.subscribe(refresh => { this.getUnreadConversations(); });
+    this.visitsRefreshSubscription = this.sharedService.unseenNumberVisitsRefresh.subscribe(refresh => { this.getUnseenVisits(); })
+
     this.getUnreadConversations();
+    this.getUnseenVisits();
 
     // TODO A ACTIVER
     //this.unreadConversationsTimer = Observable.timer(0, 60000);
     //this.unreadConversationsTimer.subscribe(t => this.getUnreadConversations());
-  }
 
+    //this.unseenVisitsTimer = Observable.timer(0, 60000);
+    //this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
+  }
 
   get getUsername() {
     let user = this.sharedService.getUser();
@@ -37,7 +53,11 @@ export class HeaderComponent implements OnInit {
   }
 
   getUnreadConversations() {
-    this.conversationService.getUnreadNumberConversations().then(unreadConversations => this.unreadConversations = unreadConversations);
+    this.conversationService.getUnreadNumberConversations().then(unreadConversations => { console.log(unreadConversations); this.unreadConversations = unreadConversations });
+  }
+
+  getUnseenVisits() {
+    this.visitService.getUnseenNumber().then(unseenVisits => { console.log(unseenVisits); this.unseenVisits = unseenVisits});
   }
 
   logout() {

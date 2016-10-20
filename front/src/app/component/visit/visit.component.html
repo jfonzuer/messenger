@@ -1,0 +1,21 @@
+<h2 style="text-decoration: underline">Visites sur le profil :</h2>
+
+<div class="container">
+  <div class="row" *ngFor="let visit of visits">
+  <div>
+    <div class="col-sm-3">
+      <img style="width: 100px; height:100px;" src="/public/img/profile.jpg" class="img-circle center-block">
+    </div>
+    <div class="col-sm-6">
+      <h3>{{ visit.visitor.username }}</h3>
+      <h5>{{ visit.visitor.age }} ans, {{ visit.visitor.localization.name }}</h5>
+    </div>
+    <div class="col-sm-3">
+      <br>
+      <p>{{ visit.visitedDate }}</p>
+    </div>
+    <hr>
+  </div>
+  </div>
+</div>
+

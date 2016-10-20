@@ -17,6 +17,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.sharedService.redirectLogin();
-    this.userService.getLast20Users().then(response => { console.log(response); this.users = response.content as User[]; console.log(this.users)})
+    this.userService.getLast20Users().then(users => { this.users = users; })
   }
 }

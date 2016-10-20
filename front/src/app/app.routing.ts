@@ -6,6 +6,7 @@ import {ProfileComponent} from "./component/profile/profile.component";
 import {MessengerComponent} from "./component/messenger/messenger.component";
 import {UserComponent} from "./component/user/user.component";
 import {ParametersComponent} from "./component/parameters/parameters.component";
+import {VisitComponent} from "./component/visit/visit.component";
 
 /**
  * Created by pgmatz on 28/09/16.
@@ -43,6 +44,10 @@ const appRoutes: Routes = [
   {
     path : 'parameters',
     component: ParametersComponent
+  },
+  {
+    path: 'visits',
+    component: VisitComponent
   },
   {
     path: '',

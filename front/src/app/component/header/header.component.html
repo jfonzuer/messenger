@@ -11,8 +11,8 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="home">Home</a></li>
-        <li><a href="conversation">Messagerie <span class="badge">{{ unreadConversations }}</span></a></li>
-        <li><a href="#">Visites <span class="badge">3</span></a></li>
+        <li><a href="conversation">Messagerie <span class="badge" *ngIf="unreadConversations != 0">{{ unreadConversations }}</span></a></li>
+        <li><a href="visits">Visites <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">

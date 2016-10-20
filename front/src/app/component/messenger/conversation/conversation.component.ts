@@ -1,10 +1,9 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import {ConversationService} from "../../service/conversation.service";
-import {Conversation} from "../../model/conversation";
 import {Observable} from "rxjs";
 import {Input} from "@angular/core/src/metadata/directives";
-import {Router} from "@angular/router";
-import {SharedService} from "../../service/shared.service";
+import {Conversation} from "../../../model/conversation";
+import {ConversationService} from "../../../service/conversation.service";
+import {SharedService} from "../../../service/shared.service";
 
 @Component({
   selector: 'app-conversation',

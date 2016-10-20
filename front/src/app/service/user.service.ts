@@ -9,13 +9,14 @@ import {environment} from "../environments/environment";
 import {User} from "../model/user";
 import {AuthenticationService} from "./authentication.service";
 import {Profile} from "../model/profile";
+import {DatetimeService} from "./datetime.service";
 
 @Injectable()
 export class UserService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService) {
+  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService, private datetimeService:DatetimeService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -28,7 +29,11 @@ export class UserService {
       .then(response => {
         this.handleResponse(response);
         console.log(response);
-        return response.json();
+        let users:User[] = response.json().content;
+        for (let user of users) {
+          this.datetimeService.formatAge(user);
+        }
+        return users;
       })
       .catch(this.handleError);
   }
@@ -40,8 +45,11 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/' + id, {headers: headers})
       .toPromise()
       .then(response => {
+        console.log(response);
         this.handleResponse(response);
-        return response.json() as User;
+        let user:User = response.json();
+        this.datetimeService.formatAge(user);
+        return user;
       })
       .catch(this.handleError);
   }
@@ -58,6 +66,7 @@ export class UserService {
       })
       .catch(this.handleError);
   }
+
 
   private handleError(error: any) {
     console.error('An error occurred', error);
