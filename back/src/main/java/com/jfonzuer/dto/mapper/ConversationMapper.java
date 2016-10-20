@@ -25,8 +25,8 @@ public class ConversationMapper {
         return c != null ? new ConversationDto.ConversationDtoBuilder()
                 .setId(c.getId())
                 .setIsRead(MessengerUtils.isUserOne(u, c) ? c.getReadByUserOne() == null ? null : c.getReadByUserOne() : c.getReadByUserTwo() == null ? null : c.getReadByUserTwo())
-                .setUserOne(u == null ? null : UserMapper.toDto(u))
-                .setUserTwo(UserMapper.toDto(MessengerUtils.getOtherUser(c, u)))
+                .setUserOne(u == null ? null : UserMapper.toLightDto(u))
+                .setUserTwo(UserMapper.toLightDto(MessengerUtils.getOtherUser(c, u)))
                 .setPreview(c.getPreview() == null ? null : c.getPreview())
                 .createConversationDto() : null;
     }

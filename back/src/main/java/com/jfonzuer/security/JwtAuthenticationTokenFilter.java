@@ -1,5 +1,6 @@
 package com.jfonzuer.security;
 
+import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +49,7 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 
-            JwtUser jwtUser = JwtUserFactory.create(this.userRepository.findByEmail(username));
+            JwtUser jwtUser = UserMapper.toDtoWithAuthorities(this.userRepository.findByEmail(username));
             System.out.println("jwtUser = " + jwtUser);
 
             if (jwtTokenUtil.validateToken(authToken, jwtUser)) {
@@ -57,19 +58,6 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-                /*
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
-
-            //UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            JwtUser jwtUser = JwtUserFactory.create(this.userRepository.findByEmail(username));
-            if (jwtTokenUtil.validateToken(authToken, jwtUser)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        }
-        */
-
 
         chain.doFilter(request, response);
     }

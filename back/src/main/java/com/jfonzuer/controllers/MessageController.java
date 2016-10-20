@@ -28,7 +28,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/messages")
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class MessageController {
 
@@ -76,7 +76,6 @@ public class MessageController {
         Message message = MessageMapper.fromDto(dto);
         message.setSentDateTime(LocalDateTime.now());
         message = messageRepository.save(message);
-
 
         System.out.println("message = " + message);
         return  MessageMapper.toDto(message);

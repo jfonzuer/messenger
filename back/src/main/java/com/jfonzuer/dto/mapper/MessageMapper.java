@@ -2,6 +2,7 @@ package com.jfonzuer.dto.mapper;
 
 import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.entities.Message;
+import com.jfonzuer.security.JwtUser;
 
 /**
  * Created by pgm on 20/09/16.
@@ -24,7 +25,7 @@ public class MessageMapper {
                 .conversation((message.getConversation() == null) ? null : ConversationMapper.toDto(message.getConversation()))
                 .content(message.getContent())
                 .sendDate(message.getSentDateTime().toString())
-                .source(UserMapper.toDto(message.getSource()))
+                .source(UserMapper.toLightDto(message.getSource()))
                 .build() : null;
     }
 }

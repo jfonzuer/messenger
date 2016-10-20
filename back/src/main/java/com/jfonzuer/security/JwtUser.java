@@ -1,14 +1,17 @@
 package com.jfonzuer.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jfonzuer.dto.FetishDto;
+import com.jfonzuer.dto.LocalizationDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
- * Created by stephan on 20.03.16.
+ * Created by jfonzuer on 20.03.16.
  */
 public class JwtUser implements UserDetails {
 
@@ -17,6 +20,9 @@ public class JwtUser implements UserDetails {
     private String password;
     private String email;
     private String description;
+    private String birthDate;
+    private List<FetishDto> fetishes;
+    private LocalizationDto localization;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean enabled;
     private Date lastPasswordResetDate;
@@ -24,15 +30,18 @@ public class JwtUser implements UserDetails {
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String email, String password, Date lastPasswordResetDate, Collection<? extends GrantedAuthority> authorities, boolean enabled, String description) {
+    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.password = password;
+        this.email = email;
+        this.description = description;
+        this.birthDate = birthDate;
+        this.fetishes = fetishes;
+        this.localization = localization;
         this.authorities = authorities;
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
-        this.description = description;
     }
 
     public Long getId() {
@@ -92,15 +101,47 @@ public class JwtUser implements UserDetails {
         return description;
     }
 
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public List<FetishDto> getFetishes() {
+        return fetishes;
+    }
+
+    public LocalizationDto getLocalization() {
+        return localization;
+    }
+
+    @Override
+    public String toString() {
+        return "JwtUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", fetishes=" + fetishes +
+                ", localization=" + localization +
+                ", authorities=" + authorities +
+                ", enabled=" + enabled +
+                ", lastPasswordResetDate=" + lastPasswordResetDate +
+                '}';
+    }
+
     public static class JwtUserBuilder {
         private Long id;
         private String username;
-        private String email;
         private String password;
-        private Date lastPasswordResetDate;
+        private String email;
+        private String description;
+        private String birthDate;
+        private List<FetishDto> fetishes;
+        private LocalizationDto localization;
         private Collection<? extends GrantedAuthority> authorities;
         private boolean enabled;
-        private String description;
+        private Date lastPasswordResetDate;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -112,18 +153,33 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
-        public JwtUserBuilder setEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
         public JwtUserBuilder setPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public JwtUserBuilder setLastPasswordResetDate(Date lastPasswordResetDate) {
-            this.lastPasswordResetDate = lastPasswordResetDate;
+        public JwtUserBuilder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public JwtUserBuilder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public JwtUserBuilder setBirthDate(String birthDate) {
+            this.birthDate = birthDate;
+            return this;
+        }
+
+        public JwtUserBuilder setFetishes(List<FetishDto> fetishes) {
+            this.fetishes = fetishes;
+            return this;
+        }
+
+        public JwtUserBuilder setLocalization(LocalizationDto localization) {
+            this.localization = localization;
             return this;
         }
 
@@ -137,27 +193,13 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
-        public JwtUserBuilder setDescription(String description) {
-            this.description = description;
+        public JwtUserBuilder setLastPasswordResetDate(Date lastPasswordResetDate) {
+            this.lastPasswordResetDate = lastPasswordResetDate;
             return this;
         }
 
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, email, password, lastPasswordResetDate, authorities, enabled, description);
+            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "JwtUser{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", description='" + description + '\'' +
-                ", authorities=" + authorities +
-                ", enabled=" + enabled +
-                ", lastPasswordResetDate=" + lastPasswordResetDate +
-                '}';
     }
 }

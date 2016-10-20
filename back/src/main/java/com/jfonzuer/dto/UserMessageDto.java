@@ -7,6 +7,7 @@ import com.jfonzuer.security.JwtUser;
  * Created by pgm on 02/10/16.
  */
 public class UserMessageDto {
+
     private MessageDto message;
     private JwtUser user;
 

@@ -33,7 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/conversations")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
 public class ConversationController {
 
     private final ConversationRepository conversationRepository;
@@ -61,9 +61,6 @@ public class ConversationController {
     @RequestMapping(method = RequestMethod.POST)
     public ConversationDto add(@RequestBody UserMessageDto dto) {
 
-        System.out.println("dto---------------------------------------------------- = " + dto);
-        LOGGER.info("In conversation controller post : " + dto);
-
         MessageDto messageDto = dto.getMessage();
 
         //TODO : set current user manually
@@ -74,7 +71,6 @@ public class ConversationController {
             throw new IllegalArgumentException();
         }
 
-        //Conversation conversation = conversationRepository.save(new Conversation(MessengerUtils.getPreviewFromMessage(messageDto), false, userOne, userTwo));
         Conversation conversation = conversationRepository.save(new Conversation(MessengerUtils.getPreviewFromMessage(messageDto), true, false, LocalDateTime.now(), false, false, userOne, userTwo));
 
         // ajout du message
@@ -93,10 +89,6 @@ public class ConversationController {
         //TODO : set current user manually
         User currentUser = userRepository.findOne(1L);
         User specifiedUser = userRepository.findOne(id);
-
-//        if (specifiedUser == null) {
-//            throw new ResourceNotFoundException();
-//        }
 
         List<Conversation> list = conversationRepository.findTop1ByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
         System.out.println("list = " + list);
@@ -127,7 +119,11 @@ public class ConversationController {
 
     @RequestMapping(value = "/unread", method = RequestMethod.GET)
     public Long getUnreadNumerConversations(HttpServletRequest request) {
-        User user = this.userService.getUserFromToken(request);
+
+        //TODO : set current user manually
+        User user = userRepository.findOne(1L);
+
+        //User user = this.userService.getUserFromToken(request);
         return this.conversationRepository.countByUserOneAndIsReadByUserOne(user, false) +  this.conversationRepository.countByUserTwoAndIsReadByUserTwo(user, false);
     }
 }

@@ -1,13 +1,7 @@
 package com.jfonzuer.runner;
 
-import com.jfonzuer.entities.User;
-import com.jfonzuer.entities.Message;
-import com.jfonzuer.entities.Conversation;
-import com.jfonzuer.entities.UserRole;
-import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.repository.MessageRepository;
-import com.jfonzuer.repository.ConversationRepository;
-import com.jfonzuer.repository.UserRoleRepository;
+import com.jfonzuer.entities.*;
+import com.jfonzuer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
@@ -32,13 +27,19 @@ public class MessengerCLR implements CommandLineRunner {
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
     private final UserRoleRepository userRoleRepository;
+    private final FetishRepository fetishRepository;
+    private final LocalizationRepository localizationRepository;
+    private final VisitRepository visitRepository;
 
     @Autowired
-    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository) {
+    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository) {
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
         this.userRoleRepository = userRoleRepository;
+        this.fetishRepository = fetishRepository;
+        this.localizationRepository = localizationRepository;
+        this.visitRepository = visitRepository;
     }
 
     @Override
@@ -47,35 +48,82 @@ public class MessengerCLR implements CommandLineRunner {
 
         PasswordEncoder encoder = new BCryptPasswordEncoder();
 
+        Fetish f1 = new Fetish.FetishBuilder().setId(1L).setName("fetish1").createFetish();
+        Fetish f2 = new Fetish.FetishBuilder().setId(2L).setName("fetish2").createFetish();
+        Fetish f3 = new Fetish.FetishBuilder().setId(3L).setName("fetish3").createFetish();
+        Fetish f4 = new Fetish.FetishBuilder().setId(4L).setName("fetish4").createFetish();
+
+        List<Fetish> fetishes = Arrays.asList(f1, f2, f3, f4);
+
+        // on insére les fetishes dans la bdd
+        fetishes.stream().forEach(f -> fetishRepository.save(f));
+
+        Localization l1 = new Localization.LocalizationBuilder().setId(1L).setName("Alsace").createLocalization();
+        Localization l2 = new Localization.LocalizationBuilder().setId(2L).setName("Aquitaine").createLocalization();
+        Localization l3 = new Localization.LocalizationBuilder().setId(3L).setName("Auvergne").createLocalization();
+        Localization l4 = new Localization.LocalizationBuilder().setId(4L).setName("Basse Normandie").createLocalization();
+        Localization l5 = new Localization.LocalizationBuilder().setId(5L).setName("Bourgogne").createLocalization();
+        Localization l6 = new Localization.LocalizationBuilder().setId(6L).setName("Bretagne").createLocalization();
+        Localization l7 = new Localization.LocalizationBuilder().setId(7L).setName("Centre").createLocalization();
+        Localization l8 = new Localization.LocalizationBuilder().setId(8L).setName("Champagne-Ardenne").createLocalization();
+        Localization l9 = new Localization.LocalizationBuilder().setId(9L).setName("Corse").createLocalization();
+        Localization l10 = new Localization.LocalizationBuilder().setId(10L).setName("Franche-Comté").createLocalization();
+        Localization l11 = new Localization.LocalizationBuilder().setId(11L).setName("Haute-Normandie").createLocalization();
+        Localization l12 = new Localization.LocalizationBuilder().setId(12L).setName("Ile-de-France").createLocalization();
+        Localization l13 = new Localization.LocalizationBuilder().setId(13L).setName("Languedoc-Roussilon").createLocalization();
+        Localization l14 = new Localization.LocalizationBuilder().setId(14L).setName("Limousin").createLocalization();
+        Localization l15 = new Localization.LocalizationBuilder().setId(15L).setName("Lorraine").createLocalization();
+        Localization l16 = new Localization.LocalizationBuilder().setId(16L).setName("Midi-Pyrénées").createLocalization();
+        Localization l17 = new Localization.LocalizationBuilder().setId(17L).setName("Nord-Pas-de-Calais").createLocalization();
+        Localization l18 = new Localization.LocalizationBuilder().setId(18L).setName("Pays de la Loire").createLocalization();
+        Localization l19 = new Localization.LocalizationBuilder().setId(19L).setName("Picardie").createLocalization();
+        Localization l20 = new Localization.LocalizationBuilder().setId(20L).setName("Poitou-Charentes").createLocalization();
+        Localization l21 = new Localization.LocalizationBuilder().setId(21L).setName("Provence-Alpes-Côtes-d'Azur").createLocalization();
+        Localization l22 = new Localization.LocalizationBuilder().setId(22L).setName("Guadeloupe").createLocalization();
+        Localization l23 = new Localization.LocalizationBuilder().setId(23L).setName("Martinique").createLocalization();
+        Localization l24 = new Localization.LocalizationBuilder().setId(24L).setName("Guyane").createLocalization();
+        Localization l25 = new Localization.LocalizationBuilder().setId(25L).setName("La Réunion").createLocalization();
+        Localization l26 = new Localization.LocalizationBuilder().setId(26L).setName("Mayotte").createLocalization();
+
+        List<Localization> localizations = Arrays.asList(l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, l26);
+        localizations.stream().forEach(l -> localizationRepository.save(l));
+
+
         User u1 = new User.UserBuilder()
                 .setEmail("member1@gmail.com")
+                .setBirthDate(LocalDate.of(1992, 3, 29))
                 .setUsername("member1")
-                //.setPassword("password1")
                 .setPassword(encoder.encode("password1"))
                 .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .setEnabled(true)
                 .setDescription("je suis le membre 1")
+                .setFetishes(fetishes)
+                .setLocalization(l1)
                 .createUser();
         User u2 = new User.UserBuilder()
                 .setEmail("member13@gmail.com")
                 .setUsername("member2")
                 .setPassword(encoder.encode("password2"))
-                //.setPassword("password2")
                 .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .setEnabled(true)
                 .setDescription("je suis le membre 2")
+                .setBirthDate(LocalDate.of(1988, 3, 29))
+                .setLocalization(l2)
                 .createUser();
         User u3 = new User.UserBuilder()
                 .setEmail("member3@gmail.com")
                 .setUsername("member3")
-                //.setPassword("password3")
                 .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .setPassword(encoder.encode("password3"))
                 .setEnabled(true)
                 .setDescription("je suis le membre 3")
+                .setBirthDate(LocalDate.of(1988, 3, 29))
+                .setLocalization(l2)
                 .createUser();
+
         // save members
         Stream.of(u1, u2, u3).forEach( m -> userRepository.save(m));
+
 
 
         UserRole us1 = new UserRole(u1, "ROLE_USER");
@@ -83,6 +131,12 @@ public class MessengerCLR implements CommandLineRunner {
         UserRole us3 = new UserRole(u2, "ROLE_USER");
 
         Stream.of(us1, us2, us3).forEach(us -> userRoleRepository.save(us));
+
+        // visits
+        Visit v1 = new Visit(LocalDate.now(), u2, u1, false);
+        Visit v2 = new Visit(LocalDate.now(), u3, u1, false);
+        Visit v3 = new Visit(LocalDate.now(), u2, u1, false);
+        Stream.of(v1, v2, v3).forEach(v -> this.visitRepository.save(v));
 
         Conversation c1 = new Conversation.ConversationBuilder()
                 .setId(1L)
@@ -116,73 +170,11 @@ public class MessengerCLR implements CommandLineRunner {
 
         //Conversation t1 = new Conversation(Arrays.asList(u1,u2), Arrays.asList(ms1, ms2, ms3, ms4));
 
-
         Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(c1).setContent("Salut").setSentDateTime(LocalDateTime.now()).createMessage();
         Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(c1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).createMessage();
         Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(c1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).createMessage();
         Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(c1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).createMessage();
         Stream.of(ms1, ms2, ms3, ms4).forEach(ms -> messageRepository.save(ms));
 
-        //messageRepository.findTop1ByOrderIdDesc().stream().forEach(System.out::println);
-        //conversationRepository.flush();
-
-        /*
-        conversationRepository.findAll().forEach(s -> System.out.println(s.getMessages()));
-
-        //conversationRepository.flush();
-        User u11 = memberRepository.findOne(1L);
-        u11.setEmail("member 11111");
-        memberRepository.save(u11);
-
-        Message ms5 = new Message(u2,u1, "sisi la famille ", LocalDateTime.now());
-
-
-        Conversation t2 = conversationRepository.findOne(1L);
-
-        System.out.println(Stream.of(t2.getMessages(), Arrays.asList(ms5)).flatMap(s -> s.stream()).collect(Collectors.toList()));
-
-        t2.setMessages(Stream.concat(t2.getMessages().stream(), Arrays.asList(ms5).stream()).collect(Collectors.toList()));
-        //t2.setMessages(Stream.of(t2.getMessages(), Arrays.asList(ms5)).flatMap(s -> s.stream()).collect(Collectors.toList()));
-        //t2.getMessages().add(ms5);
-
-        //System.out.println(t2);
-        //conversationRepository.flush();
-        //conversationRepository.save(t2);
-
-
-        //conversationRepository.findAll().forEach(s -> System.out.println(s.getUsers()));
-
-        //messageRepository.findByThread(t1).forEach(System.out::println);
-
-        //messageRepository.findByThread(t1).forEach(s -> System.out.println("ok"));
-
-        //conversationRepository.findAll().forEach(s -> s.getMessages().forEach(System.out::println));
-
-        /*
-        t1.setMessages(Arrays.asList(ms1, ms2, ms3, ms3, ms4));
-        conversationRepository.save(t1);
-        conversationRepository.flush();
-        */
-
-        //Stream.of(ms1, ms2, ms3, ms4).forEach(ms -> messageRepository.save(ms));
-
-        //t1.setMessages(Arrays.asList(ms1, ms2, ms3, ms3, ms4));
-
-        /*
-        List<Message> u1u2 = Arrays.asList(
-                new Message(u1,u2, "Salut", LocalDateTime.now()),
-                new Message(u2,u1, "Salut ça va ?", LocalDateTime.now()),
-                new Message(u1,u2, "Parfait et toi gros frère ?", LocalDateTime.now()),
-                new Message(u2,u1, "Parfaitement oklm bro ", LocalDateTime.now())
-        );
-
-
-        Conversation t1 = new Conversation(listMemberst1, u1u2);
-        conversationRepository.save(t1);
-
-
-
-        memberRepository.findAll().forEach(System.out::println);
-        */
     }
 }

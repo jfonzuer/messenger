@@ -1,11 +1,11 @@
 package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.AuthenticationRequestDto;
+import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.security.JwtUser;
 import com.jfonzuer.dto.JwtAuthenticationResponse;
-import com.jfonzuer.security.JwtUserFactory;
 import com.jfonzuer.service.JwtUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,7 +52,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Reload password post-security so we can generate token
-        JwtUser jwtUser = JwtUserFactory.create(userRepository.findByEmail(authenticationRequest.getEmail()));
+        JwtUser jwtUser = UserMapper.toDtoWithAuthorities(userRepository.findByEmail(authenticationRequest.getEmail()));
 
         final String token = jwtTokenUtil.generateToken(jwtUser, device);
 
@@ -64,7 +64,7 @@ public class AuthenticationController {
     public JwtUser getCurrentUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        return JwtUserFactory.create(this.userRepository.findByEmail(username));
+        return UserMapper.toDto(this.userRepository.findByEmail(username));
     }
 
     @RequestMapping(value = "refresh", method = RequestMethod.GET)
@@ -72,7 +72,7 @@ public class AuthenticationController {
         String token = request.getHeader(tokenHeader);
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = JwtUserFactory.create(userRepository.findByEmail(username));
+        JwtUser user = UserMapper.toDtoWithAuthorities(userRepository.findByEmail(username));
 
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
