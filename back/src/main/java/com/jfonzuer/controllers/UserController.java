@@ -1,5 +1,6 @@
 package com.jfonzuer.controllers;
 
+import com.jfonzuer.dto.PasswordDto;
 import com.jfonzuer.dto.ProfileDto;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -26,13 +29,14 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
     private final VisitRepository visitRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserController(UserRepository userRepository, UserService userService, VisitRepository visitRepository) {
@@ -69,16 +73,51 @@ public class UserController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
-    public JwtUser update(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
+    public JwtUser updateProfile(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
         //TODO : set current user manually
         User user = userRepository.findOne(1L);
+
+        User updatedUser = UserMapper.fromDto(jwtUser);
 
         //User user = userService.getUserFromToken(request);
         // TODO : validation via annotation and exception handling
 
-        user.setDescription(jwtUser.getDescription());
+        user.setDescription(updatedUser.getDescription());
+        user.setLocalization(updatedUser.getLocalization());
+        user.setFetishes(updatedUser.getFetishes());
 
         return UserMapper.toDto(userRepository.save(user));
+    }
+
+    @RequestMapping(value = "/informations", method = RequestMethod.PUT)
+    public JwtUser updateInformation(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
+        //TODO : set current user manually
+        User user = userRepository.findOne(1L);
+        System.out.println("jwtUser = " + jwtUser);
+        User updatedUser = UserMapper.fromDto(jwtUser);
+        System.out.println("updatedUser = " + updatedUser);
+
+        //User user = userService.getUserFromToken(request);
+        // TODO : validation via annotation and exception handling
+        user.setUsername(updatedUser.getUsername());
+        user.setEmail(updatedUser.getEmail());
+        user.setBirthDate(updatedUser.getBirthDate());
+
+        return UserMapper.toDto(userRepository.save(user));
+    }
+
+
+    @RequestMapping(value = "/passwordReset", method = RequestMethod.PUT)
+    public void resetPassword(@RequestBody PasswordDto passwordDto) {
+
+        if (!passwordDto.getPassword().equals(passwordDto.getConfirmation())) {
+            throw new IllegalArgumentException();
+        }
+
+        //TODO : set current user manually
+        User user = userRepository.findOne(1L);
+        user.setPassword(encoder.encode(passwordDto.getPassword()));
+        userRepository.save(user);
     }
 
     /*

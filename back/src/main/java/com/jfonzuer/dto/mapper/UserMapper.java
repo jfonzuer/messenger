@@ -1,5 +1,6 @@
 package com.jfonzuer.dto.mapper;
 
+import com.jfonzuer.entities.Localization;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserRole;
 import com.jfonzuer.security.JwtUser;
@@ -65,7 +66,10 @@ public class UserMapper {
                 .setId((dto.getId() == null) ? null : dto.getId())
                 .setEmail(dto.getEmail())
                 .setUsername(dto.getUsername())
+                .setBirthDate(DateMapper.toLocalDate(dto.getBirthDate()))
                 .setDescription(dto.getDescription())
+                .setLocalization(LocalizationMapper.fromDto(dto.getLocalization()))
+                .setFetishes(dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
                 .createUser() : null;
     }
 

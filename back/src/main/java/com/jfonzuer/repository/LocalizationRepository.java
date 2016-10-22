@@ -9,5 +9,5 @@ import java.util.List;
  * Created by pgm on 17/10/16.
  */
 public interface LocalizationRepository extends JpaRepository<Localization, Long> {
-    List<Localization> findAll();
+    List<Localization> findAllByOrderByName();
 }

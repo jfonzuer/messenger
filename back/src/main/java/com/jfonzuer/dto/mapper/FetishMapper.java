@@ -12,4 +12,8 @@ public class FetishMapper {
         return f != null ? new FetishDto.FetishDtoBuilder().setId(f.getId()).setName(f.getName()).createFetishDto() : null;
     }
 
+    public static Fetish fromDto(FetishDto dto) {
+        return dto != null ? new Fetish.FetishBuilder().setId(dto.getId()).setName(dto.getName()).createFetish() : null;
+    }
+
 }

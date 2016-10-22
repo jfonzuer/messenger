@@ -12,4 +12,8 @@ public class LocalizationMapper {
         return localization != null ? new LocalizationDto.LocalizationDtoBuilder().setId(localization.getId()).setName(localization.getName()).createLocalizationDto() : null;
     }
 
+    public static Localization fromDto(LocalizationDto dto) {
+        return dto != null ? new Localization.LocalizationBuilder().setId(dto.getId()).setName(dto.getName()).createLocalization() : null;
+    }
+
 }

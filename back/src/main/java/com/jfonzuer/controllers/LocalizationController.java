@@ -30,6 +30,6 @@ public class LocalizationController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<LocalizationDto> getAll() {
-        return localizationRepository.findAll().stream().map(LocalizationMapper::toDto).collect(Collectors.toList());
+        return localizationRepository.findAllByOrderByName().stream().map(LocalizationMapper::toDto).collect(Collectors.toList());
     }
 }

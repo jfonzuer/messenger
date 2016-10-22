@@ -60,6 +60,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
+    //@PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getCurrentUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
