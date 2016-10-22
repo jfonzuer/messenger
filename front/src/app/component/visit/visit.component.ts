@@ -18,16 +18,4 @@ export class VisitComponent implements OnInit {
   ngOnInit() {
     this.visitService.getAll().then(visits => { this.visits = visits; /*this.formatVisits(visits);*/ this.sharedService.refreshUnseenNumberVisits(); });
   }
-
-  /*
-  formatVisits(response:any) {
-    // si non vide
-    if (response.content) {
-      this.visits = response.content;
-      for (let visit of this.visits) {
-        this.datetimeService.formatAge(visit.visitor);
-      }
-    }
-  }
-  */
 }

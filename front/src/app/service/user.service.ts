@@ -6,10 +6,10 @@ import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import {Router} from "@angular/router";
 import {environment} from "../environments/environment";
-import {User} from "../model/user";
 import {AuthenticationService} from "./authentication.service";
-import {Profile} from "../model/profile";
 import {DatetimeService} from "./datetime.service";
+import {User} from "../model/user";
+import {PasswordReset} from "../model/passwordReset";
 
 @Injectable()
 export class UserService {
@@ -49,16 +49,17 @@ export class UserService {
         this.handleResponse(response);
         let user:User = response.json();
         this.datetimeService.formatAge(user);
+        this.datetimeService.formatBirthDate(user);
         return user;
       })
       .catch(this.handleError);
   }
 
-  updateProfile(profile : Profile) {
+  updateProfile(user : User) {
     let headers = this.authenticationService.getHeaders();
     headers.append('Content-Type', 'application/json');
 
-    return this.http.put(this.baseUrl + 'users/profile', profile, {headers: headers})
+    return this.http.put(this.baseUrl + 'users/profile', user, {headers: headers})
       .toPromise()
       .then(response => {
         this.handleResponse(response);
@@ -67,6 +68,30 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  updateInformations(user : User) {
+    let headers = this.authenticationService.getHeaders();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.put(this.baseUrl + 'users/informations', user, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.handleResponse(response);
+        return response.json();
+      })
+      .catch(this.handleError);
+  }
+
+  updatePassword(passwordReset : PasswordReset) {
+    let headers = this.authenticationService.getHeaders();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.put(this.baseUrl + 'users/passwordReset', passwordReset, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.handleResponse(response);
+      })
+      .catch(this.handleError);
+  }
 
   private handleError(error: any) {
     console.error('An error occurred', error);
