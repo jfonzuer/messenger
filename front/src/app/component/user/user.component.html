@@ -5,7 +5,6 @@
   <form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm">
     <fieldset>
       <legend>Mon profil :</legend>
-
       <div class="form-group">
         <div class="col-sm-5">
           <label>Région :</label>
@@ -29,7 +28,7 @@
 
       <div class="form-group">
         <div class="col-sm-10">
-          <label>Région :</label>
+          <label>Description :</label>
           <textarea class="form-control" rows="4" name="description" (keyup.enter)="send(sendForm.form.valid)" [(ngModel)]="user.description" autofocus required></textarea>
         </div>
       </div>

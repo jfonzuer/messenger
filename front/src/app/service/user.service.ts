@@ -9,7 +9,8 @@ import {environment} from "../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {DatetimeService} from "./datetime.service";
 import {User} from "../model/user";
-import {PasswordReset} from "../model/passwordReset";
+import {PasswordConfirmation} from "../model/passwordConfirmation";
+import {Register} from "../model/register";
 
 @Injectable()
 export class UserService {
@@ -55,6 +56,18 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  post(register:Register) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.baseUrl + 'register', register, {headers:headers})
+      .toPromise()
+      .then(response => {
+        this.handleResponse(response);
+      })
+      .catch(this.handleError)
+  }
+
   updateProfile(user : User) {
     let headers = this.authenticationService.getHeaders();
     headers.append('Content-Type', 'application/json');
@@ -81,11 +94,11 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  updatePassword(passwordReset : PasswordReset) {
+  updatePassword(passwordConfirmation : PasswordConfirmation) {
     let headers = this.authenticationService.getHeaders();
     headers.append('Content-Type', 'application/json');
 
-    return this.http.put(this.baseUrl + 'users/passwordReset', passwordReset, {headers: headers})
+    return this.http.put(this.baseUrl + 'users/passwordReset', passwordConfirmation, {headers: headers})
       .toPromise()
       .then(response => {
         this.handleResponse(response);

@@ -6,6 +6,7 @@ import {Injectable} from "@angular/core";
 import {environment} from "../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {Http} from "@angular/http";
+import {Fetish} from "../model/fetish";
 
 @Injectable()
 export class FetishService {
@@ -31,6 +32,29 @@ export class FetishService {
         return [];
       })
       .catch(this.handleError);
+  }
+
+  updateCheckedFetishes(fetish:Fetish, event:any, selectedFetishId:number[]) : number[] {
+    event.target.checked ? selectedFetishId.push(fetish.id) : selectedFetishId.splice(selectedFetishId.indexOf(fetish.id), 1);
+    selectedFetishId.sort();
+    return selectedFetishId;
+  }
+
+  initIdList(fetishes: Fetish[]) : number[] {
+    let idList: number[] = [];
+    // on initialise la liste des id des pratiques
+    for (let fetish of fetishes) {
+      idList.push(fetish.id);
+    }
+    return idList;
+  }
+
+  getFetishListFromIdList(idList: number[]) : Fetish[] {
+    let fetishes: Fetish[] = [];
+    for (let id of idList) {
+      fetishes.push(new Fetish(id, ""));
+    }
+    return fetishes;
   }
 
   private handleError(error: any) {

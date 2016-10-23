@@ -3,9 +3,9 @@ import {SharedService} from "../../service/shared.service";
 import {User} from "../../model/user";
 import {AuthenticationService} from "../../service/authentication.service";
 import {UserService} from "../../service/user.service";
-import {PasswordReset} from "../../model/passwordReset";
 import {DatetimeService} from "../../service/datetime.service";
 import { LocalStorageService } from 'angular-2-local-storage';
+import {PasswordConfirmation} from "../../model/passwordConfirmation";
 
 @Component({
   selector: 'app-parameters',
@@ -16,7 +16,7 @@ export class ParametersComponent implements OnInit {
 
   user:User;
   birthDate:string;
-  passwordReset: PasswordReset = new PasswordReset();
+  passwordConfirmation: PasswordConfirmation = new PasswordConfirmation();
   error:string;
   success:string;
 
@@ -38,8 +38,8 @@ export class ParametersComponent implements OnInit {
 
   updatePassword(valid:boolean) {
     if (valid) {
-      if (this.passwordReset.password == this.passwordReset.confirmation) {
-        this.userService.updatePassword(this.passwordReset).then(response => {
+      if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
+        this.userService.updatePassword(this.passwordConfirmation).then(() => {
           this.success = "Le mot de passe a été modifié avec succés.";
           setTimeout(() => this.success = "", 2000);
           this.authenticationService.refreshToken().then(response => { this.localStorageService.set('token', response.token) }).catch(error => this.error = error);
