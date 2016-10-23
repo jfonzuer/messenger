@@ -49,4 +49,12 @@ public class FetishDto {
             return new FetishDto(id, name);
         }
     }
+
+    @Override
+    public String toString() {
+        return "FetishDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -160,15 +160,20 @@ public class JwtTokenUtil implements Serializable {
 
         final String username = getUsernameFromToken(token);
         System.out.println("username = " + username);
+        System.out.println("jwtUser.getEmail() = " + jwtUser.getEmail());
+        System.out.println("username.length() = " + username.length());
+        System.out.println("jwtUser.length = " + jwtUser.getEmail().length());
+        System.out.println("username.equals jwt username = " + username.equals(jwtUser.getUsername()));
+        
         
         final Date created = getCreatedDateFromToken(token);
         //final Date expiration = getExpirationDateFromToken(token);
 
         //System.out.println("created = " + created);
-        System.out.println("userDetails.getUsername() = " + jwtUser.getEmail());
+        
         System.out.println("!isTokenExpired(token) = " + !isTokenExpired(token));
         System.out.println("!isCreatedBeforeLastPasswordReset(created, jwtUser.getLastPasswordResetDate()) = " + !isCreatedBeforeLastPasswordReset(created, jwtUser.getLastPasswordResetDate()));
-        System.out.println("username.equals jwt username = " + username.equals(jwtUser.getUsername()));
+        
         return (
                 username.equals(jwtUser.getEmail())
                         && !isTokenExpired(token)

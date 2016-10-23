@@ -2,6 +2,7 @@ package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.PasswordDto;
 import com.jfonzuer.dto.ProfileDto;
+import com.jfonzuer.dto.RegisterDto;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.Visit;
@@ -45,13 +46,6 @@ public class UserController {
         this.visitRepository = visitRepository;
     }
 
-    /*
-    @RequestMapping(method = RequestMethod.POST)
-    public JwtUser add(@RequestBody JwtUser JwtUser) {
-        // TODO : validation via annotation and exception handling
-        return saveOrUpdate(JwtUser);
-    }
-    */
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<JwtUser> getAll(Pageable p) {
@@ -68,7 +62,6 @@ public class UserController {
         if (!visited.equals(visitor)) {
             visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
         }
-
         return UserMapper.toDto(userRepository.findOne(id));
     }
 

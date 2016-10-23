@@ -49,4 +49,12 @@ public class PasswordDto {
             return new PasswordDto(password, confirmation);
         }
     }
+
+    @Override
+    public String toString() {
+        return "PasswordDto{" +
+                "password='" + password + '\'' +
+                ", confirmation='" + confirmation + '\'' +
+                '}';
+    }
 }

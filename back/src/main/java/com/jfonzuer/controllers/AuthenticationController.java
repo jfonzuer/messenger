@@ -1,8 +1,12 @@
 package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.AuthenticationRequestDto;
+import com.jfonzuer.dto.RegisterDto;
 import com.jfonzuer.dto.mapper.UserMapper;
+import com.jfonzuer.entities.User;
+import com.jfonzuer.entities.UserRole;
 import com.jfonzuer.repository.UserRepository;
+import com.jfonzuer.repository.UserRoleRepository;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.security.JwtUser;
 import com.jfonzuer.dto.JwtAuthenticationResponse;
@@ -11,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,9 +23,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.Date;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -37,6 +46,11 @@ public class AuthenticationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
@@ -60,7 +74,28 @@ public class AuthenticationController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
-    //@PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "register", method = RequestMethod.POST)
+    public void add(@RequestBody RegisterDto register) {
+        // TODO : validation via annotation and exception handling
+        System.out.println("register = " + register);
+
+        if (!register.getPasswordConfirmation().getPassword().equals(register.getPasswordConfirmation().getConfirmation())) {
+            throw new IllegalArgumentException();
+        }
+        if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
+            throw new IllegalArgumentException("L'adresse email est déjà utilisée");
+        }
+
+        User user = UserMapper.fromDto(register.getUser());
+        user.setPassword(encoder.encode(register.getPasswordConfirmation().getPassword()));
+        user.setEnabled(true);
+        user.setLastPasswordResetDate(new Date());
+        user = userRepository.save(user);
+        userRoleRepository.save(new UserRole(user, "ROLE_USER"));
+    }
+
+
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getCurrentUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
@@ -68,6 +103,7 @@ public class AuthenticationController {
         return UserMapper.toDto(this.userRepository.findByEmail(username));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
