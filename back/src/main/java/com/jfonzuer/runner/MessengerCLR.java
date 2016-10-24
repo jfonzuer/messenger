@@ -90,10 +90,10 @@ public class MessengerCLR implements CommandLineRunner {
 
 
         User u1 = new User.UserBuilder()
-                .setEmail("member1@gmail.com")
+                .setEmail("pgiraultmatz@gmail.com")
                 .setBirthDate(LocalDate.of(1992, 3, 29))
-                .setUsername("member1")
-                .setPassword(encoder.encode("password1"))
+                .setUsername("pgm")
+                .setPassword(encoder.encode("test"))
                 .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .setEnabled(true)
                 .setDescription("je suis le membre 1")

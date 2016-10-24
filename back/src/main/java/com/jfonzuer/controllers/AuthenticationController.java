@@ -47,12 +47,6 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserRoleRepository userRoleRepository;
-
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
-
-
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequest, Device device) throws AuthenticationException {
 
@@ -73,27 +67,6 @@ public class AuthenticationController {
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
-
-    @RequestMapping(value = "register", method = RequestMethod.POST)
-    public void add(@RequestBody RegisterDto register) {
-        // TODO : validation via annotation and exception handling
-        System.out.println("register = " + register);
-
-        if (!register.getPasswordConfirmation().getPassword().equals(register.getPasswordConfirmation().getConfirmation())) {
-            throw new IllegalArgumentException();
-        }
-        if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
-            throw new IllegalArgumentException("L'adresse email est déjà utilisée");
-        }
-
-        User user = UserMapper.fromDto(register.getUser());
-        user.setPassword(encoder.encode(register.getPasswordConfirmation().getPassword()));
-        user.setEnabled(true);
-        user.setLastPasswordResetDate(new Date());
-        user = userRepository.save(user);
-        userRoleRepository.save(new UserRole(user, "ROLE_USER"));
-    }
-
 
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "user", method = RequestMethod.GET)

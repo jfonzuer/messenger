@@ -164,7 +164,6 @@ public class User implements Serializable {
                 ", birthDate=" + birthDate +
                 ", fetishes=" + fetishes +
                 ", localization=" + localization +
-                ", userRoles=" + userRoles +
                 '}';
     }
 

@@ -3,7 +3,6 @@ package com.jfonzuer.service;
 import com.jfonzuer.entities.UserRole;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtUser;
-import com.jfonzuer.security.JwtUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

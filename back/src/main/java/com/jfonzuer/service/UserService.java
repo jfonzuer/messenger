@@ -3,7 +3,6 @@ package com.jfonzuer.service;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.security.JwtUser;
-import com.jfonzuer.security.JwtUserFactory;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

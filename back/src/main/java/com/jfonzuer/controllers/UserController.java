@@ -100,7 +100,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/passwordReset", method = RequestMethod.PUT)
+    @RequestMapping(value = "/password/reset", method = RequestMethod.PUT)
     public void resetPassword(@RequestBody PasswordDto passwordDto) {
 
         if (!passwordDto.getPassword().equals(passwordDto.getConfirmation())) {
@@ -112,12 +112,4 @@ public class UserController {
         user.setPassword(encoder.encode(passwordDto.getPassword()));
         userRepository.save(user);
     }
-
-    /*
-    private JwtUser saveOrUpdate(JwtUser JwtUser) {
-        User user = UserMapper.fromDto(JwtUser);
-        userRepository.save(user);
-        return UserMapper.create(user);
-    }
-    */
 }
