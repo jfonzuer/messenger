@@ -1,22 +1,21 @@
+<app-error [error]="error"></app-error>
+
 <div class="container">
   <div class="card card-container">
-    <app-error [error]="error"></app-error>
-
     <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
     <p id="profile-name" class="profile-name-card"></p>
     <form class="form-signin" (ngSubmit)="login(loginForm)" #loginForm="ngForm">
       <span id="reauth-email" class="reauth-email"></span>
 
-      <input type="" name="email" class="form-control" placeholder="Email" required autofocus [(ngModel)]="authentication.email">
+      <input type="email" name="email" class="form-control" placeholder="Email" required autofocus [(ngModel)]="authentication.email">
       <br>
       <input type="password" name="password" class="form-control" placeholder="Mot de passe" required [(ngModel)]="authentication.password" (keyup.enter)="login(loginForm)">
 
       <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Connexion</button>
     </form>
-    <a href="#" class="forgot-password">
+    <a href="password/forgotten" class="forgot-password">
       Mot de passe oublié ?
     </a>
-
   </div>
 
 </div>

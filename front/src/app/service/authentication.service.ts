@@ -58,6 +58,18 @@ export class AuthenticationService {
       .catch(this.handleError);
   }
 
+  resetPasswordByEmail(email:string) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.baseUrl + 'password/reset/mail', email, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.handleResponse(response);
+      })
+      .catch(this.handleError);
+  }
+
   getHeaders() : Headers {
     let headers = new Headers();
     let token = this.localStorageService.get("token");
@@ -66,7 +78,6 @@ export class AuthenticationService {
     console.log(headers);
     return headers;
   }
-
 
   private handleError(error: any) {
     console.error('An error occurred', error);

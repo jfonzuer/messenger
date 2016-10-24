@@ -11,6 +11,7 @@ import {DatetimeService} from "./datetime.service";
 import {User} from "../model/user";
 import {PasswordConfirmation} from "../model/passwordConfirmation";
 import {Register} from "../model/register";
+import {ResetPassword} from "../model/resetPassword";
 
 @Injectable()
 export class UserService {
@@ -98,12 +99,24 @@ export class UserService {
     let headers = this.authenticationService.getHeaders();
     headers.append('Content-Type', 'application/json');
 
-    return this.http.put(this.baseUrl + 'users/passwordReset', passwordConfirmation, {headers: headers})
+    return this.http.put(this.baseUrl + 'users/password/reset', passwordConfirmation, {headers: headers})
       .toPromise()
       .then(response => {
         this.handleResponse(response);
       })
       .catch(this.handleError);
+  }
+
+  resetPassword(resetPassword:ResetPassword) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.baseUrl + 'password/reset', resetPassword, {headers:headers})
+      .toPromise()
+      .then(response => {
+        this.handleResponse(response);
+      })
+      .catch(this.handleError)
   }
 
   private handleError(error: any) {
