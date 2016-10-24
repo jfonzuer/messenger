@@ -36,13 +36,13 @@
       <legend>Réinitialiser mon mot de passe :</legend>
       <div class="form-group">
         <div class="col-sm-5">
-          <input type="password" class="form-control" required placeholder="Mot de passe" name="password" [(ngModel)]="passwordConfirmation.password">
+          <input type="password" minlength="6" class="form-control" required placeholder="Mot de passe" name="password" [(ngModel)]="passwordConfirmation.password">
         </div>
       </div>
 
       <div class="form-group">
         <div class="col-sm-5">
-          <input type="password" class="form-control" required (keyup.enter)="updatePassword(passwordResetForm.form.valid)" placeholder="Confirmation" name="confirmation" [(ngModel)]="passwordReset.confirmation">
+          <input type="password" minlength="6" class="form-control" required (keyup.enter)="updatePassword(passwordResetForm.form.valid)" placeholder="Confirmation" name="confirmation" [(ngModel)]="passwordConfirmation.confirmation">
         </div>
       </div>
 

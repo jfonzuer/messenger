@@ -30,8 +30,8 @@ import {DatetimeService} from "./service/datetime.service";
 import {LocalizationService} from "./service/localization.service";
 import {FetishService} from "./service/fetish.service";
 import {SuccessComponent} from "./component/success/success.component";
-import {ForgotPasswordComponent} from "./component/forgot-password/forgot-password.component";
-import {ResetPasswordComponent} from "./component/reset-password/reset-password.component";
+import {ForgotPasswordComponent} from "./component/password/forgot-password/forgot-password.component";
+import {ResetPasswordComponent} from "./component/password/reset-password/reset-password.component";
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
 let localStorageServiceConfig = {

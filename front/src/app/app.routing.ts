@@ -7,8 +7,8 @@ import {MessengerComponent} from "./component/messenger/messenger.component";
 import {UserComponent} from "./component/user/user.component";
 import {ParametersComponent} from "./component/parameters/parameters.component";
 import {VisitComponent} from "./component/visit/visit.component";
-import {ForgotPasswordComponent} from "./component/forgot-password/forgot-password.component";
-import {ResetPasswordComponent} from "./component/reset-password/reset-password.component";
+import {ForgotPasswordComponent} from "./component/password/forgot-password/forgot-password.component";
+import {ResetPasswordComponent} from "./component/password/reset-password/reset-password.component";
 
 /**
  * Created by pgmatz on 28/09/16.
@@ -61,7 +61,7 @@ const appRoutes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/password/forgotten',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
 ];

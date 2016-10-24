@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {UserService} from "../../service/user.service";
-import {ResetPassword} from "../../model/resetPassword";
-import {PasswordConfirmation} from "../../model/passwordConfirmation";
+import {PasswordConfirmation} from "../../../model/passwordConfirmation";
+import {UserService} from "../../../service/user.service";
+import {ResetPassword} from "../../../model/resetPassword";
 
 @Component({
   selector: 'app-reset-password',
@@ -25,7 +25,6 @@ export class ResetPasswordComponent implements OnInit {
       if (params['id'] && params['token']) {
         this.userId = +params['id'];// (+) converts string 'id' to a number
         this.token = params['token'];
-
       }
       else {
         this.router.navigateByUrl('login');
