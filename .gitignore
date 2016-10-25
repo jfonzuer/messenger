@@ -9,3 +9,4 @@
 **/.idea/**
 **.iml**
 npm-debug.log
+**/uploads/**

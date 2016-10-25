@@ -1,12 +1,17 @@
 package com.jfonzuer.dto.mapper;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfonzuer.entities.Localization;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserRole;
+import com.jfonzuer.exception.JsonMalformedException;
 import com.jfonzuer.security.JwtUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -71,6 +76,18 @@ public class UserMapper {
                 .setLocalization(dto.getLocalization() == null ? null : LocalizationMapper.fromDto(dto.getLocalization()))
                 .setFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
                 .createUser() : null;
+    }
+
+    public static JwtUser toDto(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JwtUser jwtUser;
+        try {
+            jwtUser = objectMapper.readValue(json, JwtUser.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new JsonMalformedException("JSON malformed");
+        }
+        return jwtUser;
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(Set<UserRole> userRoles) {

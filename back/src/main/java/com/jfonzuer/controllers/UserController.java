@@ -49,7 +49,6 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<JwtUser> getAll(Pageable p) {
-        //return userRepository.findAllByOrderByIdDesc(p).map(UserMapper::toDto);
         return userRepository.findAllByOrderByIdDesc(p).map(UserMapper::toLightDto);
     }
 

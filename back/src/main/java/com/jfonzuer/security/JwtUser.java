@@ -124,6 +124,7 @@ public class JwtUser implements UserDetails {
                 ", birthDate='" + birthDate + '\'' +
                 ", fetishes=" + fetishes +
                 ", localization=" + localization +
+                ", authorities=" + authorities +
                 ", enabled=" + enabled +
                 ", lastPasswordResetDate=" + lastPasswordResetDate +
                 '}';
