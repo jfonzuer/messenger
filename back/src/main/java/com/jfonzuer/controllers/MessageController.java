@@ -73,6 +73,7 @@ public class MessageController {
         conversation.setPreview(MessengerUtils.getPreviewFromMessage(dto));
         conversationRepository.save(conversation);
 
+        System.out.println("dto.getSource() = " + dto.getSource());
         Message message = MessageMapper.fromDto(dto);
         message.setSentDateTime(LocalDateTime.now());
         message = messageRepository.save(message);

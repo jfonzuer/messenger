@@ -60,7 +60,7 @@ public class UserController {
         User visitor = userRepository.findOne(1L);
         User visited = userRepository.findOne(id);
         if (!visited.equals(visitor)) {
-            visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
+            visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
         }
         return UserMapper.toDto(userRepository.findOne(id));
     }

@@ -107,11 +107,11 @@ public class RegisterController {
 
     private void constructResetTokenEmail(String appUrl, Locale locale, String token, User user) {
         this.templateMessage = new SimpleMailMessage();
-        this.templateMessage.setSubject("Réinitialiser le mot de passe");
+        this.templateMessage.setSubject("App - Réinitialiser le mot de passe");
         this.templateMessage.setFrom(this.fromEmail);
         this.templateMessage.setTo(user.getEmail());
         SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-        msg.setText("Cliquer sur le lien suivant pour réinitialiser le mot de passe :" + appUrl + "/password/reset/" + user.getId() + "/" + token);
+        msg.setText("Cliquer sur le lien suivant pour réinitialiser le mot de passe : " + appUrl + "/password/reset/" + user.getId() + "/" + token);
         System.out.println("Sending email");
         this.mailSender.send(msg);
     }

@@ -66,10 +66,10 @@ public class UserMapper {
                 .setId((dto.getId() == null) ? null : dto.getId())
                 .setEmail(dto.getEmail())
                 .setUsername(dto.getUsername())
-                .setBirthDate(DateMapper.toLocalDate(dto.getBirthDate()))
+                .setBirthDate(dto.getBirthDate() == null ? null : DateMapper.toLocalDate(dto.getBirthDate()))
                 .setDescription(dto.getDescription())
-                .setLocalization(LocalizationMapper.fromDto(dto.getLocalization()))
-                .setFetishes(dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
+                .setLocalization(dto.getLocalization() == null ? null : LocalizationMapper.fromDto(dto.getLocalization()))
+                .setFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
                 .createUser() : null;
     }
 
