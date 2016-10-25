@@ -5,10 +5,12 @@ import {HomeComponent} from "./component/home/home.component";
 import {ProfileComponent} from "./component/profile/profile.component";
 import {MessengerComponent} from "./component/messenger/messenger.component";
 import {UserComponent} from "./component/user/user.component";
-import {ParametersComponent} from "./component/parameters/parameters.component";
 import {VisitComponent} from "./component/visit/visit.component";
 import {ForgotPasswordComponent} from "./component/password/forgot-password/forgot-password.component";
 import {ResetPasswordComponent} from "./component/password/reset-password/reset-password.component";
+import {UserParametersComponent} from "./component/user/user-parameters/user-parameters.component";
+import {UserProfileComponent} from "./component/user/user-profile/user-profile.component";
+import {UserInformationsComponent} from "./component/user/user-informations/user-informations.component";
 
 /**
  * Created by pgmatz on 28/09/16.
@@ -29,7 +31,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'profile/:id',
-    component: ProfileComponent
+    component: UserProfileComponent
   },
   {
     path: 'conversation',
@@ -41,11 +43,11 @@ const appRoutes: Routes = [
   },
   {
     path : 'profile',
-    component: UserComponent
+    component: UserInformationsComponent
   },
   {
     path : 'parameters',
-    component: ParametersComponent
+    component: UserParametersComponent
   },
   {
     path: 'visits',

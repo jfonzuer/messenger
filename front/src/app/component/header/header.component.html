@@ -10,9 +10,9 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="home">Home</a></li>
-        <li><a href="conversation">Messagerie <span class="badge" *ngIf="unreadConversations != 0">{{ unreadConversations }}</span></a></li>
-        <li><a href="visits">Visites <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
+        <li class="active"><a href="home">Accueil</a></li>
+        <li><a href="conversation"><span class="glyphicon glyphicon-envelope"></span> Messagerie  <span class="badge" *ngIf="unreadConversations != 0">{{ unreadConversations }}</span></a></li>
+        <li><a href="visits"> <span class="glyphicon glyphicon-eye-open"></span> Visites  <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -22,7 +22,7 @@
             <li><a href="parameters"><span class="glyphicon glyphicon-cog"></span>  Mes paramètres</a></li>
           </ul>
         </li>
-        <li><a class="pointer" (click)="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        <li><a class="pointer" (click)="logout()"><span class="glyphicon glyphicon-off"></span> </a></li>
       </ul>
     </div>
   </div>

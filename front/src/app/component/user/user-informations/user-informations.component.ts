@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from "../../service/user.service";
-import {AuthenticationService} from "../../service/authentication.service";
-import {User} from "../../model/user";
 import { LocalStorageService } from 'angular-2-local-storage';
-import {SharedService} from "../../service/shared.service";
-import {Localization} from "../../model/localization";
-import {LocalizationService} from "../../service/localization.service";
-import {FetishService} from "../../service/fetish.service";
-import {Fetish} from "../../model/fetish";
+import {User} from "../../../model/user";
+import {Localization} from "../../../model/localization";
+import {Fetish} from "../../../model/fetish";
+import {AuthenticationService} from "../../../service/authentication.service";
+import {UserService} from "../../../service/user.service";
+import {SharedService} from "../../../service/shared.service";
+import {LocalizationService} from "../../../service/localization.service";
+import {FetishService} from "../../../service/fetish.service";
+
 
 @Component({
-  selector: 'app-user',
-  templateUrl: 'user.component.html',
-  styleUrls: ['user.component.css']
+  selector: 'app-user-informations',
+  templateUrl: 'user-informations.component.html',
+  styleUrls: ['user-informations.component.css']
 })
-export class UserComponent implements OnInit {
-
+export class UserInformationsComponent implements OnInit {
   user:User;
   error:string;
   success:string;

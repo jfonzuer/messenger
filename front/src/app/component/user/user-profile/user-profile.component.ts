@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from "../../service/user.service";
-import {User} from "../../model/user";
-import {ActivatedRoute, Params} from "@angular/router";
-import {ConversationService} from "../../service/conversation.service";
-import * as moment from 'moment/moment';
+import {Params, ActivatedRoute} from "@angular/router";
+import {User} from "../../../model/user";
+import {UserService} from "../../../service/user.service";
+import {ConversationService} from "../../../service/conversation.service";
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: 'profile.component.html',
-  styleUrls: ['profile.component.css']
+  selector: 'app-user-profile',
+  templateUrl: 'user-profile.component.html',
+  styleUrls: ['user-profile.component.css']
 })
-
-export class ProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit {
 
   user:User;
   loading:boolean = true;

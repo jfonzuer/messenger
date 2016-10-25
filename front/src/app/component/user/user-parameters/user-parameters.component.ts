@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import {SharedService} from "../../service/shared.service";
-import {User} from "../../model/user";
-import {AuthenticationService} from "../../service/authentication.service";
-import {UserService} from "../../service/user.service";
-import {DatetimeService} from "../../service/datetime.service";
 import { LocalStorageService } from 'angular-2-local-storage';
-import {PasswordConfirmation} from "../../model/passwordConfirmation";
+import {User} from "../../../model/user";
+import {PasswordConfirmation} from "../../../model/passwordConfirmation";
+import {AuthenticationService} from "../../../service/authentication.service";
+import {UserService} from "../../../service/user.service";
+import {SharedService} from "../../../service/shared.service";
+import {DatetimeService} from "../../../service/datetime.service";
+
 
 @Component({
-  selector: 'app-parameters',
-  templateUrl: 'parameters.component.html',
-  styleUrls: ['parameters.component.css']
+  selector: 'app-user-parameters',
+  templateUrl: 'user-parameters.component.html',
+  styleUrls: ['user-parameters.component.css']
 })
-export class ParametersComponent implements OnInit {
+export class UserParametersComponent implements OnInit {
 
   user:User;
   birthDate:string;
@@ -49,5 +50,4 @@ export class ParametersComponent implements OnInit {
       }
     }
   }
-
 }
