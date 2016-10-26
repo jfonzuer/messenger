@@ -3,10 +3,10 @@
  */
 
 import {Injectable} from "@angular/core";
-import {environment} from "../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {Http} from "@angular/http";
 import {Fetish} from "../model/fetish";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class FetishService {

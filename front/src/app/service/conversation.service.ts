@@ -1,10 +1,10 @@
 import {Injectable} from "@angular/core";
-import {environment} from "../environments/environment";
 import {Router} from "@angular/router";
 import {Http, Response, Headers} from "@angular/http";
 import {Conversation} from "../model/conversation";
 import {UserMessage} from "../model/userMessage";
 import {AuthenticationService} from "./authentication.service";
+import {environment} from "../../environments/environment";
 
 /**
  * Created by pgmatz on 28/09/16.

@@ -26,5 +26,4 @@ export class AppComponent implements OnInit {
   get connected () {
     return this.sharedService.isConnected() && (this.router.url !== '/login');
   }
-
 }

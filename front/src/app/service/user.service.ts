@@ -5,13 +5,13 @@
 import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import {Router} from "@angular/router";
-import {environment} from "../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {DatetimeService} from "./datetime.service";
 import {User} from "../model/user";
 import {PasswordConfirmation} from "../model/passwordConfirmation";
 import {Register} from "../model/register";
 import {ResetPassword} from "../model/resetPassword";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class UserService {

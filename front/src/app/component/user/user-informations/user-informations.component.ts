@@ -48,7 +48,7 @@ export class UserInformationsComponent implements OnInit {
     if (valid) {
       // on met à jour la liste des fetishes
       this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
-      this.userService.updateProfile(this.user).then(user => { this.user = user as User; this.localStorageService.set('user', user); this.success = "Mise à jour effectuée"; setTimeout(() => this.success = "", 2000); }).catch(error => this.error = error);
+      this.userService.updateProfile(this.user).then(user => { this.user = user; this.localStorageService.set('user', user); this.success = "Mise à jour effectuée"; setTimeout(() => this.success = "", 2000); }).catch(error => this.error = error);
     }
   }
 }

@@ -1,11 +1,11 @@
 import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import {Router} from "@angular/router";
-import {environment} from "../environments/environment";
 import {Authentication} from "../model/authentication";
 import { LocalStorageService } from 'angular-2-local-storage';
 import {User} from "../model/user";
 import {DatetimeService} from "./datetime.service";
+import {environment} from "../../environments/environment";
 
 /**
  * Created by pgmatz on 10/10/16.

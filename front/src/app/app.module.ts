@@ -10,7 +10,6 @@ import {routing}     from './app.routing';
 import {UserService} from "./service/user.service";
 import {HttpModule} from "@angular/http";
 import {HomeComponent} from "./component/home/home.component";
-import {ProfileComponent} from "./component/profile/profile.component";
 import {MessengerComponent} from "./component/messenger/messenger.component";
 import {MessageService} from "./service/message.service";
 import {SendComponent} from "./component/messenger/send/send.component";
@@ -33,6 +32,8 @@ import {SuccessComponent} from "./component/messages/success/success.component";
 import {UserParametersComponent} from "./component/user/user-parameters/user-parameters.component";
 import {UserInformationsComponent} from "./component/user/user-informations/user-informations.component";
 import {UserProfileComponent} from "./component/user/user-profile/user-profile.component";
+import {UploadPictureComponent} from "./component/upload-picture/upload-picture.component";
+import {UploadService} from "./service/upload.service";
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
 let localStorageServiceConfig = {
@@ -60,6 +61,7 @@ let localStorageServiceConfig = {
     UserParametersComponent,
     UserInformationsComponent,
     UserProfileComponent,
+    UploadPictureComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,6 +80,7 @@ let localStorageServiceConfig = {
     DatetimeService,
     LocalizationService,
     FetishService,
+    UploadService,
     LocalStorageService,
     {
       provide: LOCAL_STORAGE_SERVICE_CONFIG, useValue: localStorageServiceConfig

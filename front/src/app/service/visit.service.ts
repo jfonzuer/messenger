@@ -4,10 +4,10 @@
 
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
-import {environment} from "../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {Visit} from "../model/visit";
 import {DatetimeService} from "./datetime.service";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class VisitService {

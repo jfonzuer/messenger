@@ -15,6 +15,7 @@
         <li><a href="visits"> <span class="glyphicon glyphicon-eye-open"></span> Visites  <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><img class="header-image" src="{{ uploadUrl }}{{ getProfilePicture() }}"></a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ getUsername }} <span class="caret"></span></a>
           <ul class="dropdown-menu">

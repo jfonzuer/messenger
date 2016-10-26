@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {Http, Headers} from "@angular/http";
-import {environment} from "../../environments/environment";
 import {Authentication} from "../../model/authentication";
 import { LocalStorageService } from 'angular-2-local-storage';
 import {AuthenticationService} from "../../service/authentication.service";
 import {Router} from "@angular/router";
 import {SharedService} from "../../service/shared.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-login',

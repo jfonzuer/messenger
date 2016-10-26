@@ -14,4 +14,5 @@ export class User {
   localization: Localization;
   enable:boolean;
   age:number;
+  profilePicture:string;
 }

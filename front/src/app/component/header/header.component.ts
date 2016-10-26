@@ -7,6 +7,7 @@ import {User} from "../../model/user";
 import {ConversationService} from "../../service/conversation.service";
 import {Observable} from "rxjs";
 import {VisitService} from "../../service/visit.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-header',
@@ -14,6 +15,9 @@ import {VisitService} from "../../service/visit.service";
   styleUrls: ['header.component.css']
 })
 export class HeaderComponent implements OnInit {
+
+  uploadUrl:string;
+  user:User;
 
   unreadConversations:number;
   unseenVisits:number;
@@ -27,12 +31,14 @@ export class HeaderComponent implements OnInit {
 
   constructor(private localStorageService: LocalStorageService, private authenticationService: AuthenticationService,
               private sharedService: SharedService, private conversationService: ConversationService,
-              private  router: Router, private visitService: VisitService) { }
+              private  router: Router, private visitService: VisitService) {
+    this.uploadUrl = environment.uploadUrl;
+  }
 
   ngOnInit() {
 
     this.conversationRefreshSubscription = this.sharedService.unreadNumberConversationsRefresh.subscribe(refresh => { this.getUnreadConversations(); });
-    this.visitsRefreshSubscription = this.sharedService.unseenNumberVisitsRefresh.subscribe(refresh => { this.getUnseenVisits(); })
+    this.visitsRefreshSubscription = this.sharedService.unseenNumberVisitsRefresh.subscribe(refresh => { this.getUnseenVisits(); });
 
     this.getUnreadConversations();
     this.getUnseenVisits();
@@ -43,12 +49,22 @@ export class HeaderComponent implements OnInit {
 
     //this.unseenVisitsTimer = Observable.timer(0, 60000);
     //this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
+
   }
 
   get getUsername() {
     let user = this.sharedService.getUser();
     if (user) {
+      //console.log(user);
       return user['username'];
+    }
+  }
+
+  getProfilePicture() {
+    let user = this.sharedService.getUser();
+    if (user) {
+      //console.log(user);
+      return user['profilePicture'];
     }
   }
 
