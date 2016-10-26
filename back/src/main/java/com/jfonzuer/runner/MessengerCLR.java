@@ -99,6 +99,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 1")
                 .setFetishes(fetishes)
                 .setLocalization(l1)
+                .setProfilePicture("profile.png")
                 .createUser();
         User u2 = new User.UserBuilder()
                 .setEmail("member13@gmail.com")
@@ -109,6 +110,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 2")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
+                .setProfilePicture("profile.png")
                 .createUser();
         User u3 = new User.UserBuilder()
                 .setEmail("member3@gmail.com")
@@ -119,6 +121,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 3")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
+                .setProfilePicture("profile.png")
                 .createUser();
 
         // save members

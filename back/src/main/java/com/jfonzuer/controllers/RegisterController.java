@@ -60,7 +60,6 @@ public class RegisterController {
     @Value("${send.from.email}")
     private String fromEmail;
 
-
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public void add(@RequestBody RegisterDto register) {
         // TODO : validation via annotation and exception handling
@@ -77,6 +76,7 @@ public class RegisterController {
         user.setPassword(encoder.encode(register.getPasswordConfirmation().getPassword()));
         user.setEnabled(true);
         user.setLastPasswordResetDate(new Date());
+        user.setProfilePicture("profile.png");
         user = userRepository.save(user);
         userRoleRepository.save(new UserRole(user, "ROLE_USER"));
     }

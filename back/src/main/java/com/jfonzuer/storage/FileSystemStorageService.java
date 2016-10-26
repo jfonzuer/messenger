@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileSystemStorageService implements StorageService {
@@ -21,9 +22,19 @@ public class FileSystemStorageService implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            Files.copy(file.getInputStream(), Paths.get(rootLocation).resolve(filename));
+            Files.copy(file.getInputStream(), Paths.get(rootLocation).resolve(filename), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
+        }
+    }
+
+    @Override
+    public void delete(String filename) {
+        try {
+            Files.delete(Paths.get(rootLocation).resolve(filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new StorageException("Failed to delete file " + filename, e);
         }
     }
 

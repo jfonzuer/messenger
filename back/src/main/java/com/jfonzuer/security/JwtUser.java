@@ -26,11 +26,12 @@ public class JwtUser implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private boolean enabled;
     private Date lastPasswordResetDate;
+    private String profilePicture;
 
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate) {
+    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, String profilePicture) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -42,6 +43,7 @@ public class JwtUser implements UserDetails {
         this.authorities = authorities;
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
+        this.profilePicture = profilePicture;
     }
 
     public Long getId() {
@@ -113,6 +115,10 @@ public class JwtUser implements UserDetails {
         return localization;
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
     @Override
     public String toString() {
         return "JwtUser{" +
@@ -127,6 +133,7 @@ public class JwtUser implements UserDetails {
                 ", authorities=" + authorities +
                 ", enabled=" + enabled +
                 ", lastPasswordResetDate=" + lastPasswordResetDate +
+                ", profilePicture='" + profilePicture + '\'' +
                 '}';
     }
 
@@ -142,6 +149,7 @@ public class JwtUser implements UserDetails {
         private Collection<? extends GrantedAuthority> authorities;
         private boolean enabled;
         private Date lastPasswordResetDate;
+        private String profilePicture;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -193,13 +201,18 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
+        public JwtUserBuilder setProfilePicture(String profilePicture) {
+            this.profilePicture = profilePicture;
+            return this;
+        }
+
         public JwtUserBuilder setLastPasswordResetDate(Date lastPasswordResetDate) {
             this.lastPasswordResetDate = lastPasswordResetDate;
             return this;
         }
 
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate);
+            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, profilePicture);
         }
     }
 }

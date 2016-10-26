@@ -34,6 +34,7 @@ public class UserMapper {
                 .setLocalization(user.getLocalization() == null ? null : LocalizationMapper.toDto(user.getLocalization()))
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
                 .setEnabled(user.getEnabled() == null ? true : user.getEnabled())
+                .setProfilePicture(user.getProfilePicture())
                 .createJwtUser();
     }
 
@@ -50,6 +51,7 @@ public class UserMapper {
                 .setLocalization(LocalizationMapper.toDto(user.getLocalization()))
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
                 .setEnabled(user.getEnabled())
+                .setProfilePicture(user.getProfilePicture())
                 .createJwtUser();
     }
 
@@ -75,19 +77,8 @@ public class UserMapper {
                 .setDescription(dto.getDescription())
                 .setLocalization(dto.getLocalization() == null ? null : LocalizationMapper.fromDto(dto.getLocalization()))
                 .setFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
+                .setProfilePicture(dto.getProfilePicture())
                 .createUser() : null;
-    }
-
-    public static JwtUser toDto(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JwtUser jwtUser;
-        try {
-            jwtUser = objectMapper.readValue(json, JwtUser.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new JsonMalformedException("JSON malformed");
-        }
-        return jwtUser;
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(Set<UserRole> userRoles) {
