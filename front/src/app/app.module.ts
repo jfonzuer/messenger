@@ -1,39 +1,42 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ApplicationRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppComponent } from './app.component';
-import {HeaderComponent} from "./component/header/header.component";
-import {LoginComponent} from "./component/login/login.component";
-import {RegisterComponent} from "./component/register/register.component";
-import {routing}     from './app.routing';
-import {UserService} from "./service/user.service";
-import {HttpModule} from "@angular/http";
-import {HomeComponent} from "./component/home/home.component";
-import {MessengerComponent} from "./component/messenger/messenger.component";
-import {MessageService} from "./service/message.service";
-import {SendComponent} from "./component/messenger/send/send.component";
-import {ConversationComponent} from "./component/messenger/conversation/conversation.component";
-import {ConversationUserFilter} from "./pipes/conversation-user-filter.pipe";
+import { HttpModule } from '@angular/http';
 import { LocalStorageService, LOCAL_STORAGE_SERVICE_CONFIG } from 'angular-2-local-storage';
-import {AuthenticationService} from "./service/authentication.service";
-import {SharedService} from "./service/shared.service";
-import {VisitService} from "./service/visit.service";
-import {ConversationService} from "./service/conversation.service";
-import {VisitComponent} from "./component/visit/visit.component";
-import {DatetimeService} from "./service/datetime.service";
-import {LocalizationService} from "./service/localization.service";
-import {FetishService} from "./service/fetish.service";
-import {ForgotPasswordComponent} from "./component/password/forgot-password/forgot-password.component";
-import {ResetPasswordComponent} from "./component/password/reset-password/reset-password.component";
-import {MessageComponent} from "./component/messenger/message/message.component";
-import {ErrorComponent} from "./component/messages/error/error.component";
-import {SuccessComponent} from "./component/messages/success/success.component";
-import {UserParametersComponent} from "./component/user/user-parameters/user-parameters.component";
-import {UserInformationsComponent} from "./component/user/user-informations/user-informations.component";
-import {UserProfileComponent} from "./component/user/user-profile/user-profile.component";
-import {UploadPictureComponent} from "./component/upload-picture/upload-picture.component";
-import {UploadService} from "./service/upload.service";
+import { AppComponent } from './app.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { HomeComponent } from './components/home/home.component';
+import { MessengerComponent } from './components/messenger/messenger.component';
+import { ConversationListComponent } from './components/conversation-list/conversation-list.component';
+import { MessageListComponent } from './components/message-list/message-list.component';
+import { MessageSendComponent } from './components/message-send/message-send.component';
+import { UploadImageComponent } from './components/upload-image/upload-image.component';
+import { UserViewComponent } from './components/user-view/user-view.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserParametersComponent } from './components/user-parameters/user-parameters.component';
+import { UserVisitsComponent } from './components/user-visits/user-visits.component';
+import { FlashMessageSuccessComponent } from './components/flash-message-success/flash-message-success.component';
+import { FlashMessageErrorComponent } from './components/flash-message-error/flash-message-error.component';
+import { HeadingComponent } from './components/heading/heading.component';
+import { PasswordForgotComponent } from './components/password-forgot/password-forgot.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { RegisterComponent } from './components/register/register.component';
+import { UnauthHeadingComponent } from './components/unauth-heading/unauth-heading.component';
+import { ConversationListFilterPipe } from './pipes/conversation-list-filter.pipe';
+import { LoginComponent } from './components/login/login.component';
+import {UserService} from "./services/user.service";
+import {ConversationService} from "./services/conversation.service";
+import {MessageService} from "./services/message.service";
+import {SharedService} from "./services/shared.service";
+import {AuthenticationService} from "./services/authentication.service";
+import {VisitService} from "./services/visit.service";
+import {DatetimeService} from "./services/datetime.service";
+import {LocalizationService} from "./services/localization.service";
+import {FetishService} from "./services/fetish.service";
+import {UploadService} from "./services/upload.service";
+import {AuthGuardService} from "./services/auth-guard.service";
+import {RouterModule, Routes} from "@angular/router";
+import { UnauthNavbarComponent } from './components/unauth-navbar/unauth-navbar.component';
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
 let localStorageServiceConfig = {
@@ -41,34 +44,67 @@ let localStorageServiceConfig = {
   storageType: 'sessionStorage'
 };
 
+const appRoutes: Routes = [
+  {
+    path: '',
+    redirectTo: '/app/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'app', canActivate: [AuthGuardService], children: [
+    { path: 'home', component: HomeComponent },
+    { path: 'profile/:id', component: UserViewComponent },
+    { path: 'profile', component: UserProfileComponent },
+    { path: 'conversation', component: MessengerComponent },
+    { path: 'conversion/:id', component: ConversationListComponent },
+    { path: 'visits', component: UserVisitsComponent },
+    { path: 'parameters', component: UserParametersComponent },
+    { path: '', component: NavbarComponent, outlet: 'header'},
+    { path: '', component: HeadingComponent, outlet: 'banner'}
+  ]
+  },
+  {
+    path: 'unauth', children: [
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'password/forgotten', component: PasswordForgotComponent },
+    { path: 'password/reset/:id/:token', component: PasswordResetComponent },
+    { path: '', component: UnauthNavbarComponent, outlet: 'header'},
+    { path: '', component: UnauthHeadingComponent, outlet: 'banner'},
+  ]
+  },
+];
+
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    LoginComponent,
-    RegisterComponent,
+    NavbarComponent,
     HomeComponent,
     MessengerComponent,
-    ConversationComponent,
-    MessageComponent,
-    SendComponent,
-    ErrorComponent,
-    ConversationUserFilter,
-    VisitComponent,
-    SuccessComponent,
-    ForgotPasswordComponent,
-    ResetPasswordComponent,
-    UserParametersComponent,
-    UserInformationsComponent,
+    ConversationListComponent,
+    MessageListComponent,
+    MessageSendComponent,
+    UploadImageComponent,
+    UserViewComponent,
     UserProfileComponent,
-    UploadPictureComponent,
+    UserParametersComponent,
+    UserVisitsComponent,
+    FlashMessageSuccessComponent,
+    FlashMessageErrorComponent,
+    HeadingComponent,
+    PasswordForgotComponent,
+    PasswordResetComponent,
+    RegisterComponent,
+    UnauthHeadingComponent,
+    ConversationListFilterPipe,
+    LoginComponent,
+    UnauthNavbarComponent
   ],
   imports: [
     BrowserModule,
-    CommonModule,
     FormsModule,
-    routing,
-    HttpModule
+    HttpModule,
+    RouterModule.forRoot(appRoutes),
   ],
   providers: [
     UserService,
@@ -81,14 +117,12 @@ let localStorageServiceConfig = {
     LocalizationService,
     FetishService,
     UploadService,
+    AuthGuardService,
     LocalStorageService,
     {
       provide: LOCAL_STORAGE_SERVICE_CONFIG, useValue: localStorageServiceConfig
     }
   ],
-
-  entryComponents: [AppComponent],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

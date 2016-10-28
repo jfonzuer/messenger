@@ -1,11 +1,5 @@
-<app-header *ngIf="connected"></app-header>
-<div class="jumbotron" *ngIf="connected">
-  <div class="container">
-    <h2> Messenger</h2>
-  </div>
-</div>
-
-<hr>
+<router-outlet name="header"></router-outlet>
+<router-outlet name="banner"></router-outlet>
 
 <div class="container">
   <router-outlet></router-outlet>

@@ -1,0 +1,12 @@
+<h2>Derniers utilisateurs inscrits :</h2>
+<hr>
+<div class="row">
+  <div class="col-sm-3" *ngFor="let user of users">
+    <a [routerLink]="['/app/profile', user.id ]">
+      <img src="{{ uploadUrl }}{{ user.profilePicture }}" class="medium-image img-circle center-block">
+      <h3 class="text-center text-primary">{{ user.username }}</h3>
+      <p class="text-center">Age: {{ user.age }} ans, {{ user.localization.name }}
+      </p>
+    </a>
+  </div>
+</div>

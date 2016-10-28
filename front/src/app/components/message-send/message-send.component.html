@@ -1,0 +1,20 @@
+<app-flash-message-error [error]="error"></app-flash-message-error>
+<form (ngSubmit)="send()" #sendForm="ngForm">
+  <div class="send-wrap ">
+    <textarea #sendTextArea (keyup.enter)="sendEnter()" name="content" required class="form-control send-message" rows="3" placeholder="Envoyer un message ..." [(ngModel)]="message.content"></textarea>
+  </div>
+  <div class="btn-panel">
+    <a href="" class=" col-sm-3 btn send-message-btn " role="button"><i class="fa fa-cloud-upload"></i> Add Files</a>
+
+    <div class="checkbox col-sm-3 col-sm-offset-2">
+      <label style="color:#337ab7;">
+        <input type="checkbox" name="enter" [(ngModel)]="enter"> Entrer = Envoyer
+      </label>
+    </div>
+
+    <button type="submit" class="col-sm-2 text-right btn btn-default send-message-btn pull-right" [disabled]="!sendForm.form.valid"><i class="fa fa-plus"></i>  Envoyer</button>
+  </div>
+</form>
+
+<hr>
+

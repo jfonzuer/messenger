@@ -1,0 +1,56 @@
+<app-flash-message-error [error]="error"></app-flash-message-error>
+<app-flash-message-success [success]="success"></app-flash-message-success>
+
+<div class="container">
+  <form class="form-horizontal" (ngSubmit)="updateInformation(informationForm.form.valid)" #informationForm="ngForm">
+    <fieldset>
+      <legend>Mes informations :</legend>
+
+      <div class="form-group">
+        <div class="col-sm-5">
+          <input type="text" class="form-control" required placeholder="Nom d'utilisateur" (keyup.enter)="updateInformation(informationForm.form.valid)" name="username" [(ngModel)]="user.username">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-5">
+          <input type="email" class="form-control" required placeholder="Email" name="email" (keyup.enter)="updateInformation(informationForm.form.valid)" [(ngModel)]="user.email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-5">
+          <input type="text" class="form-control" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[012])\/[0-9]{4}" required placeholder="Date de naissance" (keyup.enter)="updateInformation(informationForm.form.valid)" name="birthDate" [(ngModel)]="birthDate">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-success">Valider</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <form class="form-horizontal" (ngSubmit)="updatePassword(passwordResetForm.form.valid)" #passwordResetForm="ngForm">
+    <fieldset>
+      <legend>Réinitialiser mon mot de passe :</legend>
+      <div class="form-group">
+        <div class="col-sm-5">
+          <input type="password" minlength="6" class="form-control" required placeholder="Mot de passe" name="password" [(ngModel)]="passwordConfirmation.password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-5">
+          <input type="password" minlength="6" class="form-control" required (keyup.enter)="updatePassword(passwordResetForm.form.valid)" placeholder="Confirmation" name="confirmation" [(ngModel)]="passwordConfirmation.confirmation">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-success">Valider</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

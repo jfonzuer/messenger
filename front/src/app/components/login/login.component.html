@@ -1,0 +1,26 @@
+<app-flash-message-error [error]="error"></app-flash-message-error>
+
+<div class="container">
+  <div class="card card-container">
+    <img id="profile-img" class="profile-img-card" src="/public/uploads/profile.png" />
+    <p id="profile-name" class="profile-name-card"></p>
+    <form class="form-signin" (ngSubmit)="login(loginForm)" #loginForm="ngForm">
+      <span id="reauth-email" class="reauth-email"></span>
+
+      <input type="email" name="email" class="form-control" placeholder="Email" required autofocus [(ngModel)]="authentication.email">
+      <br>
+      <input type="password" name="password" class="form-control" placeholder="Mot de passe" required [(ngModel)]="authentication.password" (keyup.enter)="login(loginForm)">
+
+      <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Connexion</button>
+    </form>
+    <a [routerLink]="['/unauth/password/forgotten']" class="forgot-password">
+      Mot de passe oublié ?
+    </a>
+  </div>
+
+</div>
+<div class="col-xs-5 col-xs-offset-5">
+  <a [routerLink]="['/unauth/register']" class="forgot-password">
+    Créer un compte
+  </a>
+</div>
