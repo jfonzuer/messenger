@@ -12,6 +12,6 @@ import java.util.List;
  * Created by pgm on 19/09/16.
  */
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    Page<Message> findByConversation(Conversation conversation, Pageable pageable);
+    Page<Message> findByConversationOrderByIdDesc(Conversation conversation, Pageable pageable);
     List<Message> findTop1ByOrderByIdDesc();
 }

@@ -58,12 +58,15 @@ public class UserMapper {
     // methode qui mappe selon les besoin de l'authentification
     public static JwtUser toDtoWithAuthorities(User user) {
         return new JwtUser.JwtUserBuilder()
-                .setId(user.getId())
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail())
+                .setDescription(user.getDescription())
                 .setPassword(user.getPassword())
+                .setBirthDate(user.getBirthDate() == null ? null : user.getBirthDate().toString())
+                .setLocalization(user.getLocalization() == null ? null : LocalizationMapper.toDto(user.getLocalization()))
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
-                .setEnabled(user.getEnabled())
+                .setEnabled(user.getEnabled() == null ? true : user.getEnabled())
+                .setProfilePicture(user.getProfilePicture())
                 .setAuthorities(mapToGrantedAuthorities(user.getUserRoles()))
                 .createJwtUser();
     }

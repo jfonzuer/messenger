@@ -57,7 +57,7 @@ public class MessageController {
         updateConversationIsRead(conversation, currentUser);
 
         // on retourne null si la conversation n'existe pas
-        return conversation == null ? null : messageRepository.findByConversation(conversation, p).map(m -> MessageMapper.toDto(m));
+        return conversation == null ? null : messageRepository.findByConversationOrderByIdDesc(conversation, p).map(m -> MessageMapper.toDto(m));
     }
 
     @RequestMapping(method = RequestMethod.POST)
