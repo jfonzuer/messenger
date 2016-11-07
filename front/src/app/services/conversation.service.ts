@@ -5,13 +5,14 @@ import {Router} from "@angular/router";
 import {Http, Response} from "@angular/http";
 import {UserMessage} from "../model/userMessage";
 import {Conversation} from "../model/conversation";
+import {RequestService} from "./request.service";
 
 @Injectable()
 export class ConversationService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService) {
+  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -22,10 +23,10 @@ export class ConversationService {
     return this.http.get(this.baseUrl + 'conversations/' + id, {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
-        return this.extractData(response);
+        this.rs.handleResponse(response);
+        return this.rs.extractData(response);
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   getAll() {
@@ -35,10 +36,10 @@ export class ConversationService {
     return this.http.get(this.baseUrl + 'conversations', {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
-        return this.extractData(response);
+        this.rs.handleResponse(response);
+        return this.rs.extractData(response);
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   getUnreadNumberConversations() {
@@ -47,10 +48,10 @@ export class ConversationService {
     return this.http.get(this.baseUrl + 'conversations/unread', {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         return response.json();
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   post(userMessage:UserMessage) {
@@ -61,10 +62,10 @@ export class ConversationService {
     return this.http.post(this.baseUrl + 'conversations', userMessage, {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         return response.json();
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   remove(conversation : Conversation) {
@@ -75,33 +76,9 @@ export class ConversationService {
       .toPromise()
       .then(response => {
           console.log(response);
-          this.handleResponse(response);
+          this.rs.handleResponse(response);
         }
       )
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
-
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
-  private handleResponse(response:any) {
-    if (response.status === 200) {
-      return;
-    }
-    throw Error(response.message);
-  }
-
-  private extractData(res: Response) {
-    let body;
-
-    // check if empty, before call json
-    if (res.text()) {
-      body = res.json();
-    }
-
-    return body || {};
-  }
-
 }

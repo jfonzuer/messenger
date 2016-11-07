@@ -3,13 +3,14 @@ import {Http} from "@angular/http";
 import {AuthenticationService} from "./authentication.service";
 import {environment} from "../../environments/environment";
 import {Fetish} from "../model/fetish";
+import {RequestService} from "./request.service";
 
 @Injectable()
 export class FetishService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, private authenticationService:AuthenticationService) {
+  constructor (private http:Http, private authenticationService:AuthenticationService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -19,7 +20,7 @@ export class FetishService {
     return this.http.get(this.baseUrl + 'fetishes', {headers:headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
 
         // si reponse non vide
         if (response.text()) {
@@ -27,7 +28,7 @@ export class FetishService {
         }
         return [];
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   updateCheckedFetishes(fetish:Fetish, event:any, selectedFetishId:number[]) : number[] {
@@ -52,17 +53,4 @@ export class FetishService {
     }
     return fetishes;
   }
-
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
-  private handleResponse(response:any) {
-    if (response.status === 200) {
-      return;
-    }
-    throw Error(response.message);
-  }
-
 }

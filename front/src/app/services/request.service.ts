@@ -3,36 +3,16 @@
  */
 
 import {Injectable} from "@angular/core";
+import {Response} from "@angular/http";
 
 @Injectable()
 export class RequestService {
 
-
-
   handleError(error: any) {
-    console.log("ok");
-    error.json();
-    console.log(error);
-    console.log(error._body);
-    let body = JSON.parse(error._body);
-    console.log(body);
-
-    console.log(error.b);
-    console.error(error);
-    let message = "";
-    error.status === 0 ? message = 'Server unreachable' : message = error.body.message;
-    let e =  error.json();
-    console.log(e);
-    console.log("error");
+    let message:string;
+    error.status == 0 ? message = 'Server unreachable' : message = JSON.parse(error._body).message;
     return Promise.reject(message);
   }
-
-  /*
-  handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-  */
 
   handleResponse(response:any) {
     console.log(response);
@@ -42,4 +22,14 @@ export class RequestService {
     throw Error(response.message);
   }
 
+  extractData(res: Response) {
+    let body;
+
+    // check if empty, before call json
+    if (res.text()) {
+      body = res.json();
+    }
+
+    return body || {};
+  }
 }

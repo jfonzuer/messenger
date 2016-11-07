@@ -5,13 +5,14 @@ import {AuthenticationService} from "./authentication.service";
 import {environment} from "../../environments/environment";
 import {Message} from "../model/message";
 import {Pager} from "../model/pager";
+import {RequestService} from "./request.service";
 
 @Injectable()
 export class MessageService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, router: Router, private authenticationService : AuthenticationService) {
+  constructor (private http:Http, router: Router, private authenticationService : AuthenticationService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -27,13 +28,13 @@ export class MessageService {
     return this.http.get(this.baseUrl + 'messages/' + userId + queryParams, {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         if (response.text()) {
           return response.json();
         }
         return [];
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   post(message:Message) {
@@ -43,32 +44,9 @@ export class MessageService {
     return this.http.post(this.baseUrl + 'messages', message, {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         return response.json();
       })
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
-  private handleResponse(response:any) {
-    if (response.status === 200) {
-      return;
-    }
-    throw Error(response.message);
-  }
-
-  private extractData(res: Response) {
-    let body;
-
-    // check if empty, before call json
-    if (res.text()) {
-      body = res.json();
-    }
-
-    return body || {};
+      .catch(this.rs.handleError);
   }
 }

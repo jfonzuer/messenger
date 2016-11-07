@@ -3,13 +3,14 @@ import {Http} from "@angular/http";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "./authentication.service";
 import {environment} from "../../environments/environment";
+import {RequestService} from "./request.service";
 
 @Injectable()
 export class UploadService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService) {
+  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -20,17 +21,4 @@ export class UploadService {
 
     return this.http.post(this.baseUrl + 'medias', fileForm, {headers:headers}).map(response => response.json());;
   }
-
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
-  private handleResponse(response:any) {
-    if (response.status === 200) {
-      return;
-    }
-    throw Error(response.message);
-  }
-
 }

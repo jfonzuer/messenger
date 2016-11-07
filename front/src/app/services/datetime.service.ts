@@ -18,6 +18,12 @@ export class DatetimeService {
     console.log(visit.visitedDate);
   }
 
+  formatVisits(visits:Visit[]) {
+    for (let visit of visits) {
+      this.formatVisit(visit);
+    }
+  }
+
   formatBirthDate(user:User) {
     user.birthDate = moment(user.birthDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
   }

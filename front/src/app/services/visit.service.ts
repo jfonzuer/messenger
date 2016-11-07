@@ -4,13 +4,14 @@ import {DatetimeService} from "./datetime.service";
 import {AuthenticationService} from "./authentication.service";
 import {Http} from "@angular/http";
 import {Visit} from "../model/visit";
+import {RequestService} from "./request.service";
 
 @Injectable()
 export class VisitService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, private authenticationService: AuthenticationService, private datetimeService:DatetimeService) {
+  constructor (private http:Http, private authenticationService: AuthenticationService, private datetimeService:DatetimeService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -20,7 +21,7 @@ export class VisitService {
     return this.http.get(this.baseUrl + 'visits', {headers:headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
 
         // si reponse non vide
         if (response.text()) {
@@ -33,7 +34,7 @@ export class VisitService {
         }
         return [];
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   getUnseenNumber() {
@@ -42,22 +43,9 @@ export class VisitService {
     return this.http.get(this.baseUrl + 'visits/number', {headers:headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         return response.json() as number;
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
-
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
-  private handleResponse(response:any) {
-    if (response.status === 200) {
-      return;
-    }
-    throw Error(response.message);
-  }
-
 }

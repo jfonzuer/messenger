@@ -23,6 +23,7 @@ export class UserResolve implements Resolve<User> {
       }
       else {
         // id not found
+        console.log("not found");
         this.router.navigate(['/app/home']);
         return false;
       }

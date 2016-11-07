@@ -8,13 +8,14 @@ import {User} from "../model/user";
 import {Register} from "../model/register";
 import {ResetPassword} from "../model/resetPassword";
 import {PasswordConfirmation} from "../model/passwordConfirmation";
+import {RequestService} from "./request.service";
 
 @Injectable()
 export class UserService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService, private datetimeService:DatetimeService) {
+  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService, private datetimeService:DatetimeService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -25,7 +26,7 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users',  {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         console.log(response);
         let users:User[] = response.json().content;
         for (let user of users) {
@@ -33,7 +34,7 @@ export class UserService {
         }
         return users;
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   getUserById(id) {
@@ -44,13 +45,13 @@ export class UserService {
       .toPromise()
       .then(response => {
         console.log(response);
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         let user:User = response.json();
         this.datetimeService.formatAge(user);
         this.datetimeService.formatBirthDate(user);
         return user;
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   post(register:Register) {
@@ -60,9 +61,9 @@ export class UserService {
     return this.http.post(this.baseUrl + 'register', register, {headers:headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
       })
-      .catch(this.handleError)
+      .catch(this.rs.handleError)
   }
 
   updateProfile(user : User) {
@@ -72,10 +73,10 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/profile', user, {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         return response.json();
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   updateInformations(user : User) {
@@ -85,10 +86,10 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/informations', user, {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
         return response.json();
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   updatePassword(passwordConfirmation : PasswordConfirmation) {
@@ -98,9 +99,9 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/password/reset', passwordConfirmation, {headers: headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
       })
-      .catch(this.handleError);
+      .catch(this.rs.handleError);
   }
 
   resetPassword(resetPassword:ResetPassword) {
@@ -110,21 +111,8 @@ export class UserService {
     return this.http.post(this.baseUrl + 'password/reset', resetPassword, {headers:headers})
       .toPromise()
       .then(response => {
-        this.handleResponse(response);
+        this.rs.handleResponse(response);
       })
-      .catch(this.handleError)
+      .catch(this.rs.handleError)
   }
-
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
-
-  private handleResponse(response:any) {
-    if (response.status === 200) {
-      return;
-    }
-    throw Error(response.message);
-  }
-
 }
