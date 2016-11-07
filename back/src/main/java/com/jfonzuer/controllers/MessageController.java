@@ -95,7 +95,7 @@ public class MessageController {
     private Conversation returnConversationOrThrowException(Long id) {
         Conversation conversation = conversationRepository.findOne(id);
         if (conversation == null) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("Conversation cannot be found");
         }
         return conversation;
     }
