@@ -26,7 +26,7 @@ export class VisitService {
         if (response.text()) {
           let visits:Visit[] = response.json().content;
           for(let visit of visits) {
-            this.datetimeService.formatVisit(visit);
+            //this.datetimeService.formatVisit( visit);
             this.datetimeService.formatAge(visit.visitor);
           }
           return visits;

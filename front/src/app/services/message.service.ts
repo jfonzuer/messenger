@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {AuthenticationService} from "./authentication.service";
 import {environment} from "../../environments/environment";
 import {Message} from "../model/message";
+import {Pager} from "../model/pager";
 
 @Injectable()
 export class MessageService {
@@ -14,11 +15,16 @@ export class MessageService {
     this.baseUrl = environment.baseUrl;
   }
 
-  getMessages(userId) {
+  getMessages(userId:number, pager:Pager) {
 
     let headers = this.authenticationService.getHeaders();
+    let queryParams = '?l=1';
+    if (pager) {
+      console.log(pager.page);
+      queryParams = queryParams.concat('&p=' + pager.page);
+    }
 
-    return this.http.get(this.baseUrl + 'messages/' + userId, {headers: headers})
+    return this.http.get(this.baseUrl + 'messages/' + userId + queryParams, {headers: headers})
       .toPromise()
       .then(response => {
         this.handleResponse(response);

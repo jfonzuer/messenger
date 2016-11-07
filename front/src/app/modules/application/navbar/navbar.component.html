@@ -1,0 +1,30 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" [routerLink]="['/app/home']">App</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a [routerLink]="['/app/conversation']">Accueil</a></li>
+        <li><a [routerLink]="['/app/conversation']" routerLinkActive="active"><span class="glyphicon glyphicon-envelope"></span> Messagerie  <span class="badge" *ngIf="unreadConversations != 0">{{ unreadConversations }}</span></a></li>
+        <li><a [routerLink]="['/app/visits']" routerLinkActive="active"> <span class="glyphicon glyphicon-eye-open"></span> Visites  <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a><img class="header-image" src="{{ uploadUrl }}{{ user.profilePicture }}"></a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" style="cursor: pointer" data-toggle="dropdown">{{ user.username }} <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a [routerLink]="['/app/profile']" routerLinkActive="active"><span class="glyphicon glyphicon-user"></span>   Mon profil</a></li>
+            <li><a [routerLink]="['/app/parameters']" routerLinkActive="active"><span class="glyphicon glyphicon-cog"></span>  Mes paramètres</a></li>
+          </ul>
+        </li>
+        <li><a class="pointer" (click)="logout()"><span class="glyphicon glyphicon-off"></span> </a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

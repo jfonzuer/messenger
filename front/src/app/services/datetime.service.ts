@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {User} from "../model/user";
 import * as moment from 'moment/moment';
 import {Visit} from "../model/visit";
+import {Message} from "../model/message";
 
 @Injectable()
 export class DatetimeService {
