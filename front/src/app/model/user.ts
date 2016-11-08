@@ -1,5 +1,6 @@
 import {Fetish} from "./fetish";
 import {Localization} from "./localization";
+import {Image} from "./image";
 /**
  * Created by pgmatz on 28/09/16.
  */
@@ -14,5 +15,5 @@ export class User {
   localization: Localization;
   enable:boolean;
   age:number;
-  profilePicture:string;
+  images:Image[];
 }

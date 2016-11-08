@@ -29,6 +29,7 @@ export class UserService {
         this.rs.handleResponse(response);
         console.log(response);
         let users:User[] = response.json().content;
+        console.log(response);
         for (let user of users) {
           this.datetimeService.formatAge(user);
         }

@@ -11,6 +11,12 @@
 .pointer {
   cursor: pointer;
 }
+
+.small-image {
+  width: 100px;
+  height: 100px;
+}
+
 .medium-image {
   width: 150px;
   height: 150px;

@@ -15,7 +15,7 @@
         <li><a [routerLink]="['/app/visits']" routerLinkActive="active"> <span class="glyphicon glyphicon-eye-open"></span> Visites  <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a><img class="header-image" src="{{ uploadUrl }}{{ user.profilePicture }}"></a></li>
+        <li><a><img class="header-image" src="{{ uploadUrl }}{{ user.images[0].url }}"></a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" style="cursor: pointer" data-toggle="dropdown">{{ user.username }} <span class="caret"></span></a>
           <ul class="dropdown-menu">

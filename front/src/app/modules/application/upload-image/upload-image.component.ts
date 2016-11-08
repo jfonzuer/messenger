@@ -19,13 +19,16 @@ export class UploadImageComponent implements OnInit {
   file:File;
   @Input() user:User;
   uploadUrl:string;
+  addImage:boolean = false;
+  orderNumber:number;
 
   constructor(private http:Http, private uploadService: UploadService, private authenticationService: AuthenticationService, private localStorageService: LocalStorageService, private sharedService: SharedService) {
     this.uploadUrl = environment.uploadUrl;
-    console.log(this.uploadUrl);
   }
 
   ngOnInit() {
+    this.checkAddImage();
+    this.checkOrder();
   }
 
   fileChangeEvent(event:any) {
@@ -34,10 +37,20 @@ export class UploadImageComponent implements OnInit {
 
   send(valid:boolean) {
     if (valid) {
-      this.uploadService.uploadProfilePicture(this.file).subscribe(
-        user => { this.user = user; this.localStorageService.set('user', this.user); this.sharedService.refreshUser(user); },
+      this.uploadService.uploadProfilePicture(this.file, this.orderNumber).subscribe(
+        image => {
+          this.user.images.concat(image);
+          this.localStorageService.set('user', this.user);
+          this.sharedService.refreshUser(this.user); },
         error => this.error = error
       )
     }
+  }
+
+  checkAddImage() {
+    this.user.images.length < 3 ? this.addImage = true : this.addImage = false;
+  }
+  checkOrder() {
+    this.user.images[0].url == 'profile.png' ? this.orderNumber = 1 : this.orderNumber = this.user.images.length + 1;
   }
 }
