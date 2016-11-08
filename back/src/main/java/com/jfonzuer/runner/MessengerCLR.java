@@ -30,9 +30,10 @@ public class MessengerCLR implements CommandLineRunner {
     private final FetishRepository fetishRepository;
     private final LocalizationRepository localizationRepository;
     private final VisitRepository visitRepository;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository) {
+    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository) {
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
@@ -40,6 +41,7 @@ public class MessengerCLR implements CommandLineRunner {
         this.fetishRepository = fetishRepository;
         this.localizationRepository = localizationRepository;
         this.visitRepository = visitRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -99,7 +101,6 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 1")
                 .setFetishes(fetishes)
                 .setLocalization(l1)
-                .setProfilePicture("profile.png")
                 .createUser();
         User u2 = new User.UserBuilder()
                 .setEmail("member13@gmail.com")
@@ -110,7 +111,6 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 2")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
-                .setProfilePicture("profile.png")
                 .createUser();
         User u3 = new User.UserBuilder()
                 .setEmail("member3@gmail.com")
@@ -121,13 +121,17 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 3")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
-                .setProfilePicture("profile.png")
                 .createUser();
 
         // save members
         Stream.of(u1, u2, u3).forEach( m -> userRepository.save(m));
 
+        Image u1i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u1).createImage();
 
+        Image u2i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u2).createImage();
+
+        Image u3i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u3).createImage();
+        Stream.of(u1i1, u2i1, u3i1).forEach( i -> imageRepository.save(i));
 
         UserRole us1 = new UserRole(u1, "ROLE_USER");
         UserRole us2 = new UserRole(u1, "ROLE_ADMIN");

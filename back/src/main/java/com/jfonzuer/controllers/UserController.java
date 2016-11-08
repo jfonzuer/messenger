@@ -30,7 +30,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -85,9 +85,7 @@ public class UserController {
     public JwtUser updateInformation(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
         //TODO : set current user manually
         User user = userRepository.findOne(1L);
-        System.out.println("jwtUser = " + jwtUser);
         User updatedUser = UserMapper.fromDto(jwtUser);
-        System.out.println("updatedUser = " + updatedUser);
 
         //User user = userService.getUserFromToken(request);
         // TODO : validation via annotation and exception handling

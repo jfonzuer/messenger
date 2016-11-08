@@ -2,7 +2,9 @@ package com.jfonzuer.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jfonzuer.dto.FetishDto;
+import com.jfonzuer.dto.ImageDto;
 import com.jfonzuer.dto.LocalizationDto;
+import com.jfonzuer.entities.Image;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -26,12 +28,12 @@ public class JwtUser implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private boolean enabled;
     private Date lastPasswordResetDate;
-    private String profilePicture;
+    private List<ImageDto> images;
 
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, String profilePicture) {
+    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, List<ImageDto> images) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -43,7 +45,7 @@ public class JwtUser implements UserDetails {
         this.authorities = authorities;
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
-        this.profilePicture = profilePicture;
+        this.images = images;
     }
 
     public Long getId() {
@@ -115,8 +117,8 @@ public class JwtUser implements UserDetails {
         return localization;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public List<ImageDto> getImages() {
+        return images;
     }
 
     @Override
@@ -133,7 +135,6 @@ public class JwtUser implements UserDetails {
                 ", authorities=" + authorities +
                 ", enabled=" + enabled +
                 ", lastPasswordResetDate=" + lastPasswordResetDate +
-                ", profilePicture='" + profilePicture + '\'' +
                 '}';
     }
 
@@ -149,7 +150,7 @@ public class JwtUser implements UserDetails {
         private Collection<? extends GrantedAuthority> authorities;
         private boolean enabled;
         private Date lastPasswordResetDate;
-        private String profilePicture;
+        private List<ImageDto> images;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -201,8 +202,8 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
-        public JwtUserBuilder setProfilePicture(String profilePicture) {
-            this.profilePicture = profilePicture;
+        public JwtUserBuilder setImages(List<ImageDto> images) {
+            this.images = images;
             return this;
         }
 
@@ -212,7 +213,7 @@ public class JwtUser implements UserDetails {
         }
 
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, profilePicture);
+            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, images);
         }
     }
 }

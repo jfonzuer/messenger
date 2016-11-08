@@ -42,15 +42,12 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String authToken = httpRequest.getHeader(this.tokenHeader);
 
-        System.out.println("authToken = " + authToken);
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
-        System.out.println("username = " + username);
-        System.out.println(" security context holder " + SecurityContextHolder.getContext().getAuthentication());
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 
             JwtUser jwtUser = UserMapper.toDtoWithAuthorities(this.userRepository.findByEmail(username));
-            System.out.println("jwtUser = " + jwtUser);
+            //System.out.println("jwtUser = " + jwtUser);
 
             if (jwtTokenUtil.validateToken(authToken, jwtUser)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());

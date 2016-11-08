@@ -1,7 +1,11 @@
 package com.jfonzuer.controllers;
 
+import com.jfonzuer.dto.ImageDto;
+import com.jfonzuer.dto.mapper.ImageMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
+import com.jfonzuer.entities.Image;
 import com.jfonzuer.entities.User;
+import com.jfonzuer.repository.ImageRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtUser;
 import com.jfonzuer.service.UserService;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pgm on 25/10/16.
@@ -36,27 +42,36 @@ public class MediaController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ImageRepository imageRepository;
+
     @Value("${default.image}")
     private String defaultImage;
 
     @RequestMapping(method = RequestMethod.POST)
-    public JwtUser upload(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file) {
+    public ImageDto upload(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file, @RequestParam(value = "order") Integer order) {
 
         mediaValidator.validate(file);
         User user = userService.getUserFromToken(request);
 
-        // if user already have profile picture
-        System.out.println("defaultImage = " + defaultImage);
-        System.out.println("user.getProfilePicture().equals(defaultImage) = " + user.getProfilePicture().equals(defaultImage));
-
-        if (!user.getProfilePicture().equals(defaultImage)) {
-            storageService.delete(user.getProfilePicture());
+        if (order < 1 || order > 3) {
+            throw new IllegalArgumentException();
         }
 
-        String filename = user.getId() + "_" + user.getUsername() + mediaValidator.getExtension(file.getContentType());
-        storageService.store(file, filename);
-        user.setProfilePicture(filename);
 
-        return UserMapper.toDto(userRepository.save(user));
+        List<Image> images = new ArrayList<>(user.getImages());
+        Image image = images.get(order);
+
+        // suppression de l'image
+        if (!image.getUrl().equals(defaultImage)) {
+            storageService.delete(image.getUrl());
+        }
+        imageRepository.delete(image);
+
+        String filename = order + "_" + user.getUsername() + mediaValidator.getExtension(file.getContentType());
+        image.setUrl(filename);
+        imageRepository.save(image);
+        storageService.store(file, filename);
+        return ImageMapper.toDto(image);
     }
 }

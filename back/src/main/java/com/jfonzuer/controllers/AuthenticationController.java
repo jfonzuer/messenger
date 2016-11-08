@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,8 +60,13 @@ public class AuthenticationController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        System.out.println("userRepository.findByEmail(authenticationRequest.getEmail()).getImages() = " + userRepository.findByEmail(authenticationRequest.getEmail()).getImages());
+        System.out.println("userRepository.findByEmail(authenticationRequest.getEmail()).getImages() = " + userRepository.findByEmail(authenticationRequest.getEmail()).getFetishes());
+
         // Reload password post-security so we can generate token
-        JwtUser jwtUser = UserMapper.toDtoWithAuthorities(userRepository.findByEmail(authenticationRequest.getEmail()));
+        JwtUser jwtUser = UserMapper.toDto(userRepository.findByEmail(authenticationRequest.getEmail()));
+        System.out.println("jwtUser------------------------------------------- = " + jwtUser.getImages());
+        System.out.println("jwtUser.getFetishes() = " + jwtUser.getFetishes());
 
         final String token = jwtTokenUtil.generateToken(jwtUser, device);
 

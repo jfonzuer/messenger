@@ -34,7 +34,7 @@ public class UserMapper {
                 .setLocalization(user.getLocalization() == null ? null : LocalizationMapper.toDto(user.getLocalization()))
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
                 .setEnabled(user.getEnabled() == null ? true : user.getEnabled())
-                .setProfilePicture(user.getProfilePicture())
+                .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .createJwtUser();
     }
 
@@ -51,7 +51,7 @@ public class UserMapper {
                 .setLocalization(LocalizationMapper.toDto(user.getLocalization()))
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
                 .setEnabled(user.getEnabled())
-                .setProfilePicture(user.getProfilePicture())
+                .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .createJwtUser();
     }
 
@@ -60,13 +60,9 @@ public class UserMapper {
         return new JwtUser.JwtUserBuilder()
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail())
-                .setDescription(user.getDescription())
                 .setPassword(user.getPassword())
-                .setBirthDate(user.getBirthDate() == null ? null : user.getBirthDate().toString())
-                .setLocalization(user.getLocalization() == null ? null : LocalizationMapper.toDto(user.getLocalization()))
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
                 .setEnabled(user.getEnabled() == null ? true : user.getEnabled())
-                .setProfilePicture(user.getProfilePicture())
                 .setAuthorities(mapToGrantedAuthorities(user.getUserRoles()))
                 .createJwtUser();
     }
@@ -80,7 +76,6 @@ public class UserMapper {
                 .setDescription(dto.getDescription())
                 .setLocalization(dto.getLocalization() == null ? null : LocalizationMapper.fromDto(dto.getLocalization()))
                 .setFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
-                .setProfilePicture(dto.getProfilePicture())
                 .createUser() : null;
     }
 

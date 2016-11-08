@@ -44,9 +44,8 @@ public class User implements Serializable {
     @OneToOne
     private Localization localization;
 
-    @Column(nullable = false)
-    private String profilePicture;
-
+    @OneToMany(mappedBy = "user")
+    private Collection<Image> images;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> userRoles = new HashSet<>(0);
@@ -54,7 +53,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, String profilePicture, Set<UserRole> userRoles) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, Set<UserRole> userRoles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -65,7 +64,7 @@ public class User implements Serializable {
         this.birthDate = birthDate;
         this.fetishes = fetishes;
         this.localization = localization;
-        this.profilePicture = profilePicture;
+        this.images = images;
         this.userRoles = userRoles;
     }
 
@@ -157,12 +156,12 @@ public class User implements Serializable {
         this.userRoles = userRoles;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public Collection<Image> getImages() {
+        return images;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setImages(Collection<Image> images) {
+        this.images = images;
     }
 
     @Override
@@ -178,6 +177,8 @@ public class User implements Serializable {
                 ", birthDate=" + birthDate +
                 ", fetishes=" + fetishes +
                 ", localization=" + localization +
+                ", images=" + images +
+                ", userRoles=" + userRoles +
                 '}';
     }
 
@@ -204,7 +205,7 @@ public class User implements Serializable {
         private Collection<Fetish> fetishes;
         private Localization localization;
         private Set<UserRole> userRoles;
-        private String profilePicture;
+        private Collection<Image> images;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -261,13 +262,14 @@ public class User implements Serializable {
             return this;
         }
 
-        public UserBuilder setProfilePicture(String profilePicture) {
-            this.profilePicture = profilePicture;
+        public UserBuilder setImages(Collection<Image> images) {
+            this.images = images;
             return this;
         }
 
+
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, profilePicture, userRoles);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, userRoles);
         }
     }
 }

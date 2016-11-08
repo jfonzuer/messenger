@@ -1,19 +1,19 @@
 package com.jfonzuer.controllers;
 
-import com.jfonzuer.dto.PasswordDto;
 import com.jfonzuer.dto.RegisterDto;
 import com.jfonzuer.dto.ResetPasswordDto;
 import com.jfonzuer.dto.mapper.UserMapper;
+import com.jfonzuer.entities.Image;
 import com.jfonzuer.entities.Token;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserRole;
+import com.jfonzuer.repository.ImageRepository;
 import com.jfonzuer.repository.TokenRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.UserRoleRepository;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * Created by pgm on 23/10/16.
@@ -48,6 +49,9 @@ public class RegisterController {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
     private MailSender mailSender;
@@ -76,9 +80,11 @@ public class RegisterController {
         user.setPassword(encoder.encode(register.getPasswordConfirmation().getPassword()));
         user.setEnabled(true);
         user.setLastPasswordResetDate(new Date());
-        user.setProfilePicture("profile.png");
         user = userRepository.save(user);
         userRoleRepository.save(new UserRole(user, "ROLE_USER"));
+
+        // creation d'une image par défaut
+        Stream.of(new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(user).createImage()).forEach(i -> imageRepository.save(i));
     }
 
     @RequestMapping(value = "password/reset/mail", method = RequestMethod.POST)
@@ -97,7 +103,6 @@ public class RegisterController {
         tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));
 
         //String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-
         String appUrl = "http://localhost:4200";
 
         System.out.println("appUrl = " + appUrl);

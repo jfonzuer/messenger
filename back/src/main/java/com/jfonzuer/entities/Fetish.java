@@ -62,4 +62,12 @@ public class Fetish implements Serializable {
             return new Fetish(id, name);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Fetish{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
