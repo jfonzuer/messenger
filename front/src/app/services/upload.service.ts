@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import {Http} from "@angular/http";
+import {Http, Response} from "@angular/http";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "./authentication.service";
 import {environment} from "../../environments/environment";
 import {RequestService} from "./request.service";
+import {Observable} from "rxjs";
+import {OrderNumber} from "../model/orderNumber";
 
 @Injectable()
 export class UploadService {
@@ -14,12 +16,21 @@ export class UploadService {
     this.baseUrl = environment.baseUrl;
   }
 
-  uploadProfilePicture(file:File, order:number) {
+  deleteImage(id:number) {
     let headers = this.authenticationService.getHeaders();
-    let fileForm = new FormData();
-    fileForm.append("file", file);
-    fileForm.append("order", order);
+    return this.http.delete(this.baseUrl + 'medias/' + id, {headers:headers}).map(response => response.json()).catch(this.rs.handleError);
+  }
 
-    return this.http.post(this.baseUrl + 'medias', fileForm, {headers:headers}).map(response => response.json());;
+  uploadImage(file:File, order:number) {
+      let headers = this.authenticationService.getHeaders();
+      let fileForm = new FormData();
+      fileForm.append("file", file);
+      fileForm.append("order", order);
+      return this.http.post(this.baseUrl + 'medias', fileForm, {headers:headers}).map(response => response.json()).catch(this.rs.handleError);
+  }
+
+  setAsProfile(order:number) {
+    let headers = this.authenticationService.getHeaders();
+    return this.http.put(this.baseUrl + 'medias/', new OrderNumber(order), {headers:headers}).map(response => response.json()).catch(this.rs.handleError);
   }
 }

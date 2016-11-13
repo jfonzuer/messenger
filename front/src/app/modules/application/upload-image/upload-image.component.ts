@@ -18,17 +18,25 @@ export class UploadImageComponent implements OnInit {
   success:string;
   file:File;
   @Input() user:User;
-  uploadUrl:string;
   addImage:boolean = false;
   orderNumber:number;
+  uploadUrl:string;
+  private sizeLimit:number;
 
   constructor(private http:Http, private uploadService: UploadService, private authenticationService: AuthenticationService, private localStorageService: LocalStorageService, private sharedService: SharedService) {
+    this.sizeLimit = environment.sizeLimit;
     this.uploadUrl = environment.uploadUrl;
   }
 
-  ngOnInit() {
+  // methode qui check si on peut ajouter une image, qui recalcul l'ordre, qui remet file à null
+  private checkAll() {
     this.checkAddImage();
     this.checkOrder();
+    this.file = null;
+  }
+
+  ngOnInit() {
+    this.checkAll();
   }
 
   fileChangeEvent(event:any) {
@@ -36,15 +44,52 @@ export class UploadImageComponent implements OnInit {
   }
 
   send(valid:boolean) {
-    if (valid) {
-      this.uploadService.uploadProfilePicture(this.file, this.orderNumber).subscribe(
-        image => {
-          this.user.images.concat(image);
-          this.localStorageService.set('user', this.user);
-          this.sharedService.refreshUser(this.user); },
-        error => this.error = error
-      )
+    if (valid && this.file != null) {
+      if (this.file.size < this.sizeLimit) {
+        console.log(this.orderNumber);
+        console.log("SEND POST IMAGE REQUEST");
+        this.uploadService.uploadImage(this.file, this.orderNumber).subscribe(
+          image => {
+            this.user.images[this.orderNumber - 1] = image;
+            this.localStorageService.set('user', this.user);
+            this.sharedService.refreshUser(this.user);
+
+            this.checkAll();
+          },
+          error => this.error = error
+        )
+      }
+      else {
+        this.error = "La taille maximale de fichier est 2,048 MB";
+        setTimeout(() => this.error = "", 2000);
+      }
     }
+  }
+
+  deleteImage(orderNumber:number) {
+    console.log(orderNumber);
+    this.uploadService.deleteImage(orderNumber).subscribe(
+      images => {
+        console.log("success");
+        console.log(images);
+        this.user.images = images;
+
+        this.checkAll();
+      },
+      error => this.error = error
+    );
+  }
+
+  setAsProfile(orderNumber:number) {
+    console.log("set as profile " + orderNumber);
+    this.uploadService.setAsProfile(orderNumber).subscribe(
+      images => {
+        console.log(images);
+        this.user.images = images;
+        this.localStorageService.set('user', this.user);
+      },
+      error => this.error = error
+    )
   }
 
   checkAddImage() {

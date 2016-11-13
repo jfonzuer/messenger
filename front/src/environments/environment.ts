@@ -7,4 +7,5 @@ export const environment = {
   production: false,
   baseUrl: 'http://localhost:8080/',
   uploadUrl: '/public/uploads/',
+  sizeLimit: 2048*1000,
 };

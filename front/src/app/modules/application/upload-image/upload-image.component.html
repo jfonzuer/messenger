@@ -2,14 +2,19 @@
 <app-flash-message-success [success]="success"></app-flash-message-success>
 
 <div class="container" *ngIf="user">
-  <form class="form-horizontal" (ngSubmit)="send(uploadForm.form.valid)" #uploadForm="ngForm">
+  <form class="form-horizontal" #uploadForm="ngForm">
     <fieldset>
       <legend>Photos de profil :</legend>
       <div class="form-group">
-        <div class="col-sm-2" *ngFor="let image of user.images">
+        <div class="col-sm-2" *ngFor="let image of user.images; let i = index">
           <img class="small-image center-block" src="{{ uploadUrl }}{{ image.url }}">
           <br>
-          <button class="btn btn-default btn-sm center-block"><span class="glyphicon glyphicon-trash"></span></button>
+          <div class="col-sm-6">
+            <button *ngIf="image.url != 'profile.png' && i != 0" class="btn btn-default btn-sm center-block" (click)="setAsProfile(image.orderNumber)"><span class="glyphicon glyphicon-user"></span></button>
+          </div>
+          <div class="col-sm-6">
+            <button *ngIf="image.url != 'profile.png' && i != 0" class="btn btn-default btn-sm center-block" (click)="deleteImage(image.orderNumber)"><span class="glyphicon glyphicon-trash"></span></button>
+          </div>
         </div>
       </div>
       <hr>
@@ -20,7 +25,7 @@
           <input name="file" type="file" (change)="fileChangeEvent($event)" required autofocus (keyup.enter)="send(uploadForm.form.valid)">
         </div>
         <div class="col-sm-3">
-          <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>
+          <button type="submit" class="btn btn-success" (click)="send(uploadForm.form.valid)"><span class="glyphicon glyphicon-plus"></span></button>
         </div>
       </div>
     </fieldset>
