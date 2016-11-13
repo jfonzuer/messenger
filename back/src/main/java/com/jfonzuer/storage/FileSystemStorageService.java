@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
@@ -35,6 +36,15 @@ public class FileSystemStorageService implements StorageService {
         } catch (IOException e) {
             e.printStackTrace();
             throw new StorageException("Failed to delete file " + filename, e);
+        }
+    }
+
+    @Override
+    public void move(String filename, String newFilename) {
+        try {
+            Files.move(Paths.get(rootLocation).resolve(filename), Paths.get(rootLocation).resolve(newFilename));
+        } catch (IOException e) {
+            throw new StorageException("Failed to rename file " + filename, e);
         }
     }
 

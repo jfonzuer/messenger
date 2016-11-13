@@ -1,5 +1,8 @@
 package com.jfonzuer.controllers;
 
+import com.jfonzuer.dto.CustomErrorType;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -7,19 +10,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  * Created by pgm on 07/11/16.
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @ControllerAdvice
 public class ExceptionHandlingController extends ResponseEntityExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlingController.class);
 
-    @ExceptionHandler(value = { IllegalStateException.class, ResourceNotFoundException.class })
+    @ExceptionHandler(value = {IllegalStateException.class, ResourceNotFoundException.class })
     public ResponseEntity<Object> authenticationError(RuntimeException ex, WebRequest request) {
 
         ex.printStackTrace();
@@ -29,5 +35,31 @@ public class ExceptionHandlingController extends ResponseEntityExceptionHandler 
 
         return handleExceptionInternal(ex, message, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
+    /*
+    @ExceptionHandler(value = { FileUploadBase.FileSizeLimitExceededException.class })
+    public ResponseEntity<Object> uploadError(RuntimeException ex, WebRequest request) {
 
+        ex.printStackTrace();
+
+        String message = ex.getMessage();
+        System.out.println("Exception message : " + ex.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "*");
+        return handleExceptionInternal(ex, message, headers, HttpStatus.BAD_REQUEST, request);
+    }
+    */
+
+    @ExceptionHandler(value = { FileUploadBase.FileSizeLimitExceededException.class })
+    ResponseEntity<?> uploadError(HttpServletRequest request, Throwable ex) {
+        HttpStatus status = getStatus(request);
+        return new ResponseEntity<>(new CustomErrorType(status.value(), ex.getMessage()), status);
+    }
+
+    private HttpStatus getStatus(HttpServletRequest request) {
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        if (statusCode == null) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return HttpStatus.valueOf(statusCode);
+    }
 }
