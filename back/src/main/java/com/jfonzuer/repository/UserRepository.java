@@ -1,6 +1,7 @@
 package com.jfonzuer.repository;
 
 import com.jfonzuer.entities.User;
+import com.jfonzuer.entities.UserType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,5 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
     Page<User> findAllByOrderByIdDesc(Pageable page);
+    List<User> findTop20ByTypeOrderByIdDesc(UserType type);
 }

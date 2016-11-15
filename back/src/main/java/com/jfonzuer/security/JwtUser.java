@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jfonzuer.dto.FetishDto;
 import com.jfonzuer.dto.ImageDto;
 import com.jfonzuer.dto.LocalizationDto;
+import com.jfonzuer.dto.UserTypeDto;
 import com.jfonzuer.entities.Image;
+import com.jfonzuer.entities.UserType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -29,11 +31,12 @@ public class JwtUser implements UserDetails {
     private boolean enabled;
     private Date lastPasswordResetDate;
     private List<ImageDto> images;
+    private UserTypeDto userType;
 
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, List<ImageDto> images) {
+    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, List<ImageDto> images, UserTypeDto userType) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -46,6 +49,7 @@ public class JwtUser implements UserDetails {
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.images = images;
+        this.userType = userType;
     }
 
     public Long getId() {
@@ -121,6 +125,10 @@ public class JwtUser implements UserDetails {
         return images;
     }
 
+    public UserTypeDto getUserType() {
+        return userType;
+    }
+
     @Override
     public String toString() {
         return "JwtUser{" +
@@ -151,6 +159,7 @@ public class JwtUser implements UserDetails {
         private boolean enabled;
         private Date lastPasswordResetDate;
         private List<ImageDto> images;
+        private UserTypeDto userType;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -212,8 +221,13 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
+        public JwtUserBuilder setUserType(UserTypeDto userType) {
+            this.userType = userType;
+            return this;
+        }
+
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, images);
+            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, images, userType);
         }
     }
 }

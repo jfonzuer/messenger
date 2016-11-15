@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfonzuer.entities.Localization;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserRole;
+import com.jfonzuer.entities.UserType;
 import com.jfonzuer.exception.JsonMalformedException;
 import com.jfonzuer.security.JwtUser;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,6 +36,7 @@ public class UserMapper {
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
                 .setEnabled(user.getEnabled() == null ? true : user.getEnabled())
                 .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
+                .setUserType(UserTypeMapper.toDto(user.getType()))
                 .createJwtUser();
     }
 
@@ -52,6 +54,7 @@ public class UserMapper {
                 .setLastPasswordResetDate(user.getLastPasswordResetDate())
                 .setEnabled(user.getEnabled())
                 .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
+                .setUserType(UserTypeMapper.toDto(user.getType()))
                 .createJwtUser();
     }
 
@@ -76,6 +79,7 @@ public class UserMapper {
                 .setDescription(dto.getDescription())
                 .setLocalization(dto.getLocalization() == null ? null : LocalizationMapper.fromDto(dto.getLocalization()))
                 .setFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
+                .setUserType(dto.getUserType() == null ? null : UserTypeMapper.fromDto(dto.getUserType()))
                 .createUser() : null;
     }
 

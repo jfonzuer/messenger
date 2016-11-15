@@ -41,11 +41,15 @@ public class User implements Serializable {
     @ManyToMany
     private Collection<Fetish> fetishes;
 
-    @OneToOne
+    @ManyToOne
     private Localization localization;
 
     @OneToMany(mappedBy = "user")
     private Collection<Image> images;
+
+    @ManyToOne
+    private UserType type;
+
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> userRoles = new HashSet<>(0);
@@ -53,7 +57,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, Set<UserRole> userRoles) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -65,6 +69,7 @@ public class User implements Serializable {
         this.fetishes = fetishes;
         this.localization = localization;
         this.images = images;
+        this.type = type;
         this.userRoles = userRoles;
     }
 
@@ -164,6 +169,14 @@ public class User implements Serializable {
         this.images = images;
     }
 
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -206,6 +219,7 @@ public class User implements Serializable {
         private Localization localization;
         private Set<UserRole> userRoles;
         private Collection<Image> images;
+        private UserType userType;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -267,9 +281,13 @@ public class User implements Serializable {
             return this;
         }
 
+        public UserBuilder setUserType(UserType userType) {
+            this.userType = userType;
+            return this;
+        }
 
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, userRoles);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, userType, userRoles);
         }
     }
 }

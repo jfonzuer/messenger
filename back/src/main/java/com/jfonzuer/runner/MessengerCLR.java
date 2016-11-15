@@ -2,6 +2,7 @@ package com.jfonzuer.runner;
 
 import com.jfonzuer.entities.*;
 import com.jfonzuer.repository.*;
+import com.jfonzuer.utils.MessengerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,9 +32,10 @@ public class MessengerCLR implements CommandLineRunner {
     private final LocalizationRepository localizationRepository;
     private final VisitRepository visitRepository;
     private final ImageRepository imageRepository;
+    private final UserTypeRepository userTypeRepository;
 
     @Autowired
-    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository) {
+    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository) {
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
@@ -42,6 +44,7 @@ public class MessengerCLR implements CommandLineRunner {
         this.localizationRepository = localizationRepository;
         this.visitRepository = visitRepository;
         this.imageRepository = imageRepository;
+        this.userTypeRepository = userTypeRepository;
     }
 
     @Override
@@ -91,6 +94,10 @@ public class MessengerCLR implements CommandLineRunner {
         localizations.stream().forEach(l -> localizationRepository.save(l));
 
 
+        UserType ut1 = new UserType.UserTypeBuilder().setId(MessengerUtils.DOMINA_ID).setLabel("Dominatrice").createUserType();
+        UserType ut2 = new UserType.UserTypeBuilder().setId(MessengerUtils.SUBMISSIVE_ID).setLabel("Soumis").createUserType();
+        Stream.of(ut1, ut2).forEach(userTypeRepository::save);
+
         User u1 = new User.UserBuilder()
                 .setEmail("pgiraultmatz@gmail.com")
                 .setBirthDate(LocalDate.of(1992, 3, 29))
@@ -101,6 +108,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 1")
                 .setFetishes(fetishes)
                 .setLocalization(l1)
+                .setUserType(ut2)
                 .createUser();
         User u2 = new User.UserBuilder()
                 .setEmail("member13@gmail.com")
@@ -111,6 +119,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 2")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
+                .setUserType(ut1)
                 .createUser();
         User u3 = new User.UserBuilder()
                 .setEmail("member3@gmail.com")
@@ -121,6 +130,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 3")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
+                .setUserType(ut1)
                 .createUser();
 
         // save members
