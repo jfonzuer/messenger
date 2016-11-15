@@ -42,10 +42,10 @@
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5" *ngIf="localizations">
-          <label>Région :</label>
-          <select class="form-control" [(ngModel)]="user.localization.id" name="localization" required>
-            <option *ngFor="let localization of localizations" [value]="localization.id">{{ localization.name }}</option>
+        <div class="col-sm-5" *ngIf="types">
+          <label>Type :</label>
+          <select class="form-control" [(ngModel)]="user.userType.id" name="userType" required>
+            <option *ngFor="let type of types" [value]="type.id">{{ type.name }}</option>
           </select>
         </div>
       </div>
@@ -59,6 +59,15 @@
               {{ fetish.name }}
             </label>
           </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-5" *ngIf="localizations">
+          <label>Région :</label>
+          <select class="form-control" [(ngModel)]="user.localization.id" name="localization" required>
+            <option *ngFor="let localization of localizations" [value]="localization.id">{{ localization.name }}</option>
+          </select>
         </div>
       </div>
 

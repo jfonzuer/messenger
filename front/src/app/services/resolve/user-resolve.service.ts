@@ -4,9 +4,9 @@
 
 import {Injectable} from "@angular/core";
 import {Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from "@angular/router";
-import {User} from "../model/user";
+import {User} from "../../model/user";
 import {Observable} from "rxjs";
-import {UserService} from "./user.service";
+import {UserService} from "../user.service";
 
 @Injectable()
 export class UserResolve implements Resolve<User> {
@@ -29,5 +29,4 @@ export class UserResolve implements Resolve<User> {
       }
     })
   }
-
 }

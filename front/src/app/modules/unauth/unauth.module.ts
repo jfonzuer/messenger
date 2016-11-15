@@ -9,23 +9,25 @@ import {UnauthHeadingComponent} from "./unauth-heading/unauth-heading.component"
 import {UnauthNavbarComponent} from "./unauth-navbar/unauth-navbar.component";
 import {SharedModule} from "../shared/shared.module";
 import {UnauthRoutingModule} from "./unauth-routing.module";
+import {UnauthFooterComponent} from "./unauth-footer/unauth-footer.component";
 /**
  * Created by pgmatz on 28/10/16.
  */
 
 @NgModule({
-    imports: [
-        SharedModule,
-        UnauthRoutingModule,
-    ],
-    declarations: [
-        LoginComponent,
-        PasswordForgotComponent,
-        PasswordResetComponent,
-        RegisterComponent,
-        UnauthHeadingComponent,
-        UnauthNavbarComponent,
-    ],
+  imports: [
+    SharedModule,
+    UnauthRoutingModule,
+  ],
+  declarations: [
+    LoginComponent,
+    PasswordForgotComponent,
+    PasswordResetComponent,
+    RegisterComponent,
+    UnauthHeadingComponent,
+    UnauthNavbarComponent,
+    UnauthFooterComponent,
+  ],
 })
 export class UnauthModule { }
 

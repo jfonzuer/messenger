@@ -21,6 +21,7 @@ export class UserViewComponent implements OnInit {
   ngOnInit() {
     this.route.data.forEach((data:any) => {
       this.user = data.user;
+      console.log(this.user);
     });
   }
 }

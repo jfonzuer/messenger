@@ -14,6 +14,9 @@ import {UnauthModule} from "./modules/unauth/unauth.module";
 import {ApplicationModule} from "./modules/application/application.module";
 import {AppRoutingModule} from "./app-routing.module";
 import {RequestService} from "./services/request.service";
+import {UserTypesResolve} from "./services/resolve/user-types-resolve";
+import {FetishesResolve} from "./services/resolve/fetishes-resolve.service";
+import {LocalizationsResolve} from "./services/resolve/localizations-resolve";
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
 let localStorageServiceConfig = {
@@ -42,6 +45,9 @@ let localStorageServiceConfig = {
     FetishService,
     RequestService,
     AuthGuardService,
+    UserTypesResolve,
+    FetishesResolve,
+    LocalizationsResolve,
     LocalStorageService,
     {
       provide: LOCAL_STORAGE_SERVICE_CONFIG, useValue: localStorageServiceConfig

@@ -1,5 +1,3 @@
-import {CommonModule} from "@angular/common";
-import {FormsModule} from "@angular/forms";
 import {SharedModule} from "../shared/shared.module";
 import {MessengerComponent} from "./messenger/messenger.component";
 import {ConversationListComponent} from "./conversation-list/conversation-list.component";
@@ -20,8 +18,10 @@ import {VisitComponent} from "./visit/visit.component";
 import {VisitService} from "../../services/visit.service";
 import {ApplicationRoutingModule} from "./application-routing.module";
 import {FormatDateDirective} from "../../directives/FormatDateDirective";
-import {UserResolve} from "../../services/user-resolve.service";
+import {UserResolve} from "../../services/resolve/user-resolve.service";
 import {UploadService} from "../../services/upload.service";
+import {UserTypeService} from "../../services/user-type.service";
+import {FooterComponent} from "./footer/footer.component";
 
 /**
  * Created by pgmatz on 28/10/16.
@@ -46,6 +46,7 @@ import {UploadService} from "../../services/upload.service";
     UserProfileComponent,
     UserViewComponent,
     VisitComponent,
+    FooterComponent,
     ConversationListFilterPipe,
   ],
   providers: [
@@ -53,6 +54,7 @@ import {UploadService} from "../../services/upload.service";
     MessageService,
     UploadService,
     VisitService,
+    UserTypeService,
     UserResolve
   ]
 })

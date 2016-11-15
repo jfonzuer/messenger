@@ -8,6 +8,7 @@ import {UserService} from "../../../services/user.service";
 import {SharedService} from "../../../services/shared.service";
 import {LocalizationService} from "../../../services/localization.service";
 import {FetishService} from "../../../services/fetish.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-user-profile',
@@ -22,22 +23,21 @@ export class UserProfileComponent implements OnInit {
   localizations:Localization[];
   fetishes: Fetish[];
   selectedFetishId:number[] = [];
+  title:string;
 
-  constructor(private authenticationService: AuthenticationService, private userService: UserService, private localStorageService: LocalStorageService,
+  constructor(private route:ActivatedRoute, private authenticationService: AuthenticationService, private userService: UserService, private localStorageService: LocalStorageService,
               private sharedService:SharedService, private localizationService:LocalizationService, private fetishService:FetishService) { }
 
   ngOnInit() {
-    this.user = <User> this.localStorageService.get('user');
-    console.log(this.user);
+    this.user = <User> this.sharedService.getCurrentUser();
+    this.sharedService.isDomina() ? this.title = 'Mon profil de dominatrice' : this.title = 'Mon profil de soumis';
 
-    this.localStorageService.get('localizations') != null ?
-      this.localizations = <Localization[]> this.localStorageService.get('localizations') :
-      this.localizationService.getAll().then(localizations => { this.localizations = localizations; this.localStorageService.set('localizations', localizations)}).catch(error => this.error = error);
+    this.route.data.forEach((data:any) => {
+      data.localizations instanceof Array ? this.localizations = data.localizations : this.error = data.localizations;
+      data.fetishes instanceof Array ? this.fetishes = data.fetishes : this.error = data.fetishes;
 
-
-    this.localStorageService.get('fetishes') != null ?
-      this.fetishes = <Fetish[]> this.localStorageService.get('fetishes') :
-      this.fetishService.getAll().then(fetishes => { this.fetishes = fetishes; this.selectedFetishId = this.fetishService.initIdList(fetishes); }).catch(error => this.error = error);
+      this.selectedFetishId = this.fetishService.initIdList(this.user.fetishes);
+    });
   }
 
   updateCheckedFetishes(fetish, event) {

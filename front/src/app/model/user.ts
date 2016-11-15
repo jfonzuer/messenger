@@ -1,6 +1,7 @@
 import {Fetish} from "./fetish";
 import {Localization} from "./localization";
 import {Image} from "./image";
+import {UserType} from "./userType";
 /**
  * Created by pgmatz on 28/09/16.
  */
@@ -16,4 +17,5 @@ export class User {
   enable:boolean;
   age:number;
   images:Image[];
+  userType:UserType;
 }

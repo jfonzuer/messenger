@@ -12,7 +12,7 @@ export class UploadService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, router: Router, private authenticationService: AuthenticationService, private rs:RequestService) {
+  constructor (private http:Http, private authenticationService: AuthenticationService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 

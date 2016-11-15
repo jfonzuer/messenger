@@ -4,7 +4,7 @@
 <div class="container" *ngIf="user">
   <form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm">
     <fieldset>
-      <legend>Mon profil :</legend>
+      <legend>{{ title }} :</legend>
       <div class="form-group">
         <div class="col-sm-5">
           <label>Région :</label>

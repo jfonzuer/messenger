@@ -59,4 +59,12 @@ export class SharedService {
     return this.localStorageService.get('localizations');
   }
 
+  getCurrentUser() : User {
+    return <User> this.localStorageService.get('user');
+  }
+
+  isDomina() : boolean {
+    return this.getCurrentUser().userType.name == 'Dominatrice';
+  }
+
 }
