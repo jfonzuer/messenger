@@ -3,7 +3,10 @@ package com.jfonzuer.controllers;
 import com.jfonzuer.dto.PasswordDto;
 import com.jfonzuer.dto.ProfileDto;
 import com.jfonzuer.dto.RegisterDto;
+import com.jfonzuer.dto.SearchDto;
+import com.jfonzuer.dto.mapper.SearchMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
+import com.jfonzuer.entities.Search;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserType;
 import com.jfonzuer.entities.Visit;
@@ -59,21 +62,31 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<JwtUser> getAll(HttpServletRequest request) {
-        User user = this.userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
-        System.out.println("current user type = " + user.getType());
+    public Page<JwtUser> getAll(Pageable p, HttpServletRequest request) {
+        User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
         UserType otherType = MessengerUtils.getOtherType(user);
-        System.out.println("other user type = " + user.getType());
+        return  userRepository.findAllByTypeOrderByIdDesc(otherType, p).map(UserMapper::toLightDto);
+    }
 
-        List<JwtUser> users =  userRepository.findTop20ByTypeOrderByIdDesc(otherType).stream().map(UserMapper::toLightDto).collect(Collectors.toList());
-        System.out.println("users = " + users);
-        System.out.println("user type ------------ " + users.get(0).getUserType());
-        return users;
+    @RequestMapping(method = RequestMethod.POST)
+    public Page<JwtUser> searchUsers(@RequestBody SearchDto searchDto, Pageable p, HttpServletRequest request) {
+        User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
+        System.out.println("searchDto.getUserType() = " + searchDto.getUserType());
+
+        Search search = SearchMapper.fromDto(searchDto);
+
+        System.out.println("-----------------------------------");
+        System.out.println("search = " + search);
+        System.out.println("search.getUserType() = " + search.getUserType());
+
+        //Page<User> users = userRepository.findAllByType(search.getUserType(), p);
+        Page<User> users = userRepository.findAllByTypeAndLocalization(search.getUserType(), search.getLocalization(), p);
+        //Page<User> users = userRepository.findAllByTypeAndLocalizationAndDescriptionIgnoreCaseContainingOrUsernameIgnoreCaseContaining(search.getUserType(), search.getLocalization(), search.getKeyword(), search.getKeyword(), p);
+        return users.map(UserMapper::toDto);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public JwtUser getById(@PathVariable Long id) {
-
         //TODO : set current user manually
         User visitor = userRepository.findOne(1L);
         User visited = userRepository.findOne(id);

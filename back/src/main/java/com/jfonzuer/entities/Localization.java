@@ -61,4 +61,12 @@ public class Localization implements Serializable {
             return new Localization(id, name);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Localization{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

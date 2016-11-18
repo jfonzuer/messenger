@@ -1,5 +1,6 @@
 package com.jfonzuer.repository;
 
+import com.jfonzuer.entities.Localization;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserType;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,11 @@ import java.util.List;
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
-    Page<User> findAllByOrderByIdDesc(Pageable page);
+    Page<User> findAllByTypeOrderByIdDesc(UserType t, Pageable page);
     List<User> findTop20ByTypeOrderByIdDesc(UserType type);
+
+    Page<User> findAllByType(UserType type, Pageable pageable);
+    Page<User> findAllByTypeAndLocalization(UserType type, Localization localization, Pageable pageable);
+
+    Page<User> findAllByTypeAndLocalizationAndDescriptionIgnoreCaseContainingOrUsernameIgnoreCaseContaining(UserType type, Localization localization, String keyword, String username, Pageable pageable);
 }
