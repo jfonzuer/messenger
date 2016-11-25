@@ -17,13 +17,14 @@ export class HomeComponent implements OnInit {
   title:string;
   uploadUrl:string;
 
-  constructor(private userService: UserService, private router: Router, private sharedService: SharedService, private localStorageService:LocalStorageService) {
+  constructor(private userService: UserService, private sharedService: SharedService) {
     this.uploadUrl = environment.uploadUrl;
   }
 
   ngOnInit() {
-    this.sharedService.redirectLogin();
-    this.userService.getLast20Users().then(users => { this.users = users; })
+    this.userService.getUsers(null).then(response => {
+      this.users = response.content;
+    })
     let user = this.sharedService.getCurrentUser();
     user.userType.name == 'Soumis' ? this.title = 'Dernieres dominatrices inscrites' : this.title = 'Derniers soumis inscris';
   }

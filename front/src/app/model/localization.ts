@@ -5,4 +5,8 @@
 export class Localization {
   id:number;
   name: string;
+
+  constructor(id:number) {
+    this.id = id;
+  }
 }

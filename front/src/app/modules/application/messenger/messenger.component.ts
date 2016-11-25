@@ -40,8 +40,6 @@ export class MessengerComponent implements OnInit {
               private messageService:MessageService, private  sharedService: SharedService) { }
 
   ngOnInit() {
-    this.sharedService.redirectLogin();
-
     moment().locale('fr');
 
     // TODO : utilisateur fixé manuellement

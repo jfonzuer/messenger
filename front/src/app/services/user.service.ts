@@ -9,6 +9,8 @@ import {Register} from "../model/register";
 import {ResetPassword} from "../model/resetPassword";
 import {PasswordConfirmation} from "../model/passwordConfirmation";
 import {RequestService} from "./request.service";
+import {Pager} from "../model/pager";
+import {Search} from "../model/search";
 
 @Injectable()
 export class UserService {
@@ -19,21 +21,43 @@ export class UserService {
     this.baseUrl = environment.baseUrl;
   }
 
-  getLast20Users() {
+  getUsers(pager:Pager) : any {
 
     let headers = this.authenticationService.getHeaders();
+    let queryParams = '?l=1';
+    if (pager) {
+      queryParams = queryParams.concat('&p=' + pager.page);
+    }
 
-    return this.http.get(this.baseUrl + 'users',  {headers: headers})
+    return this.http.get(this.baseUrl + 'users/' + queryParams,  {headers: headers})
       .toPromise()
       .then(response => {
         this.rs.handleResponse(response);
-        console.log(response);
-        let users:User[] = response.json();
-        console.log(response);
-        for (let user of users) {
-          this.datetimeService.formatAge(user);
-        }
-        return users;
+
+        // if response not empty
+        //if (response.text()) {
+          let body = response.json();
+          this.datetimeService.formatUsersAge(<User[]> body.content);
+          return body;
+        //}
+        //return [];
+      })
+      .catch(this.rs.handleError);
+  }
+
+  searchUsers(search:Search, pager:Pager) {
+    let headers = this.authenticationService.getHeaders();
+    let queryParams = '?l=1';
+    if (pager) {
+      queryParams = queryParams.concat('&p=' + pager.page);
+    }
+
+    return this.http.post(this.baseUrl + 'users/' + queryParams, search, {headers:headers})
+      .toPromise()
+      .then(response => {
+        let body = response.json();
+        this.datetimeService.formatUsersAge(<User[]> body.content);
+        return body;
       })
       .catch(this.rs.handleError);
   }

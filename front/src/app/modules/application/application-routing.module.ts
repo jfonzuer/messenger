@@ -13,6 +13,8 @@ import {UserResolve} from "../../services/resolve/user-resolve.service";
 import {FetishesResolve} from "../../services/resolve/fetishes-resolve.service";
 import {LocalizationsResolve} from "../../services/resolve/localizations-resolve";
 import {FooterComponent} from "./footer/footer.component";
+import {SearchComponent} from "./search/search.component";
+import {UserTypesResolve} from "../../services/resolve/user-types-resolve";
 
 /**
  * Created by pgmatz on 28/10/16.
@@ -30,6 +32,7 @@ import {FooterComponent} from "./footer/footer.component";
       { path: 'conversation/:id', component: MessengerComponent },
       { path: 'visits', component: VisitComponent },
       { path: 'parameters', component: UserParametersComponent },
+      { path: 'search', component: SearchComponent, resolve: { types:UserTypesResolve, localizations: LocalizationsResolve}  },
       { path: '', component: NavbarComponent, outlet: 'header'},
       { path: '', component: HeadingComponent, outlet: 'banner'},
       { path: '', component: FooterComponent, outlet: 'footer'}]

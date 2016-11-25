@@ -22,6 +22,7 @@ import {UserResolve} from "../../services/resolve/user-resolve.service";
 import {UploadService} from "../../services/upload.service";
 import {UserTypeService} from "../../services/user-type.service";
 import {FooterComponent} from "./footer/footer.component";
+import {SearchComponent} from "./search/search.component";
 
 /**
  * Created by pgmatz on 28/10/16.
@@ -47,7 +48,8 @@ import {FooterComponent} from "./footer/footer.component";
     UserViewComponent,
     VisitComponent,
     FooterComponent,
-    ConversationListFilterPipe,
+    SearchComponent,
+    ConversationListFilterPipe
   ],
   providers: [
     ConversationService,
@@ -56,6 +58,7 @@ import {FooterComponent} from "./footer/footer.component";
     VisitService,
     UserTypeService,
     UserResolve
-  ]
+  ],
+
 })
 export class ApplicationModule { }

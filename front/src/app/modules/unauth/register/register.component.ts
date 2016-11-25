@@ -34,8 +34,8 @@ export class RegisterComponent implements OnInit {
               private router:Router, private localizationService:LocalizationService, private fetishService:FetishService, private typeService:UserTypeService) { }
 
   ngOnInit() {
-    this.user.localization = new Localization();
-    this.user.userType = new UserType();
+    this.user.localization = new Localization(0);
+    this.user.userType = new UserType(0);
 
     // init register
     this.user.username = 'test';
