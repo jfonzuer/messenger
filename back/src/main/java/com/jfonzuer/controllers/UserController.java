@@ -80,8 +80,9 @@ public class UserController {
         System.out.println("search.getUserType() = " + search.getUserType());
 
         //Page<User> users = userRepository.findAllByType(search.getUserType(), p);
-        Page<User> users = userRepository.findAllByTypeAndLocalization(search.getUserType(), search.getLocalization(), p);
+        Page<User> users = userRepository.search(search.getUserType(), search.getLocalization(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
         //Page<User> users = userRepository.findAllByTypeAndLocalizationAndDescriptionIgnoreCaseContainingOrUsernameIgnoreCaseContaining(search.getUserType(), search.getLocalization(), search.getKeyword(), search.getKeyword(), p);
+        //return  users.stream().map(UserMapper::toDto).collect(Collectors.toList());
         return users.map(UserMapper::toDto);
     }
 
