@@ -83,6 +83,18 @@ export class UserService {
       .catch(this.rs.handleError);
   }
 
+  report(id:number) {
+    let headers = this.authenticationService.getHeaders();
+
+    return this.http.get(this.baseUrl + 'users/report/' + id, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.rs.handleResponse(response);
+        return response.json();
+      })
+      .catch(this.rs.handleError);
+  }
+
   post(register:Register) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');

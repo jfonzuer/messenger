@@ -13,6 +13,8 @@ export class UserViewComponent implements OnInit {
   user:User;
   loading:boolean = true;
   uploadUrl:string;
+  success:string;
+  error:string;
 
   constructor(private route:ActivatedRoute, private userService:UserService) {
     this.uploadUrl = environment.uploadUrl;
@@ -23,5 +25,9 @@ export class UserViewComponent implements OnInit {
       this.user = data.user;
       console.log(this.user);
     });
+  }
+
+  report(id:number) {
+    this.userService.report(id).then(response => { this.success = response.message; setTimeout(() => this.success = "", 2000); }).catch(e => this.error = e);
   }
 }
