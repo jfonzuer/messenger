@@ -72,8 +72,12 @@ export class UserService {
         console.log(response);
         this.rs.handleResponse(response);
         let user:User = response.json();
+
+        // format different dates
         this.datetimeService.formatAge(user);
         this.datetimeService.formatBirthDate(user);
+        this.datetimeService.formatLastActivtyDate(user);
+
         return user;
       })
       .catch(this.rs.handleError);

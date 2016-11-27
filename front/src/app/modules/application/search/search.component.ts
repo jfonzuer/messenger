@@ -61,8 +61,15 @@ export class SearchComponent implements OnInit {
 
   searchUsers() {
     this.userService.searchUsers(this.search, this.pager).then(response => {
+      let list:User[] = response.content;
+      this.searched = true;
+      this.search.keyword ? this.previewFromDescription(list) : null;
+
       this.users = this.users.concat(response.content);
       this.pager = new Pager(response.number, response.last, response.size);
+      if (this.search.keyword) {
+
+      }
     }).catch(e => {
       console.error(e);
       this.error = e;
@@ -84,7 +91,20 @@ export class SearchComponent implements OnInit {
     this.pager =  null;
     this.users = [];
     this.searched = true;
-
     this.searchUsers();
+  }
+
+  previewFromDescription(users:User[]) {
+    for (let u of users) {
+      u.description.search(this.search.keyword);
+      let iKeyword = u.description.search(this.search.keyword);
+      u.description = u.description.replace(this.search.keyword, '<strong>' + this.search.keyword + '</strong>');
+
+      // on prend les 20 caractères avant et après
+      let iStart = iKeyword - 40 < 0 ? 0 : iKeyword - 40;
+      let iEnd = iKeyword + 40 > u.description.length ? u.description.length : iKeyword + 40;
+
+      u.description = '...' + u.description.substring(iStart, iEnd) + '...';
+    }
   }
 }

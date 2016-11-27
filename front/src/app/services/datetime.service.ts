@@ -11,6 +11,11 @@ export class DatetimeService {
 
   constructor() {}
 
+  formatLastActivtyDate(user:User) {
+    console.log(user.lastActivityDate);
+   user.lastActivityDate = moment(user.lastActivityDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
+  }
+
   formatAge(user:User) {
     user.age = moment().diff(moment(user.birthDate), 'years');
   }

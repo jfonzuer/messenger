@@ -1,8 +1,11 @@
 <div class="thumbnail" style="padding: 20px;">
   <div class="row">
-    <div class="col-sm-10">
-      <div class="buttons">
+    <div class="col-sm-10 col-sm-offset-1">
+      <div class="pull-left">
         <a type="button" [routerLink]="['/app/conversation/', user.id]" class="btn btn-default"><span class="glyphicon glyphicon-envelope"></span> Message</a>
+      </div>
+      <div class="pull-right">
+        Dernière connexion : <strong>{{ user.lastActivityDate }}</strong>
       </div>
     </div>
     <div class="profile">
