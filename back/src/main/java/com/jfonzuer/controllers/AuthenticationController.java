@@ -63,8 +63,14 @@ public class AuthenticationController {
         System.out.println("userRepository.findByEmail(authenticationRequest.getEmail()).getImages() = " + userRepository.findByEmail(authenticationRequest.getEmail()).getImages());
         System.out.println("userRepository.findByEmail(authenticationRequest.getEmail()).getImages() = " + userRepository.findByEmail(authenticationRequest.getEmail()).getFetishes());
 
+        User user = userRepository.findByEmail(authenticationRequest.getEmail());
+
+        // update last activity date
+        user.setLastActivityDate(LocalDate.now());
+        userRepository.save(user);
+
         // Reload password post-security so we can generate token
-        JwtUser jwtUser = UserMapper.toDto(userRepository.findByEmail(authenticationRequest.getEmail()));
+        JwtUser jwtUser = UserMapper.toDto(user);
         System.out.println("jwtUser------------------------------------------- = " + jwtUser.getImages());
         System.out.println("jwtUser.getFetishes() = " + jwtUser.getFetishes());
         System.out.println("jwtUser.getAuthorities() = " + jwtUser.getAuthorities());

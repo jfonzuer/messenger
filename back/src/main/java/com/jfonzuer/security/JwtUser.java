@@ -31,11 +31,8 @@ public class JwtUser implements UserDetails {
     private Date lastPasswordResetDate;
     private List<ImageDto> images;
     private UserTypeDto userType;
-
-
     private String lastActivityDate;
     private Long reportedAsFake;
-
 
     public JwtUser() {
     }

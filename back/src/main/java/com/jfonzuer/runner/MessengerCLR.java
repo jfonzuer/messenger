@@ -111,6 +111,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setType(ut2)
                 .setReportedAsFake(0L)
                 .setLastActivityDate(LocalDate.now())
+                .setLastReportDate(LocalDate.now().minusDays(1L))
                 .createUser();
         User u2 = new User.UserBuilder()
                 .setEmail("member13@gmail.com")
@@ -124,6 +125,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setType(ut1)
                 .setReportedAsFake(0L)
                 .setLastActivityDate(LocalDate.now())
+                .setLastReportDate(LocalDate.now().minusDays(1L))
                 .createUser();
         User u3 = new User.UserBuilder()
                 .setEmail("member3@gmail.com")
@@ -137,6 +139,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setType(ut1)
                 .setReportedAsFake(0L)
                 .setLastActivityDate(LocalDate.now())
+                .setLastReportDate(LocalDate.now().minusDays(1L))
                 .createUser();
 
         // save members

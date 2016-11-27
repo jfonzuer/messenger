@@ -82,6 +82,7 @@ public class RegisterController {
         user.setLastPasswordResetDate(new Date());
         user.setReportedAsFake(0L);
         user.setLastActivityDate(LocalDate.now());
+        user.setLastReportDate(LocalDate.now().minusDays(1));
 
         user = userRepository.save(user);
         userRoleRepository.save(new UserRole(user, "ROLE_USER"));

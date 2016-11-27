@@ -58,10 +58,13 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Long reportedAsFake;
 
+    @Column(nullable = false)
+    private LocalDate lastReportDate;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -77,6 +80,7 @@ public class User implements Serializable {
         this.userRoles = userRoles;
         this.lastActivityDate = lastActivityDate;
         this.reportedAsFake = reportedAsFake;
+        this.lastReportDate = lastReportDate;
     }
 
     public Long getId() {
@@ -199,6 +203,14 @@ public class User implements Serializable {
         this.reportedAsFake = reportedAsFake;
     }
 
+    public LocalDate getLastReportDate() {
+        return lastReportDate;
+    }
+
+    public void setLastReportDate(LocalDate lastReportDate) {
+        this.lastReportDate = lastReportDate;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -239,6 +251,7 @@ public class User implements Serializable {
         private Set<UserRole> userRoles;
         private LocalDate lastActivityDate;
         private Long reportedAsFake;
+        private LocalDate lastReportDate;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -314,9 +327,13 @@ public class User implements Serializable {
             this.reportedAsFake = reportedAsFake;
             return this;
         }
+        public UserBuilder setLastReportDate(LocalDate lastReportDate) {
+            this.lastReportDate = lastReportDate;
+            return this;
+        }
 
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate);
         }
     }
 }

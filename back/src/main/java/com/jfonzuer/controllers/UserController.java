@@ -1,9 +1,6 @@
 package com.jfonzuer.controllers;
 
-import com.jfonzuer.dto.PasswordDto;
-import com.jfonzuer.dto.ProfileDto;
-import com.jfonzuer.dto.RegisterDto;
-import com.jfonzuer.dto.SearchDto;
+import com.jfonzuer.dto.*;
 import com.jfonzuer.dto.mapper.SearchMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.Search;
@@ -24,11 +21,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,5 +140,26 @@ public class UserController {
         User user = userRepository.findOne(1L);
         user.setPassword(encoder.encode(passwordDto.getPassword()));
         userRepository.save(user);
+    }
+
+    @RequestMapping(value = "/report/{id}", method = RequestMethod.GET)
+    public ResponseDto reportUser(HttpServletRequest request, @PathVariable Long id) {
+        User user = userService.getUserFromToken(request);
+        User reportedUser = userRepository.findOne(id);
+
+        if (reportedUser == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        // if user has reported another user in the last 24 hours
+        if (!user.getLastReportDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Vous avez déjà signalé un utilisateur lors des 24 dernières heures");
+        }
+        
+        // increment number of reports, last report date and save both users
+        reportedUser.setReportedAsFake(reportedUser.getReportedAsFake() + 1);
+        user.setLastReportDate(LocalDate.now());
+        Arrays.asList(reportedUser, user).stream().forEach(u -> userRepository.save(u));
+
+        return new ResponseDto("L utilisateur a été signalé");
     }
 }
