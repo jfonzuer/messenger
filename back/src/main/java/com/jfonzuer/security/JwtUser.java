@@ -5,11 +5,10 @@ import com.jfonzuer.dto.FetishDto;
 import com.jfonzuer.dto.ImageDto;
 import com.jfonzuer.dto.LocalizationDto;
 import com.jfonzuer.dto.UserTypeDto;
-import com.jfonzuer.entities.Image;
-import com.jfonzuer.entities.UserType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -33,10 +32,15 @@ public class JwtUser implements UserDetails {
     private List<ImageDto> images;
     private UserTypeDto userType;
 
+
+    private String lastActivityDate;
+    private Long reportedAsFake;
+
+
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, List<ImageDto> images, UserTypeDto userType) {
+    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -50,6 +54,8 @@ public class JwtUser implements UserDetails {
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.images = images;
         this.userType = userType;
+        this.lastActivityDate = lastActivityDate;
+        this.reportedAsFake = reportedAsFake;
     }
 
     public Long getId() {
@@ -89,7 +95,6 @@ public class JwtUser implements UserDetails {
         return password;
     }
 
-    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -129,6 +134,14 @@ public class JwtUser implements UserDetails {
         return userType;
     }
 
+    public String getLastActivityDate() {
+        return lastActivityDate;
+    }
+
+    public Long getReportedAsFake() {
+        return reportedAsFake;
+    }
+
     @Override
     public String toString() {
         return "JwtUser{" +
@@ -160,6 +173,8 @@ public class JwtUser implements UserDetails {
         private Date lastPasswordResetDate;
         private List<ImageDto> images;
         private UserTypeDto userType;
+        private String lastActivityDate;
+        private Long reportedAsFake;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -226,8 +241,18 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
+        public JwtUserBuilder setLastActivityDate(String lastActivityDate) {
+            this.lastActivityDate = lastActivityDate;
+            return this;
+        }
+
+        public JwtUserBuilder setReportedAsFake(Long reportedAsFake) {
+            this.reportedAsFake = reportedAsFake;
+            return this;
+        }
+
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, images, userType);
+            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, images, userType, lastActivityDate, reportedAsFake);
         }
     }
 }

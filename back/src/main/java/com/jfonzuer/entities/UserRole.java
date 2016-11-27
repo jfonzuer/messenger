@@ -5,6 +5,7 @@ import javax.persistence.*;
 /**
  * Created by pgm on 06/10/16.
  */
+
 @Entity
 public class UserRole {
 

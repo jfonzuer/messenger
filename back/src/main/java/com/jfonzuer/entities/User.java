@@ -1,7 +1,5 @@
 package com.jfonzuer.entities;
 
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -54,10 +52,16 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> userRoles = new HashSet<>(0);
 
+    @Column(nullable = false)
+    private LocalDate lastActivityDate;
+
+    @Column(nullable = false)
+    private Long reportedAsFake;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -71,6 +75,8 @@ public class User implements Serializable {
         this.images = images;
         this.type = type;
         this.userRoles = userRoles;
+        this.lastActivityDate = lastActivityDate;
+        this.reportedAsFake = reportedAsFake;
     }
 
     public Long getId() {
@@ -177,6 +183,22 @@ public class User implements Serializable {
         this.type = type;
     }
 
+    public LocalDate getLastActivityDate() {
+        return lastActivityDate;
+    }
+
+    public void setLastActivityDate(LocalDate lastActivityDate) {
+        this.lastActivityDate = lastActivityDate;
+    }
+
+    public Long getReportedAsFake() {
+        return reportedAsFake;
+    }
+
+    public void setReportedAsFake(Long reportedAsFake) {
+        this.reportedAsFake = reportedAsFake;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -188,10 +210,6 @@ public class User implements Serializable {
                 ", enabled=" + enabled +
                 ", lastPasswordResetDate=" + lastPasswordResetDate +
                 ", birthDate=" + birthDate +
-                ", fetishes=" + fetishes +
-                ", localization=" + localization +
-                ", images=" + images +
-                ", userRoles=" + userRoles +
                 '}';
     }
 
@@ -205,7 +223,6 @@ public class User implements Serializable {
         return false;
     }
 
-
     public static class UserBuilder {
         private Long id;
         private String username;
@@ -217,9 +234,11 @@ public class User implements Serializable {
         private LocalDate birthDate;
         private Collection<Fetish> fetishes;
         private Localization localization;
-        private Set<UserRole> userRoles;
         private Collection<Image> images;
-        private UserType userType;
+        private UserType type;
+        private Set<UserRole> userRoles;
+        private LocalDate lastActivityDate;
+        private Long reportedAsFake;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -271,23 +290,33 @@ public class User implements Serializable {
             return this;
         }
 
-        public UserBuilder setUserRoles(Set<UserRole> userRoles) {
-            this.userRoles = userRoles;
-            return this;
-        }
-
         public UserBuilder setImages(Collection<Image> images) {
             this.images = images;
             return this;
         }
 
-        public UserBuilder setUserType(UserType userType) {
-            this.userType = userType;
+        public UserBuilder setType(UserType type) {
+            this.type = type;
+            return this;
+        }
+
+        public UserBuilder setUserRoles(Set<UserRole> userRoles) {
+            this.userRoles = userRoles;
+            return this;
+        }
+
+        public UserBuilder setLastActivityDate(LocalDate lastActivityDate) {
+            this.lastActivityDate = lastActivityDate;
+            return this;
+        }
+
+        public UserBuilder setReportedAsFake(Long reportedAsFake) {
+            this.reportedAsFake = reportedAsFake;
             return this;
         }
 
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, userType, userRoles);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake);
         }
     }
 }

@@ -80,6 +80,9 @@ public class RegisterController {
         user.setPassword(encoder.encode(register.getPasswordConfirmation().getPassword()));
         user.setEnabled(true);
         user.setLastPasswordResetDate(new Date());
+        user.setReportedAsFake(0L);
+        user.setLastActivityDate(LocalDate.now());
+
         user = userRepository.save(user);
         userRoleRepository.save(new UserRole(user, "ROLE_USER"));
 

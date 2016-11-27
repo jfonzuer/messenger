@@ -108,7 +108,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 1")
                 .setFetishes(fetishes)
                 .setLocalization(l1)
-                .setUserType(ut2)
+                .setType(ut2)
+                .setReportedAsFake(0L)
+                .setLastActivityDate(LocalDate.now())
                 .createUser();
         User u2 = new User.UserBuilder()
                 .setEmail("member13@gmail.com")
@@ -119,7 +121,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 2")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
-                .setUserType(ut1)
+                .setType(ut1)
+                .setReportedAsFake(0L)
+                .setLastActivityDate(LocalDate.now())
                 .createUser();
         User u3 = new User.UserBuilder()
                 .setEmail("member3@gmail.com")
@@ -130,7 +134,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setDescription("je suis le membre 3")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
-                .setUserType(ut1)
+                .setType(ut1)
+                .setReportedAsFake(0L)
+                .setLastActivityDate(LocalDate.now())
                 .createUser();
 
         // save members
@@ -192,6 +198,5 @@ public class MessengerCLR implements CommandLineRunner {
         Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(c1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).createMessage();
         Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(c1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).createMessage();
         Stream.of(ms1, ms2, ms3, ms4).forEach(ms -> messageRepository.save(ms));
-
     }
 }

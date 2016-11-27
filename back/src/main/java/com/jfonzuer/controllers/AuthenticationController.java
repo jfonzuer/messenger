@@ -67,6 +67,7 @@ public class AuthenticationController {
         JwtUser jwtUser = UserMapper.toDto(userRepository.findByEmail(authenticationRequest.getEmail()));
         System.out.println("jwtUser------------------------------------------- = " + jwtUser.getImages());
         System.out.println("jwtUser.getFetishes() = " + jwtUser.getFetishes());
+        System.out.println("jwtUser.getAuthorities() = " + jwtUser.getAuthorities());
 
         final String token = jwtTokenUtil.generateToken(jwtUser, device);
 

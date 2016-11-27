@@ -40,7 +40,6 @@ public class UserMapper {
                 .createJwtUser();
     }
 
-    // methode qui ne mappe pas les authorités
     public static JwtUser toDto(User user) {
         return new JwtUser.JwtUserBuilder()
                 .setId(user.getId())
@@ -55,6 +54,9 @@ public class UserMapper {
                 .setEnabled(user.getEnabled())
                 .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .setUserType(UserTypeMapper.toDto(user.getType()))
+                .setAuthorities(mapToGrantedAuthorities(user.getUserRoles()))
+                .setLastActivityDate(user.getLastActivityDate().toString())
+                .setReportedAsFake(user.getReportedAsFake())
                 .createJwtUser();
     }
 
@@ -79,7 +81,7 @@ public class UserMapper {
                 .setDescription(dto.getDescription())
                 .setLocalization(dto.getLocalization() == null ? null : LocalizationMapper.fromDto(dto.getLocalization()))
                 .setFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
-                .setUserType(dto.getUserType() == null ? null : UserTypeMapper.fromDto(dto.getUserType()))
+                .setType(dto.getUserType() == null ? null : UserTypeMapper.fromDto(dto.getUserType()))
                 .createUser() : null;
     }
 
