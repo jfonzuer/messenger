@@ -1,0 +1,37 @@
+<form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm" [hidden]="!show">
+  <fieldset>
+    <div class="form-group">
+      <div class="col-sm-5">
+        <label>Région :</label>
+        <select class="form-control" [(ngModel)]="user.localization.id" name="localization" required>
+          <option *ngFor="let localization of localizations" [value]="localization.id">{{ localization.name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-10">
+        <label>Pratiques :</label>
+        <div class="radio">
+          <label *ngFor="let fetish of fetishes; let i = index">
+            <input type="checkbox" name="fetishes"  value="{{ option }}" [checked]="selectedFetishId.indexOf(fetish.id) >= 0" (change)="updateCheckedFetishes(fetish, $event)">
+            {{ fetish.name }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-10">
+        <label>Description :</label>
+        <textarea class="form-control" rows="4" name="description" (keyup.enter)="send(sendForm.form.valid)" [(ngModel)]="user.description" autofocus required></textarea>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-10">
+        <button type="submit" class="btn btn-success">Valider</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

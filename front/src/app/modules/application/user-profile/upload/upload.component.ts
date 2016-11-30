@@ -1,29 +1,29 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {LocalStorageService} from 'angular-2-local-storage';
+import {User} from "../../../../model/user";
 import {Http} from "@angular/http";
-import {User} from "../../../model/user";
-import {UploadService} from "../../../services/upload.service";
-import {AuthenticationService} from "../../../services/authentication.service";
-import {SharedService} from "../../../services/shared.service";
-import {environment} from "../../../../environments/environment";
+import {UploadService} from "../../../../services/upload.service";
+import {SharedService} from "../../../../services/shared.service";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
-  selector: 'app-upload-image',
-  templateUrl: './upload-image.component.html',
-  styleUrls: ['./upload-image.component.css']
+  selector: 'app-upload',
+  templateUrl: 'upload.component.html',
+  styleUrls: ['upload.component.css']
 })
-export class UploadImageComponent implements OnInit {
+export class UploadComponent implements OnInit {
+
+  @Input() user:User;
+  @Input() show:boolean;
 
   error:string;
   success:string;
   file:File;
-  @Input() user:User;
   addImage:boolean = false;
   orderNumber:number;
   uploadUrl:string;
   private sizeLimit:number;
 
-  constructor(private http:Http, private uploadService: UploadService, private authenticationService: AuthenticationService, private localStorageService: LocalStorageService, private sharedService: SharedService) {
+  constructor(private http:Http, private uploadService: UploadService, private sharedService: SharedService) {
     this.sizeLimit = environment.sizeLimit;
     this.uploadUrl = environment.uploadUrl;
   }
@@ -51,7 +51,6 @@ export class UploadImageComponent implements OnInit {
         this.uploadService.uploadImage(this.file, this.orderNumber).subscribe(
           image => {
             this.user.images[this.orderNumber - 1] = image;
-            this.localStorageService.set('user', this.user);
             this.sharedService.refreshUser(this.user);
 
             this.checkAll();
@@ -86,7 +85,7 @@ export class UploadImageComponent implements OnInit {
       images => {
         console.log(images);
         this.user.images = images;
-        this.localStorageService.set('user', this.user);
+        this.sharedService.refreshUser(this.user);
       },
       error => this.error = error
     )

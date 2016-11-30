@@ -1,50 +1,21 @@
 <app-flash-message [error]="error" [success]="success"></app-flash-message>
 
-<div class="container" *ngIf="user">
-  <legend class="pointer" (click)="show = 1">{{ title }} <span class="glyphicon glyphicon-chevron-down"></span></legend>
-  <form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm" [hidden]="show != 1">
-    <fieldset>
-      <div class="form-group">
-        <div class="col-sm-5">
-          <label>Région :</label>
-          <select class="form-control" [(ngModel)]="user.localization.id" name="localization" required>
-            <option *ngFor="let localization of localizations" [value]="localization.id">{{ localization.name }}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-10">
-          <label>Pratiques :</label>
-          <div class="radio">
-            <label *ngFor="let fetish of fetishes; let i = index">
-              <input type="checkbox" name="fetishes"  value="{{ option }}" [checked]="selectedFetishId.indexOf(fetish.id) >= 0" (change)="updateCheckedFetishes(fetish, $event)">
-              {{ fetish.name }}
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-10">
-          <label>Description :</label>
-          <textarea class="form-control" rows="4" name="description" (keyup.enter)="send(sendForm.form.valid)" [(ngModel)]="user.description" autofocus required></textarea>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-10">
-          <button type="submit" class="btn btn-success">Valider</button>
-        </div>
-      </div>
-    </fieldset>
-  </form>
+<div class="container">
+  <legend class="pointer" (click)="show == 1 ? show = 0 : show = 1">Mon profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <app-profile (successEmitter)="successListener($event)" (errorEmitter)="errorListener($event)" [user]="user" [fetishes]="fetishes" [localizations]="localizations" [show]="show == 1"></app-profile>
 </div>
 
-<router-outlet name="changePassword"></router-outlet>
-
-<div class="container" *ngIf="user">
-  <legend class="pointer" (click)="show = 2">Photos de profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
-  <app-upload-image [user]="user" [hidden]="show != 2"></app-upload-image>
+<div class="container">
+  <legend class="pointer" (click)="show == 2 ? show = 0 : show = 2">Mes informations <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <app-information [user]="user" [show]="show == 2"></app-information>
 </div>
 
+<div class="container">
+  <legend class="pointer" (click)="show == 3 ? show = 0 : show = 3">Mon mot de passe <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <app-change-password [user]="user" [show]="show == 3"></app-change-password>
+</div>
+
+<div class="container">
+  <legend class="pointer" (click)="show == 4 ? show = 0 : show = 4">Mes photos de profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <app-upload [user]="user" [show]="show == 4"></app-upload>
+</div>

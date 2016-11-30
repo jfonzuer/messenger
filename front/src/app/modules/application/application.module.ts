@@ -10,8 +10,6 @@ import {NgModule} from "@angular/core";
 import {HeadingComponent} from "./heading/heading.component";
 import {HomeComponent} from "./home/home.component";
 import {NavbarComponent} from "./navbar/navbar.component";
-import {UploadImageComponent} from "./upload-image/upload-image.component";
-import {UserParametersComponent} from "./user-parameters/user-parameters.component";
 import {UserProfileComponent} from "./user-profile/user-profile.component";
 import {UserViewComponent} from "./user-view/user-view.component";
 import {VisitComponent} from "./visit/visit.component";
@@ -23,7 +21,11 @@ import {UploadService} from "../../services/upload.service";
 import {UserTypeService} from "../../services/user-type.service";
 import {FooterComponent} from "./footer/footer.component";
 import {SearchComponent} from "./search/search.component";
-
+import {ChangePasswordComponent} from "./user-profile/change-password/change-password.component";
+import {InformationComponent} from "./user-profile/information/information.component";
+import {UploadComponent} from "./user-profile/upload/upload.component";
+import {CurrentUserResolve} from "../../services/resolve/current-user-resolve.service";
+import {ProfileComponent} from "./user-profile/profile/profile.component";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -42,14 +44,16 @@ import {SearchComponent} from "./search/search.component";
     HeadingComponent,
     HomeComponent,
     NavbarComponent,
-    UploadImageComponent,
-    UserParametersComponent,
     UserProfileComponent,
     UserViewComponent,
     VisitComponent,
     FooterComponent,
     SearchComponent,
-    ConversationListFilterPipe
+    ConversationListFilterPipe,
+    ChangePasswordComponent,
+    InformationComponent,
+    UploadComponent,
+    ProfileComponent,
   ],
   providers: [
     ConversationService,
@@ -57,7 +61,8 @@ import {SearchComponent} from "./search/search.component";
     UploadService,
     VisitService,
     UserTypeService,
-    UserResolve
+    UserResolve,
+    CurrentUserResolve
   ],
 
 })

@@ -17,7 +17,6 @@ import {RequestService} from "./services/request.service";
 import {UserTypesResolve} from "./services/resolve/user-types-resolve";
 import {FetishesResolve} from "./services/resolve/fetishes-resolve.service";
 import {LocalizationsResolve} from "./services/resolve/localizations-resolve";
-import {MaterialModule, MdSlider, MdSliderModule} from "@angular/material";
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
 let localStorageServiceConfig = {

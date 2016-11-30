@@ -1,7 +1,5 @@
-<form class="form-horizontal" #uploadForm="ngForm">
+<form class="form-horizontal" #uploadForm="ngForm" [hidden]="!show">
   <fieldset>
-    <app-flash-message [error]="error" [success]="success"></app-flash-message>
-
     <div class="form-group">
       <div class="col-sm-2" *ngFor="let image of user.images; let i = index">
         <img class="small-image center-block" src="{{ uploadUrl }}{{ image.url }}">

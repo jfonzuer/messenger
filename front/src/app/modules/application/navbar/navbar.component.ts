@@ -55,9 +55,7 @@ export class NavbarComponent implements OnInit {
     //this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
 
     this.user = <User> this.localStorageService.get('user');
-    this.isUserAdmin = this.sharedService.isAdmin(this.user);
-
-    //this.isUserAdmin = this.user.authorities.find(authority => authority == "ROLE_ADMIN");
+    //this.isUserAdmin = this.sharedService.isAdmin(this.user);
   }
 
   getUnreadConversations() {
