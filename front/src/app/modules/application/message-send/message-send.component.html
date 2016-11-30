@@ -1,4 +1,5 @@
-<app-flash-message-error [error]="error"></app-flash-message-error>
+<app-flash-message [error]="error" [success]="success"></app-flash-message>
+
 <form (ngSubmit)="send()" #sendForm="ngForm">
   <div class="send-wrap ">
     <textarea #sendTextArea (keyup.enter)="sendEnter()" name="content" required class="form-control send-message" rows="3" placeholder="Envoyer un message ..." [(ngModel)]="message.content"></textarea>

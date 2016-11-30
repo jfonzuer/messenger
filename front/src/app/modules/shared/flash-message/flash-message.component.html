@@ -1,0 +1,14 @@
+<div class="alert-messages" *ngIf="error">
+  <div class="alert alert-danger">
+    {{ error }}
+  </div>
+</div>
+
+<div class="alert-messages" *ngIf="success">
+  <div class="alert alert-success">
+    {{ success }}
+  </div>
+</div>
+
+<div *ngIf="!success && !error" style="height: 72px;">
+</div>

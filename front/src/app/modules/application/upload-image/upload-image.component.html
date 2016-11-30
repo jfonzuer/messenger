@@ -1,33 +1,29 @@
-<app-flash-message-error [error]="error"></app-flash-message-error>
-<app-flash-message-success [success]="success"></app-flash-message-success>
+<form class="form-horizontal" #uploadForm="ngForm">
+  <fieldset>
+    <app-flash-message [error]="error" [success]="success"></app-flash-message>
 
-<div class="container" *ngIf="user">
-  <form class="form-horizontal" #uploadForm="ngForm">
-    <fieldset>
-      <legend>Photos de profil :</legend>
-      <div class="form-group">
-        <div class="col-sm-2" *ngFor="let image of user.images; let i = index">
-          <img class="small-image center-block" src="{{ uploadUrl }}{{ image.url }}">
-          <br>
-          <div class="col-sm-6">
-            <button *ngIf="image.url != 'profile.png' && i != 0" class="btn btn-default btn-sm center-block" (click)="setAsProfile(image.orderNumber)"><span class="glyphicon glyphicon-user"></span></button>
-          </div>
-          <div class="col-sm-6">
-            <button *ngIf="image.url != 'profile.png' && i != 0" class="btn btn-default btn-sm center-block" (click)="deleteImage(image.orderNumber)"><span class="glyphicon glyphicon-trash"></span></button>
-          </div>
+    <div class="form-group">
+      <div class="col-sm-2" *ngFor="let image of user.images; let i = index">
+        <img class="small-image center-block" src="{{ uploadUrl }}{{ image.url }}">
+        <br>
+        <div class="col-sm-6">
+          <button *ngIf="image.url != 'profile.png' && i != 0" class="btn btn-default btn-sm center-block" (click)="setAsProfile(image.orderNumber)"><span class="glyphicon glyphicon-user"></span></button>
+        </div>
+        <div class="col-sm-6">
+          <button *ngIf="image.url != 'profile.png' && i != 0" class="btn btn-default btn-sm center-block" (click)="deleteImage(image.orderNumber)"><span class="glyphicon glyphicon-trash"></span></button>
         </div>
       </div>
-      <hr>
-      <div class="form-group" *ngIf="addImage">
+    </div>
+    <hr>
+    <div class="form-group" *ngIf="addImage">
+    </div>
+    <div class="form-group">
+      <div class="col-sm-4">
+        <input name="file" type="file" (change)="fileChangeEvent($event)" required autofocus (keyup.enter)="send(uploadForm.form.valid)">
       </div>
-      <div class="form-group">
-        <div class="col-sm-4">
-          <input name="file" type="file" (change)="fileChangeEvent($event)" required autofocus (keyup.enter)="send(uploadForm.form.valid)">
-        </div>
-        <div class="col-sm-3">
-          <button type="submit" class="btn btn-success" (click)="send(uploadForm.form.valid)"><span class="glyphicon glyphicon-plus"></span></button>
-        </div>
+      <div class="col-sm-3">
+        <button type="submit" class="btn btn-success" (click)="send(uploadForm.form.valid)"><span class="glyphicon glyphicon-plus"></span></button>
       </div>
-    </fieldset>
-  </form>
-</div>
+    </div>
+  </fieldset>
+</form>

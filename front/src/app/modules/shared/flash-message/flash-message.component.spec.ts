@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { FlashMessageSuccessComponent } from './flash-message-success.component';
+import { FlashMessageComponent } from './flash-message.component';
 
-describe('FlashMessageSuccessComponent', () => {
-  let component: FlashMessageSuccessComponent;
-  let fixture: ComponentFixture<FlashMessageSuccessComponent>;
+describe('FlashMessageComponent', () => {
+  let component: FlashMessageComponent;
+  let fixture: ComponentFixture<FlashMessageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FlashMessageSuccessComponent ]
+      declarations: [ FlashMessageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FlashMessageSuccessComponent);
+    fixture = TestBed.createComponent(FlashMessageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,10 +1,9 @@
-<app-flash-message-error [error]="error"></app-flash-message-error>
-<app-flash-message-success [success]="success"></app-flash-message-success>
+<app-flash-message [error]="error" [success]="success"></app-flash-message>
 
 <div class="container" *ngIf="user">
-  <form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm">
+  <legend class="pointer" (click)="show = 1">{{ title }} <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm" [hidden]="show != 1">
     <fieldset>
-      <legend>{{ title }} :</legend>
       <div class="form-group">
         <div class="col-sm-5">
           <label>Région :</label>
@@ -42,6 +41,10 @@
   </form>
 </div>
 
-<hr>
+<router-outlet name="changePassword"></router-outlet>
 
-<app-upload-image [user]="user"></app-upload-image>
+<div class="container" *ngIf="user">
+  <legend class="pointer" (click)="show = 2">Photos de profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <app-upload-image [user]="user" [hidden]="show != 2"></app-upload-image>
+</div>
+
