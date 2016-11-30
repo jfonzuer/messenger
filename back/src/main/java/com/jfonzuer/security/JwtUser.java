@@ -92,6 +92,7 @@ public class JwtUser implements UserDetails {
         return password;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

@@ -54,7 +54,6 @@ public class UserMapper {
                 .setEnabled(user.getEnabled())
                 .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .setUserType(UserTypeMapper.toDto(user.getType()))
-                .setAuthorities(mapToGrantedAuthorities(user.getUserRoles()))
                 .setLastActivityDate(user.getLastActivityDate().toString())
                 .setReportedAsFake(user.getReportedAsFake())
                 .createJwtUser();
