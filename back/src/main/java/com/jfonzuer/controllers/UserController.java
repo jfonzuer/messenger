@@ -162,4 +162,14 @@ public class UserController {
 
         return new ResponseDto("L utilisateur a été signalé");
     }
+
+    @RequestMapping(value = "/alerts", method = RequestMethod.PUT)
+    public void alerts(HttpServletRequest request, @RequestBody AlertsDto alerts) {
+
+    }
+
+    @RequestMapping(value = "/desactivate", method = RequestMethod.PUT)
+    public void desactivate(HttpServletRequest request, @RequestBody DesactivateDto desactivate) {
+
+    }
 }

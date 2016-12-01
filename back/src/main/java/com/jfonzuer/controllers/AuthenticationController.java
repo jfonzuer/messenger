@@ -67,6 +67,8 @@ public class AuthenticationController {
 
         // update last activity date
         user.setLastActivityDate(LocalDate.now());
+        // set active
+        user.setEnabled(true);
         userRepository.save(user);
 
         // Reload password post-security so we can generate token
