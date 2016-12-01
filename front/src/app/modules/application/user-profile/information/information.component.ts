@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import {UserService} from "../../../../services/user.service";
 import {FetishService} from "../../../../services/fetish.service";
 import {Fetish} from "../../../../model/fetish";
@@ -16,9 +16,9 @@ export class InformationComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
+  @Output() successEmitter = new EventEmitter();
+  @Output() errorEmitter = new EventEmitter();
   birthDate:string;
-  error:string;
-  success:string;
 
   constructor(private userService: UserService, private sharedService:SharedService, private datetimeService:DatetimeService) { }
 
@@ -29,7 +29,7 @@ export class InformationComponent implements OnInit {
   updateInformation(valid:boolean) {
     if (valid) {
       this.user.birthDate = this.datetimeService.toStandardFormat(this.birthDate);
-      this.userService.updateInformations(this.user).then(user => { this.user = user; this.sharedService.refreshUser(user); }).catch(error => { this.error = error; });
+      this.userService.updateInformations(this.user).then(user => { this.user = user; this.sharedService.refreshUser(user); }).catch(error => { this.errorEmitter.emit(error) });
     }
   }
 }

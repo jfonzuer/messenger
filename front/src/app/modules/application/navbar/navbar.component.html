@@ -16,12 +16,11 @@
         <li><a [routerLink]="['/app/search']" routerLinkActive="active"> <span class="glyphicon glyphicon-search"></span> Rechercher</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a><img class="header-image" src="{{ uploadUrl }}{{ user.images[0].url }}"></a></li>
+        <li><a [routerLink]="['/app/profile']"><img class="header-image" src="{{ uploadUrl }}{{ user.images[0].url }}"></a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" style="cursor: pointer" data-toggle="dropdown">{{ user.username }} <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a [routerLink]="['/app/profile']" routerLinkActive="active"><span class="glyphicon glyphicon-user"></span>   Mon profil</a></li>
-            <li><a [routerLink]="['/app/parameters']" routerLinkActive="active"><span class="glyphicon glyphicon-cog"></span>  Mes paramètres</a></li>
           </ul>
         </li>
         <li><a class="pointer" (click)="logout()"><span class="glyphicon glyphicon-off"></span> </a></li>

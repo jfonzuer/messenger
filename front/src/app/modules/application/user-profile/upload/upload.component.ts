@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import {User} from "../../../../model/user";
 import {Http} from "@angular/http";
 import {UploadService} from "../../../../services/upload.service";
@@ -14,9 +14,9 @@ export class UploadComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
+  @Output() successEmitter = new EventEmitter();
+  @Output() errorEmitter = new EventEmitter();
 
-  error:string;
-  success:string;
   file:File;
   addImage:boolean = false;
   orderNumber:number;
@@ -55,12 +55,11 @@ export class UploadComponent implements OnInit {
 
             this.checkAll();
           },
-          error => this.error = error
+          error => this.errorEmitter.emit(error)
         )
       }
       else {
-        this.error = "La taille maximale de fichier est 2,048 MB";
-        setTimeout(() => this.error = "", 2000);
+        this.errorEmitter.emit("La taille maximale de fichier est 2,048 MB");
       }
     }
   }
@@ -75,7 +74,7 @@ export class UploadComponent implements OnInit {
 
         this.checkAll();
       },
-      error => this.error = error
+      error => this.errorEmitter.emit(error)
     );
   }
 
@@ -87,7 +86,7 @@ export class UploadComponent implements OnInit {
         this.user.images = images;
         this.sharedService.refreshUser(this.user);
       },
-      error => this.error = error
+      error => this.errorEmitter.emit(error)
     )
   }
 

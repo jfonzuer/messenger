@@ -18,8 +18,6 @@ export class ChangePasswordComponent implements OnInit {
   @Output() errorEmitter = new EventEmitter();
 
   passwordConfirmation: PasswordConfirmation = new PasswordConfirmation();
-  error:string;
-  success:string;
 
   constructor(private authenticationService: AuthenticationService, private userService: UserService, private localStorageService: LocalStorageService) { }
 
@@ -30,13 +28,13 @@ export class ChangePasswordComponent implements OnInit {
     if (valid) {
       if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
         this.userService.updatePassword(this.passwordConfirmation).then(() => {
-          this.success = "Le mot de passe a été modifié avec succés.";
-          setTimeout(() => this.success = "", 2000);
-          this.authenticationService.refreshToken().then(response => { this.localStorageService.set('token', response.token) }).catch(error => this.error = error);
+          this.successEmitter.emit("Le mot de passe a été modifié avec succés.");
+          this.authenticationService.refreshToken().then(response => { this.localStorageService.set('token', response.token) }).catch(error => this.errorEmitter.emit(error));
         })
       } else {
-        this.error = "Les mots de passe doivent être identiques"; setTimeout(() => this.error = "", 2000);
+        this.errorEmitter.emit("Les mots de passe doivent être identiques");
       }
     }
   }
+
 }

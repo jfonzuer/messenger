@@ -26,6 +26,8 @@ import {InformationComponent} from "./user-profile/information/information.compo
 import {UploadComponent} from "./user-profile/upload/upload.component";
 import {CurrentUserResolve} from "../../services/resolve/current-user-resolve.service";
 import {ProfileComponent} from "./user-profile/profile/profile.component";
+import {DesactivateComponent} from "./user-profile/desactivate/desactivate.component";
+import {AlertsComponent} from "./user-profile/alerts/alerts.component";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -54,6 +56,8 @@ import {ProfileComponent} from "./user-profile/profile/profile.component";
     InformationComponent,
     UploadComponent,
     ProfileComponent,
+    AlertsComponent,
+    DesactivateComponent,
   ],
   providers: [
     ConversationService,

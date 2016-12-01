@@ -19,3 +19,13 @@
   <legend class="pointer" (click)="show == 4 ? show = 0 : show = 4">Mes photos de profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
   <app-upload [user]="user" [show]="show == 4"></app-upload>
 </div>
+
+<div class="container">
+  <legend class="pointer" (click)="show == 5 ? show = 0 : show = 5">Mes alertes email <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <app-alerts [user]="user" [show]="show == 5"></app-alerts>
+</div>
+
+<div class="container">
+  <legend class="pointer" (click)="show == 6 ? show = 0 : show = 6">Désactivation <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <app-desactivate [user]="user" [show]="show == 6"></app-desactivate>
+</div>

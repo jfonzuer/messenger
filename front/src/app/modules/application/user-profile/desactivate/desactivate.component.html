@@ -1,0 +1,14 @@
+<form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm" [hidden]="!show">
+  <fieldset>
+
+    <div class="checkbox">
+      <label><input type="checkbox" value="">Désactiver le compte</label>
+    </div>
+    <br>
+    <div class="form-group">
+      <div class="col-sm-10">
+        <button type="submit" class="btn btn-success">Valider</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
