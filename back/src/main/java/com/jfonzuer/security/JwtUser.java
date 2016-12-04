@@ -20,18 +20,19 @@ public class JwtUser {
     private List<FetishDto> fetishes;
     private LocalizationDto localization;
     private List<String> authorities;
-    private boolean isActive;
     private List<ImageDto> images;
     private UserTypeDto userType;
     private String lastActivityDate;
     private Long reportedAsFake;
-    private boolean notifyMessage;
-    private boolean notifyVisit;
+    private Boolean notifyMessage;
+    private Boolean notifyVisit;
+    private Boolean enabled;
+    private Boolean isBlocked;
 
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, List<String> authorities, boolean isActive, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, boolean notifyMessage, boolean notifyVisit) {
+    public JwtUser(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -40,13 +41,14 @@ public class JwtUser {
         this.fetishes = fetishes;
         this.localization = localization;
         this.authorities = authorities;
-        this.isActive = isActive;
         this.images = images;
         this.userType = userType;
         this.lastActivityDate = lastActivityDate;
         this.reportedAsFake = reportedAsFake;
         this.notifyMessage = notifyMessage;
         this.notifyVisit = notifyVisit;
+        this.enabled = enabled;
+        this.isBlocked = isBlocked;
     }
 
     public Long getId() {
@@ -98,16 +100,20 @@ public class JwtUser {
         return authorities;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public boolean isNotifyMessage() {
+    public Boolean getNotifyMessage() {
         return notifyMessage;
     }
 
-    public boolean isNotifyVisit() {
+    public Boolean getNotifyVisit() {
         return notifyVisit;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public Boolean getBlocked() {
+        return isBlocked;
     }
 
     @Override
@@ -124,7 +130,6 @@ public class JwtUser {
                 '}';
     }
 
-
     public static class JwtUserBuilder {
         private Long id;
         private String username;
@@ -134,13 +139,14 @@ public class JwtUser {
         private List<FetishDto> fetishes;
         private LocalizationDto localization;
         private List<String> authorities;
-        private boolean isActive;
         private List<ImageDto> images;
         private UserTypeDto userType;
         private String lastActivityDate;
         private Long reportedAsFake;
-        private boolean notifyMessage;
-        private boolean notifyVisit;
+        private Boolean notifyMessage;
+        private Boolean notifyVisit;
+        private Boolean enabled;
+        private Boolean isBlocked;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -182,11 +188,6 @@ public class JwtUser {
             return this;
         }
 
-        public JwtUserBuilder setIsActive(boolean isActive) {
-            this.isActive = isActive;
-            return this;
-        }
-
         public JwtUserBuilder setImages(List<ImageDto> images) {
             this.images = images;
             return this;
@@ -207,18 +208,28 @@ public class JwtUser {
             return this;
         }
 
-        public JwtUserBuilder setNotifyMessage(boolean notifyMessage) {
+        public JwtUserBuilder setNotifyMessage(Boolean notifyMessage) {
             this.notifyMessage = notifyMessage;
             return this;
         }
 
-        public JwtUserBuilder setNotifyVisit(boolean notifyVisit) {
+        public JwtUserBuilder setNotifyVisit(Boolean notifyVisit) {
             this.notifyVisit = notifyVisit;
             return this;
         }
 
+        public JwtUserBuilder setEnabled(Boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public JwtUserBuilder setIsBlocked(Boolean isBlocked) {
+            this.isBlocked = isBlocked;
+            return this;
+        }
+
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, email, description, birthDate, fetishes, localization, authorities, isActive, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit);
+            return new JwtUser(id, username, email, description, birthDate, fetishes, localization, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked);
         }
     }
 }

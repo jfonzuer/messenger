@@ -34,7 +34,8 @@ public class UserMapper {
                 .setLocalization(user.getLocalization() == null ? null : LocalizationMapper.toDto(user.getLocalization()))
                 .setImages(user.getImages() == null ? null : user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .setUserType(UserTypeMapper.toDto(user.getType()))
-                .setIsActive(user.getEnabled() && !user.getBlocked())
+                .setEnabled(user.getEnabled())
+                .setIsBlocked(user.getBlocked())
                 .createJwtUser();
     }
 
@@ -51,7 +52,8 @@ public class UserMapper {
                 .setUserType(UserTypeMapper.toDto(user.getType()))
                 .setLastActivityDate(user.getLastActivityDate().toString())
                 .setAuthorities(mapAuthorities(user.getUserRoles()))
-                .setIsActive(user.getEnabled() && !user.getBlocked())
+                .setEnabled(user.getEnabled())
+                .setIsBlocked(user.getBlocked())
                 .setReportedAsFake(user.getReportedAsFake())
                 .setNotifyVisit(user.getNotifyVisit())
                 .setNotifyMessage(user.getNotifyMessage())

@@ -104,10 +104,7 @@ public class RegisterController {
         tokenRepository.getAllByUser(user).stream().forEach(t -> tokenRepository.delete(t));
 
         tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));
-
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-        Future sendMail = executor.submit(() -> mailService.sendResetTokenEmail(request.getLocale(), token, user));
-        executor.shutdown();
+        mailService.sendAsync(() -> mailService.sendResetTokenEmail(request.getLocale(), token, user));
     }
 
     @RequestMapping(value = "/password/reset", method = RequestMethod.POST)

@@ -94,13 +94,14 @@ public class UserController {
     public JwtUser getById(HttpServletRequest request, @PathVariable Long id) {
         User visitor = userService.getUserFromToken(request);
         User visited = userRepository.findByIdAndEnabledAndIsBlocked(id, true, false);
-        if (!visited.equals(visitor)) {
-            visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
 
-            ExecutorService executor = Executors.newFixedThreadPool(1);
-            Future sendMail = executor.submit(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
-            executor.shutdown();
+        if (!visited.equals(visitor) && !visitor.equals(visited.getLastVisitedBy())) {
+            visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
+            visited.setLastVisitedBy(visitor);
+            userRepository.save(visited);
+            mailService.sendAsync(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
         }
+
         return UserMapper.toDto(visited);
     }
 

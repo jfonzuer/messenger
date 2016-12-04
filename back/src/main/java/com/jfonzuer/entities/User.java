@@ -75,10 +75,16 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private Boolean isBlocked;
 
+    @ManyToOne
+    private User lastVisitedBy;
+
+    @ManyToOne
+    private User lastMessageBy;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -99,6 +105,8 @@ public class User implements UserDetails, Serializable {
         this.notifyMessage = notifyMessage;
         this.notifyVisit = notifyVisit;
         this.isBlocked = isBlocked;
+        this.lastVisitedBy = lastVisitedBy;
+        this.lastMessageBy = lastMessageBy;
     }
 
     @Override
@@ -280,6 +288,22 @@ public class User implements UserDetails, Serializable {
         isBlocked = blocked;
     }
 
+    public User getLastVisitedBy() {
+        return lastVisitedBy;
+    }
+
+    public void setLastVisitedBy(User lastVisitedBy) {
+        this.lastVisitedBy = lastVisitedBy;
+    }
+
+    public User getLastMessageBy() {
+        return lastMessageBy;
+    }
+
+    public void setLastMessageBy(User lastMessageBy) {
+        this.lastMessageBy = lastMessageBy;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -304,6 +328,7 @@ public class User implements UserDetails, Serializable {
         return false;
     }
 
+
     public static class UserBuilder {
         private Long id;
         private String username;
@@ -325,6 +350,8 @@ public class User implements UserDetails, Serializable {
         private Boolean notifyMessage;
         private Boolean notifyVisit;
         private Boolean isBlocked;
+        private User lastVisitedBy;
+        private User lastMessageBy;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -426,8 +453,18 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
+        public UserBuilder setLastVisitedBy(User lastVisitedBy) {
+            this.lastVisitedBy = lastVisitedBy;
+            return this;
+        }
+
+        public UserBuilder setLastMessageBy(User lastMessageBy) {
+            this.lastMessageBy = lastMessageBy;
+            return this;
+        }
+
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked, lastVisitedBy, lastMessageBy);
         }
     }
 }

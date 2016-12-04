@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by pgm on 04/12/16.
@@ -43,7 +47,7 @@ public class MailService {
             //helper.setTo(visited.getEmail());
             helper.setSubject(visitor.getUsername() + " a visité votre profil");
             helper.setText("Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a>", true);
-            //javaMailSender.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -79,6 +83,17 @@ public class MailService {
             //javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendAsync(Runnable r) {
+
+        ExecutorService service = null;
+        try {
+            service = Executors.newSingleThreadExecutor();
+            service.submit(r);
+        } finally {
+            if (service != null) service.shutdown();
         }
     }
 

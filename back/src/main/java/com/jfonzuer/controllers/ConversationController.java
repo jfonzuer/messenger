@@ -12,6 +12,7 @@ import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ConversationRepository;
 import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.repository.UserRepository;
+import com.jfonzuer.service.MailService;
 import com.jfonzuer.service.UserService;
 import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -40,16 +41,19 @@ public class ConversationController {
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
     private final UserService userService;
+    private final MailService mailService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConversationController.class);
 
     @Autowired
-    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, MessageRepository messageRepository, UserService userService) {
+    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, MessageRepository messageRepository, UserService userService, MailService mailService) {
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         this.userService = userService;
+        this.mailService = mailService;
     }
+
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
@@ -75,8 +79,8 @@ public class ConversationController {
         Message message = MessageMapper.fromDto(messageDto);
         message.setSentDateTime(LocalDateTime.now());
         message.setConversation(conversation);
-        message.setSource(userOne);
         messageRepository.save(message);
+        mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
 
         return ConversationMapper.toDto(conversation);
     }

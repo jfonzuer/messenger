@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by pgm on 21/09/16.
@@ -72,9 +75,12 @@ public class MessageController {
     public MessageDto addToConversation(HttpServletRequest request, @RequestBody MessageDto dto) {
 
         User sender = userService.getUserFromToken(request);
-
-        // check if conversation exists
         Conversation conversation = returnConversationOrThrowException(dto.getConversation().getId());
+        User target = MessengerUtils.getOtherUser(conversation, sender);
+
+        target.setLastMessageBy(sender);
+        userRepository.save(target);
+
         conversation.setPreview(MessengerUtils.getPreviewFromMessage(dto));
         conversationRepository.save(conversation);
 
@@ -82,7 +88,11 @@ public class MessageController {
         message.setSource(sender);
         message.setSentDateTime(LocalDateTime.now());
         message = messageRepository.save(message);
-        mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender);
+
+        // send email if sender is not last sender
+        if (!target.getLastMessageBy().equals(sender)) {
+            mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender));
+        }
         return  MessageMapper.toDto(message);
     }
 
