@@ -14,7 +14,11 @@
 
       </app-message-list>
 
-      <app-message-send [selectedConversation]="selectedConversation"
+      <app-message-send
+                        (successEmitter)="successListener($event)"
+                        (errorEmitter)="errorListener($event)"
+                        [selectedConversation]="selectedConversation"
+                        [user]="user"
                         (addConversation)="addConversationListener($event)"
                         (addMessage)="addMessageListener($event)"
                         >

@@ -22,9 +22,8 @@ export class MessengerComponent implements OnInit {
 
   loading:boolean = true;
   error:string;
-
-  // TODO : utilisateur fixé manuellement
-  currentUser:User = new User();
+  success:string;
+  user:User;
 
   selectedConversation: Conversation;
   conversations:Conversation[] = [];
@@ -42,28 +41,36 @@ export class MessengerComponent implements OnInit {
   ngOnInit() {
     moment().locale('fr');
 
-    // TODO : utilisateur fixé manuellement
-    this.currentUser.id = 1;
-
     // TODO : à activer
     // this.defineConversationTimer();
     this.getConversations();
 
+    this.route.data.forEach((data:any) => {
+      this.user = data.user;
+    });
+
     this.route.params.forEach((params: Params) => {
       // si on arrive avec l'id d'un utilisateur spécifié
       if (params['id']) {
-
         let userId = +params['id'];// (+) converts string 'id' to a number
         this.getMessages(userId);
-
         // on récupère l'objet conversation et on la set en selected
-        this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => { console.log(conversation); this.selectedConversation = conversation; });
-
+        this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => { console.log("conversation"); console.log(conversation); this.selectedConversation = conversation; });
         // TODO : à activer
         // on définit le timer si pas encore défini
         //this.defineMessageTimerIfInexistant(userId);
       }
     });
+  }
+
+  errorListener(error:string) : void {
+    this.error = error;
+    setTimeout(() => this.error = "", 2000);
+  }
+
+  successListener(success:string) : void {
+    this.success = success;
+    setTimeout(() => this.success = "", 2000);
   }
 
   deleteConversationListener(conversation : Conversation) : void {
@@ -124,10 +131,7 @@ export class MessengerComponent implements OnInit {
       for (let message of messages) {
         message.sendDate = moment(message.sendDate).fromNow();
       }
-      console.log(messages);
-
       this.pager == null ? this.messages = messages : this.messages = messages.concat(this.messages);
-      this.messages.concat(messages, this.messages);
     }
   }
 
@@ -144,5 +148,8 @@ export class MessengerComponent implements OnInit {
   }
   private getConversations() {
     this.conversationService.getAll().then(response => { console.log(response); this.conversations = response.content; }).catch(error => this.error = error);
+  }
+
+  private isSelectedConversationSeen() {
   }
 }

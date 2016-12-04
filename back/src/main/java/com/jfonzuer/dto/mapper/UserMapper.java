@@ -32,9 +32,9 @@ public class UserMapper {
                 .setDescription(user.getDescription())
                 .setBirthDate(user.getBirthDate() == null ? null : user.getBirthDate().toString())
                 .setLocalization(user.getLocalization() == null ? null : LocalizationMapper.toDto(user.getLocalization()))
-                .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
+                .setImages(user.getImages() == null ? null : user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .setUserType(UserTypeMapper.toDto(user.getType()))
-                .setIsActive(user.isEnabled() && !user.getBlocked())
+                .setIsActive(user.getEnabled() && !user.getBlocked())
                 .createJwtUser();
     }
 
@@ -51,7 +51,7 @@ public class UserMapper {
                 .setUserType(UserTypeMapper.toDto(user.getType()))
                 .setLastActivityDate(user.getLastActivityDate().toString())
                 .setAuthorities(mapAuthorities(user.getUserRoles()))
-                .setIsActive(user.isEnabled() && !user.getBlocked())
+                .setIsActive(user.getEnabled() && !user.getBlocked())
                 .setReportedAsFake(user.getReportedAsFake())
                 .setNotifyVisit(user.getNotifyVisit())
                 .setNotifyMessage(user.getNotifyMessage())

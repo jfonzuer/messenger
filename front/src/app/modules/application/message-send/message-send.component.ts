@@ -13,51 +13,42 @@ import {UserMessage} from "../../../model/userMessage";
 })
 export class MessageSendComponent implements OnInit {
 
-  // TODO : get user from localstorage
-  currentUser: User = new User();
+  @Input() user: User;
   @Input() selectedConversation: Conversation;
   @Output() addMessage = new EventEmitter();
   @Output() addConversation = new EventEmitter();
-  message: Message = new Message();
+  @Output() successEmitter = new EventEmitter();
+  @Output() errorEmitter = new EventEmitter();
+
+  message: Message;
   enter:boolean = true;
   error:string;
 
   constructor(private messageService: MessageService, private conversationService: ConversationService) { }
 
   ngOnInit() {
-    // TODO : get user from localstorage
-    this.currentUser.id = 1;
-    this.currentUser.username = 'member1';
+    this.message = new Message();
+    this.message.source = this.user;
   }
 
   send() {
-    console.log(this.selectedConversation);
-
     if (this.selectedConversation) {
-      console.log(this.message);
-      this.message.source =  this.currentUser;
-
       if (this.selectedConversation.id) {
         this.message.conversation = this.selectedConversation;
-        console.log(this.message);
+
         this.messageService.post(this.message)
             .then(response => {
               this.addMessage.emit(response);
-              this.message.content = ''
+              this.message.content = '';
             })
-            // si erreur on fixe le message d'erreur et on set un timeout
-            .catch(error => {
-              this.error = error;
-              setTimeout(() => this.error = "", 2000);
-            });
+            .catch(error => this.errorEmitter.emit(error) );
         // s'il s'agit d'une nouvelle conversation
       } else {
         console.log("create new conversation");
         this.conversationService.post(new UserMessage(this.selectedConversation.userTwo, this.message)).then(response => {
-          console.log(response);
           this.message.content = '';
           this.addConversation.emit();
-        });
+        }).catch(error => this.errorEmitter.emit(error));
       }
     }
   }

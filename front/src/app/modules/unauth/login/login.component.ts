@@ -27,6 +27,9 @@ export class LoginComponent implements OnInit {
     this.authentication.email = "pgiraultmatz@gmail.com";
     this.authentication.password = "test";
 
+    this.authentication.email = "member4@gmail.com";
+    this.authentication.password = "password4";
+
     //TODO raffraichissement du token ?
   }
 

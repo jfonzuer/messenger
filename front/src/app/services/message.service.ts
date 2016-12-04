@@ -44,6 +44,7 @@ export class MessageService {
     return this.http.post(this.baseUrl + 'messages', message, {headers: headers})
       .toPromise()
       .then(response => {
+        console.log(response);
         this.rs.handleResponse(response);
         return response.json();
       })

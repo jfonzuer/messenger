@@ -72,23 +72,17 @@ public class MessageController {
     public MessageDto addToConversation(HttpServletRequest request, @RequestBody MessageDto dto) {
 
         User sender = userService.getUserFromToken(request);
-        LOGGER.debug("add message dto : " + dto);
-        LOGGER.info("add message dto : " + dto);
-        System.out.println("-------------------------------------------------------------");
-        System.out.println("dto = " + dto);
 
         // check if conversation exists
         Conversation conversation = returnConversationOrThrowException(dto.getConversation().getId());
         conversation.setPreview(MessengerUtils.getPreviewFromMessage(dto));
         conversationRepository.save(conversation);
 
-        System.out.println("dto.getSource() = " + dto.getSource());
         Message message = MessageMapper.fromDto(dto);
+        message.setSource(sender);
         message.setSentDateTime(LocalDateTime.now());
         message = messageRepository.save(message);
         mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender);
-
-        System.out.println("message = " + message);
         return  MessageMapper.toDto(message);
     }
 
@@ -98,8 +92,7 @@ public class MessageController {
         if (specifiedUser == null) {
             throw  new ResourceNotFoundException();
         }
-        List<Conversation> list = conversationRepository.findTop1ByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
-        return list.size() > 0 ? list.get(0) : null;
+        return conversationRepository.findByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
     }
 
     private Conversation returnConversationOrThrowException(Long id) {

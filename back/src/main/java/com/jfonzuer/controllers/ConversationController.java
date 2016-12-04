@@ -75,6 +75,7 @@ public class ConversationController {
         Message message = MessageMapper.fromDto(messageDto);
         message.setSentDateTime(LocalDateTime.now());
         message.setConversation(conversation);
+        message.setSource(userOne);
         messageRepository.save(message);
 
         return ConversationMapper.toDto(conversation);
@@ -87,9 +88,22 @@ public class ConversationController {
         User currentUser = userService.getUserFromToken(request);
         User specifiedUser = userRepository.findOne(id);
 
-        List<Conversation> list = conversationRepository.findTop1ByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
-        System.out.println("list = " + list);
-        return (list.size() == 0) ? null : ConversationMapper.toDto(list.get(0), currentUser);
+        Conversation conversation = conversationRepository.findByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
+
+        // si la conversation n'existe pas on la crée
+        if (conversation == null) {
+            conversation = new Conversation.ConversationBuilder()
+                    .setPreview("conversation 1")
+                    .setLastModified(LocalDateTime.now())
+                    .setUserOne(currentUser)
+                    .setUserTwo(specifiedUser)
+                    .setIsReadByUserOne(true)
+                    .setIsReadByUserTwo(false)
+                    .setIsDeletedByUserOne(false)
+                    .setIsDeletedByUserTwo(false)
+                    .createConversation();
+        }
+        return ConversationMapper.toDto(conversation, currentUser);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
