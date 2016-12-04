@@ -8,7 +8,10 @@ import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ConversationRepository;
 import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.repository.UserRepository;
+import com.jfonzuer.service.MailService;
+import com.jfonzuer.service.UserService;
 import com.jfonzuer.utils.MessengerUtils;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +40,16 @@ public class MessageController {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final ConversationRepository conversationRepository;
+    private final MailService mailService;
+    private final UserService userService;
 
     @Autowired
-    public MessageController(MessageRepository messageRepository, UserRepository userRepository, ConversationRepository conversationRepository) {
+    public MessageController(MessageRepository messageRepository, UserRepository userRepository, ConversationRepository conversationRepository, MailService mailService, UserService userService) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
+        this.mailService = mailService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
@@ -61,8 +68,9 @@ public class MessageController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public MessageDto addToConversation(@RequestBody MessageDto dto) {
+    public MessageDto addToConversation(HttpServletRequest request, @RequestBody MessageDto dto) {
 
+        User sender = userService.getUserFromToken(request);
         LOGGER.debug("add message dto : " + dto);
         LOGGER.info("add message dto : " + dto);
         System.out.println("-------------------------------------------------------------");
@@ -77,6 +85,7 @@ public class MessageController {
         Message message = MessageMapper.fromDto(dto);
         message.setSentDateTime(LocalDateTime.now());
         message = messageRepository.save(message);
+        mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender);
 
         System.out.println("message = " + message);
         return  MessageMapper.toDto(message);
@@ -95,7 +104,7 @@ public class MessageController {
     private Conversation returnConversationOrThrowException(Long id) {
         Conversation conversation = conversationRepository.findOne(id);
         if (conversation == null) {
-            throw new ResourceNotFoundException("Conversation cannot be found");
+            throw new ResourceNotFoundException("La conversation n'a pu être trouvée");
         }
         return conversation;
     }

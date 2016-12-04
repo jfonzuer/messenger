@@ -151,21 +151,41 @@ public class MessengerCLR implements CommandLineRunner {
                 .setNotifyVisit(true)
                 .createUser();
 
+        User u4 = new User.UserBuilder()
+                .setEmail("member4@gmail.com")
+                .setUsername("member4")
+                .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
+                .setPassword(encoder.encode("password4"))
+                .setEnabled(true)
+                .setIsBlocked(false)
+                .setDescription("je suis le membre 4")
+                .setBirthDate(LocalDate.of(1988, 3, 29))
+                .setLocalization(l2)
+                .setType(ut1)
+                .setReportedAsFake(0L)
+                .setLastActivityDate(LocalDate.now())
+                .setLastReportDate(LocalDate.now().minusDays(1L))
+                .setNotifyMessage(true)
+                .setNotifyVisit(true)
+                .createUser();
+
         // save members
-        Stream.of(u1, u2, u3).forEach( m -> userRepository.save(m));
+        Stream.of(u1, u2, u3, u4).forEach( m -> userRepository.save(m));
 
         Image u1i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u1).createImage();
 
         Image u2i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u2).createImage();
 
         Image u3i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u3).createImage();
-        Stream.of(u1i1, u2i1, u3i1).forEach( i -> imageRepository.save(i));
+        Image u4i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u4).createImage();
+        Stream.of(u1i1, u2i1, u3i1, u4i1).forEach( i -> imageRepository.save(i));
 
         UserRole us1 = new UserRole(u1, "ROLE_USER");
         UserRole us2 = new UserRole(u1, "ROLE_ADMIN");
         UserRole us3 = new UserRole(u2, "ROLE_USER");
+        UserRole us4 = new UserRole(u2, "ROLE_USER");
 
-        Stream.of(us1, us2, us3).forEach(us -> userRoleRepository.save(us));
+        Stream.of(us1, us2, us3, us4).forEach(us -> userRoleRepository.save(us));
 
         // visits
         Visit v1 = new Visit(LocalDate.now(), u2, u1, false);

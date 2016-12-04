@@ -11,6 +11,7 @@ import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.VisitRepository;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.security.JwtUser;
+import com.jfonzuer.service.MailService;
 import com.jfonzuer.service.UserService;
 import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -29,6 +30,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +49,7 @@ public class UserController {
     private final UserService userService;
     private final VisitRepository visitRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private final MailService mailService;
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Value("${jwt.header}")
@@ -54,10 +59,11 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    public UserController(UserRepository userRepository, UserService userService, VisitRepository visitRepository) {
+    public UserController(UserRepository userRepository, UserService userService, VisitRepository visitRepository, MailService mailService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.visitRepository = visitRepository;
+        this.mailService = mailService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -78,29 +84,27 @@ public class UserController {
         System.out.println("search = " + search);
         System.out.println("search.getUserType() = " + search.getUserType());
 
-        //Page<User> users = userRepository.findAllByType(search.getUserType(), p);
         Page<User> users = userRepository.search(search.getUserType(), search.getLocalization(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
-        //Page<User> users = userRepository.findAllByTypeAndLocalizationAndDescriptionIgnoreCaseContainingOrUsernameIgnoreCaseContaining(search.getUserType(), search.getLocalization(), search.getKeyword(), search.getKeyword(), p);
-        //return  users.stream().map(UserMapper::toDto).collect(Collectors.toList());
         return users.map(UserMapper::toDto);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public JwtUser getById(@PathVariable Long id) {
-        //TODO : set current user manually
-        User visitor = userRepository.findOne(1L);
-        User visited = userRepository.findOne(id);
+    public JwtUser getById(HttpServletRequest request, @PathVariable Long id) {
+        User visitor = userService.getUserFromToken(request);
+        User visited = userRepository.findByIdAndEnabledAndIsBlocked(id, true, false);
         if (!visited.equals(visitor)) {
             visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
+
+            ExecutorService executor = Executors.newFixedThreadPool(1);
+            Future sendMail = executor.submit(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
+            executor.shutdown();
         }
-        return UserMapper.toDto(userRepository.findOne(id));
+        return UserMapper.toDto(visited);
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
     public JwtUser updateProfile(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
-        //TODO : set current user manually
-        User user = userRepository.findOne(1L);
-
+        User user = userService.getUserFromToken(request);
         User updatedUser = UserMapper.fromDto(jwtUser);
 
         //User user = userService.getUserFromToken(request);
@@ -115,11 +119,9 @@ public class UserController {
 
     @RequestMapping(value = "/informations", method = RequestMethod.PUT)
     public JwtUser updateInformation(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
-        //TODO : set current user manually
-        User user = userRepository.findOne(1L);
+        User user = userService.getUserFromToken(request);
         User updatedUser = UserMapper.fromDto(jwtUser);
 
-        //User user = userService.getUserFromToken(request);
         // TODO : validation via annotation and exception handling
         user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());

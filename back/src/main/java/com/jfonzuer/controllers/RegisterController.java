@@ -11,6 +11,7 @@ import com.jfonzuer.repository.ImageRepository;
 import com.jfonzuer.repository.TokenRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.UserRoleRepository;
+import com.jfonzuer.service.MailService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,9 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 /**
@@ -54,15 +58,7 @@ public class RegisterController {
     private ImageRepository imageRepository;
 
     @Autowired
-    private MailSender mailSender;
-
-    @Autowired
-    private JavaMailSender javaMailSender;
-
-    private SimpleMailMessage templateMessage;
-
-    @Value("${send.from.email}")
-    private String fromEmail;
+    private MailService mailService;
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public void add(@RequestBody RegisterDto register) {
@@ -109,38 +105,9 @@ public class RegisterController {
 
         tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));
 
-        //String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        String appUrl = "http://localhost:4200";
-
-        System.out.println("appUrl = " + appUrl);
-
-        constructResetTokenEmail(appUrl, request.getLocale(), token, user);
-    }
-
-    private void constructResetTokenEmail(String appUrl, Locale locale, String token, User user) {
-        this.templateMessage = new SimpleMailMessage();
-        this.templateMessage.setSubject("Réinitialiser le mot de passe");
-        this.templateMessage.setFrom(this.fromEmail);
-        this.templateMessage.setTo(user.getEmail());
-        SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-        msg.setText("Cliquer sur le lien suivant pour réinitialiser le mot de passe :" + appUrl + "/password/reset/" + user.getId() + "/" + token);
-        System.out.println("Sending email");
-        this.mailSender.send(msg);
-    }
-
-    private void constructHtmlResetTokenEmailHtml(String appUrl, Locale locale, String token, User user) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String resetLink = appUrl + "/password/reset/" + user.getId() + "/" +token;
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setFrom(this.fromEmail);
-            helper.setTo(user.getEmail());
-            helper.setSubject("Réinitialiser le mot de passe");
-            helper.setText("Cliquer sur le lien suivant pour réinitialiser le mot de passe : <a href=" + resetLink + ">" + resetLink + "</a>");
-            javaMailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Future sendMail = executor.submit(() -> mailService.sendResetTokenEmail(request.getLocale(), token, user));
+        executor.shutdown();
     }
 
     @RequestMapping(value = "/password/reset", method = RequestMethod.POST)

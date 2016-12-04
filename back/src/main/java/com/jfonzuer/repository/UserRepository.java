@@ -19,6 +19,7 @@ import java.util.List;
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
+    User findByIdAndEnabledAndIsBlocked(Long id, Boolean enabled, Boolean isBlocked);
     Page<User> findAllByTypeAndEnabledAndIsBlockedOrderByIdDesc(UserType t, Boolean enabled, Boolean isBlocked, Pageable page);
     List<User> findTop20ByTypeOrderByIdDesc(UserType type);
 
