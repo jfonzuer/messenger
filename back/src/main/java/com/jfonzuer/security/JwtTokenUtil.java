@@ -1,5 +1,6 @@
 package com.jfonzuer.security;
 
+import com.jfonzuer.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -156,7 +157,7 @@ public class JwtTokenUtil implements Serializable {
         return refreshedToken;
     }
 
-    public Boolean validateToken(String token, JwtUser jwtUser) {
+    public Boolean validateToken(String token, User jwtUser) {
 
         final String username = getUsernameFromToken(token);
         /*

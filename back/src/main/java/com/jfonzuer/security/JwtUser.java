@@ -1,111 +1,65 @@
 package com.jfonzuer.security;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jfonzuer.dto.FetishDto;
 import com.jfonzuer.dto.ImageDto;
 import com.jfonzuer.dto.LocalizationDto;
 import com.jfonzuer.dto.UserTypeDto;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by jfonzuer on 20.03.16.
  */
-public class JwtUser implements UserDetails {
+public class JwtUser {
 
     private Long id;
     private String username;
-    private String password;
     private String email;
     private String description;
     private String birthDate;
     private List<FetishDto> fetishes;
     private LocalizationDto localization;
-    private Collection<? extends GrantedAuthority> authorities;
-    private boolean enabled;
-    private Date lastPasswordResetDate;
+    private List<String> authorities;
+    private boolean isActive;
     private List<ImageDto> images;
     private UserTypeDto userType;
     private String lastActivityDate;
     private Long reportedAsFake;
+    private boolean notifyMessage;
+    private boolean notifyVisit;
 
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String password, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, Collection<? extends GrantedAuthority> authorities, boolean enabled, Date lastPasswordResetDate, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake) {
+    public JwtUser(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, List<String> authorities, boolean isActive, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, boolean notifyMessage, boolean notifyVisit) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.email = email;
         this.description = description;
         this.birthDate = birthDate;
         this.fetishes = fetishes;
         this.localization = localization;
         this.authorities = authorities;
-        this.enabled = enabled;
-        this.lastPasswordResetDate = lastPasswordResetDate;
+        this.isActive = isActive;
         this.images = images;
         this.userType = userType;
         this.lastActivityDate = lastActivityDate;
         this.reportedAsFake = reportedAsFake;
+        this.notifyMessage = notifyMessage;
+        this.notifyVisit = notifyVisit;
     }
 
     public Long getId() {
         return id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
 
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
 
     public String getEmail() {
         return email;
-    }
-
-    @JsonIgnore
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @JsonIgnore
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @JsonIgnore
-    public Date getLastPasswordResetDate() {
-        return lastPasswordResetDate;
     }
 
     public String getDescription() {
@@ -140,39 +94,53 @@ public class JwtUser implements UserDetails {
         return reportedAsFake;
     }
 
+    public List<String> getAuthorities() {
+        return authorities;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public boolean isNotifyMessage() {
+        return notifyMessage;
+    }
+
+    public boolean isNotifyVisit() {
+        return notifyVisit;
+    }
+
     @Override
     public String toString() {
         return "JwtUser{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", description='" + description + '\'' +
                 ", birthDate='" + birthDate + '\'' +
                 ", fetishes=" + fetishes +
                 ", localization=" + localization +
                 ", authorities=" + authorities +
-                ", enabled=" + enabled +
-                ", lastPasswordResetDate=" + lastPasswordResetDate +
                 '}';
     }
+
 
     public static class JwtUserBuilder {
         private Long id;
         private String username;
-        private String password;
         private String email;
         private String description;
         private String birthDate;
         private List<FetishDto> fetishes;
         private LocalizationDto localization;
-        private Collection<? extends GrantedAuthority> authorities;
-        private boolean enabled;
-        private Date lastPasswordResetDate;
+        private List<String> authorities;
+        private boolean isActive;
         private List<ImageDto> images;
         private UserTypeDto userType;
         private String lastActivityDate;
         private Long reportedAsFake;
+        private boolean notifyMessage;
+        private boolean notifyVisit;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -181,11 +149,6 @@ public class JwtUser implements UserDetails {
 
         public JwtUserBuilder setUsername(String username) {
             this.username = username;
-            return this;
-        }
-
-        public JwtUserBuilder setPassword(String password) {
-            this.password = password;
             return this;
         }
 
@@ -214,23 +177,18 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
-        public JwtUserBuilder setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        public JwtUserBuilder setAuthorities(List<String> authorities) {
             this.authorities = authorities;
             return this;
         }
 
-        public JwtUserBuilder setEnabled(boolean enabled) {
-            this.enabled = enabled;
+        public JwtUserBuilder setIsActive(boolean isActive) {
+            this.isActive = isActive;
             return this;
         }
 
         public JwtUserBuilder setImages(List<ImageDto> images) {
             this.images = images;
-            return this;
-        }
-
-        public JwtUserBuilder setLastPasswordResetDate(Date lastPasswordResetDate) {
-            this.lastPasswordResetDate = lastPasswordResetDate;
             return this;
         }
 
@@ -249,8 +207,18 @@ public class JwtUser implements UserDetails {
             return this;
         }
 
+        public JwtUserBuilder setNotifyMessage(boolean notifyMessage) {
+            this.notifyMessage = notifyMessage;
+            return this;
+        }
+
+        public JwtUserBuilder setNotifyVisit(boolean notifyVisit) {
+            this.notifyVisit = notifyVisit;
+            return this;
+        }
+
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, password, email, description, birthDate, fetishes, localization, authorities, enabled, lastPasswordResetDate, images, userType, lastActivityDate, reportedAsFake);
+            return new JwtUser(id, username, email, description, birthDate, fetishes, localization, authorities, isActive, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit);
         }
     }
 }

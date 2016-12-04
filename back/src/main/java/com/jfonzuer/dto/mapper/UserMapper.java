@@ -30,13 +30,11 @@ public class UserMapper {
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail())
                 .setDescription(user.getDescription())
-                .setPassword(user.getPassword())
                 .setBirthDate(user.getBirthDate() == null ? null : user.getBirthDate().toString())
                 .setLocalization(user.getLocalization() == null ? null : LocalizationMapper.toDto(user.getLocalization()))
-                .setLastPasswordResetDate(user.getLastPasswordResetDate())
-                .setEnabled(user.getEnabled() == null ? true : user.getEnabled())
                 .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .setUserType(UserTypeMapper.toDto(user.getType()))
+                .setIsActive(user.isEnabled() && !user.getBlocked())
                 .createJwtUser();
     }
 
@@ -46,28 +44,17 @@ public class UserMapper {
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail())
                 .setDescription(user.getDescription())
-                .setPassword(user.getPassword())
                 .setBirthDate(user.getBirthDate().toString())
                 .setFetishes(user.getFetishes().stream().map(f -> FetishMapper.toDto(f)).collect(Collectors.toList()))
                 .setLocalization(LocalizationMapper.toDto(user.getLocalization()))
-                .setLastPasswordResetDate(user.getLastPasswordResetDate())
-                .setEnabled(user.getEnabled())
                 .setImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .setUserType(UserTypeMapper.toDto(user.getType()))
                 .setLastActivityDate(user.getLastActivityDate().toString())
+                .setAuthorities(mapAuthorities(user.getUserRoles()))
+                .setIsActive(user.isEnabled() && !user.getBlocked())
                 .setReportedAsFake(user.getReportedAsFake())
-                .createJwtUser();
-    }
-
-    // methode qui mappe selon les besoin de l'authentification
-    public static JwtUser toDtoWithAuthorities(User user) {
-        return new JwtUser.JwtUserBuilder()
-                .setUsername(user.getUsername())
-                .setEmail(user.getEmail())
-                .setPassword(user.getPassword())
-                .setLastPasswordResetDate(user.getLastPasswordResetDate())
-                .setEnabled(user.getEnabled() == null ? true : user.getEnabled())
-                .setAuthorities(mapToGrantedAuthorities(user.getUserRoles()))
+                .setNotifyVisit(user.getNotifyVisit())
+                .setNotifyMessage(user.getNotifyMessage())
                 .createJwtUser();
     }
 
@@ -84,9 +71,15 @@ public class UserMapper {
                 .createUser() : null;
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(Set<UserRole> userRoles) {
+    public static List<GrantedAuthority> mapToGrantedAuthorities(Set<UserRole> userRoles) {
         return userRoles.stream()
                 .map(userRole -> new SimpleGrantedAuthority(userRole.getRole()))
+                .collect(Collectors.toList());
+    }
+
+    private static List<String> mapAuthorities(Set<UserRole> userRoles) {
+        return userRoles.stream()
+                .map(userRole -> userRole.getRole())
                 .collect(Collectors.toList());
     }
 }

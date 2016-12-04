@@ -19,16 +19,17 @@ import java.util.List;
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
-    Page<User> findAllByTypeOrderByIdDesc(UserType t, Pageable page);
+    Page<User> findAllByTypeAndEnabledAndIsBlockedOrderByIdDesc(UserType t, Boolean enabled, Boolean isBlocked, Pageable page);
     List<User> findTop20ByTypeOrderByIdDesc(UserType type);
 
     Page<User> findAllByType(UserType type, Pageable pageable);
 
-    @Query("select u from User u where u.type = :type and (:localization is null  or u.localization = :localization) " +
+    @Query("select u from User u where u.type = :type and u.enabled = true and u.isBlocked = false and (:localization is null  or u.localization = :localization) " +
             "and (:keyword is null or lower(u.description) like concat('%', lower(:keyword), '%') or lower(u.username) like concat('%', lower(:keyword) ,'%')) " +
             "and ((:dateOne is null and :dateTwo is null) or (u.birthDate between :dateOne and :dateTwo)) " +
             "order by u.lastActivityDate desc ")
     Page<User> search(@Param("type") UserType type, @Param("localization") Localization localization, @Param("keyword") String keyword, @Param("dateOne") LocalDate dateOne, @Param("dateTwo") LocalDate dateTwo, Pageable p);
+
 
     Page<User> findAllByTypeAndLocalizationAndDescriptionIgnoreCaseContainingOrUsernameIgnoreCaseContaining(UserType type, Localization localization, String keyword, String username, Pageable pageable);
 }

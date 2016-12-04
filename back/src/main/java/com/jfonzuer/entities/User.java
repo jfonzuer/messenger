@@ -1,5 +1,8 @@
 package com.jfonzuer.entities;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,7 +12,7 @@ import java.util.*;
  * Created by pgm on 18/09/16.
  */
 @Entity
-public class User implements Serializable {
+public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue
@@ -48,7 +51,6 @@ public class User implements Serializable {
     @ManyToOne
     private UserType type;
 
-
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> userRoles = new HashSet<>(0);
 
@@ -61,10 +63,22 @@ public class User implements Serializable {
     @Column(nullable = false)
     private LocalDate lastReportDate;
 
+    @Transient
+    private Collection<? extends GrantedAuthority> authorities;
+
+    @Column(nullable = false)
+    private Boolean notifyMessage;
+
+    @Column(nullable = false)
+    private Boolean notifyVisit;
+
+    @Column(nullable = false)
+    private Boolean isBlocked;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -81,6 +95,33 @@ public class User implements Serializable {
         this.lastActivityDate = lastActivityDate;
         this.reportedAsFake = reportedAsFake;
         this.lastReportDate = lastReportDate;
+        this.authorities = authorities;
+        this.notifyMessage = notifyMessage;
+        this.notifyVisit = notifyVisit;
+        this.isBlocked = isBlocked;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     public Long getId() {
@@ -121,10 +162,6 @@ public class User implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
     }
 
     public void setEnabled(Boolean enabled) {
@@ -211,6 +248,38 @@ public class User implements Serializable {
         this.lastReportDate = lastReportDate;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public Boolean getNotifyMessage() {
+        return notifyMessage;
+    }
+
+    public void setNotifyMessage(Boolean notifyMessage) {
+        this.notifyMessage = notifyMessage;
+    }
+
+    public Boolean getNotifyVisit() {
+        return notifyVisit;
+    }
+
+    public void setNotifyVisit(Boolean notifyVisit) {
+        this.notifyVisit = notifyVisit;
+    }
+
+    public Boolean getBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        isBlocked = blocked;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -252,6 +321,10 @@ public class User implements Serializable {
         private LocalDate lastActivityDate;
         private Long reportedAsFake;
         private LocalDate lastReportDate;
+        private Collection<? extends GrantedAuthority> authorities;
+        private Boolean notifyMessage;
+        private Boolean notifyVisit;
+        private Boolean isBlocked;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -327,13 +400,34 @@ public class User implements Serializable {
             this.reportedAsFake = reportedAsFake;
             return this;
         }
+
         public UserBuilder setLastReportDate(LocalDate lastReportDate) {
             this.lastReportDate = lastReportDate;
             return this;
         }
 
+        public UserBuilder setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+            this.authorities = authorities;
+            return this;
+        }
+
+        public UserBuilder setNotifyMessage(Boolean notifyMessage) {
+            this.notifyMessage = notifyMessage;
+            return this;
+        }
+
+        public UserBuilder setNotifyVisit(Boolean notifyVisit) {
+            this.notifyVisit = notifyVisit;
+            return this;
+        }
+
+        public UserBuilder setIsBlocked(Boolean isBlocked) {
+            this.isBlocked = isBlocked;
+            return this;
+        }
+
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked);
         }
     }
 }

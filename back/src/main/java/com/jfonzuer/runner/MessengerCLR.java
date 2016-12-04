@@ -105,6 +105,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setPassword(encoder.encode("test"))
                 .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .setEnabled(true)
+                .setIsBlocked(false)
                 .setDescription("je suis le membre 1")
                 .setFetishes(fetishes)
                 .setLocalization(l1)
@@ -112,6 +113,8 @@ public class MessengerCLR implements CommandLineRunner {
                 .setReportedAsFake(0L)
                 .setLastActivityDate(LocalDate.now())
                 .setLastReportDate(LocalDate.now().minusDays(1L))
+                .setNotifyMessage(true)
+                .setNotifyVisit(true)
                 .createUser();
         User u2 = new User.UserBuilder()
                 .setEmail("member13@gmail.com")
@@ -119,6 +122,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setPassword(encoder.encode("password2"))
                 .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .setEnabled(true)
+                .setIsBlocked(false)
                 .setDescription("je suis le membre 2")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
@@ -126,6 +130,8 @@ public class MessengerCLR implements CommandLineRunner {
                 .setReportedAsFake(0L)
                 .setLastActivityDate(LocalDate.now())
                 .setLastReportDate(LocalDate.now().minusDays(1L))
+                .setNotifyMessage(true)
+                .setNotifyVisit(true)
                 .createUser();
         User u3 = new User.UserBuilder()
                 .setEmail("member3@gmail.com")
@@ -133,6 +139,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .setPassword(encoder.encode("password3"))
                 .setEnabled(true)
+                .setIsBlocked(false)
                 .setDescription("je suis le membre 3")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
                 .setLocalization(l2)
@@ -140,6 +147,8 @@ public class MessengerCLR implements CommandLineRunner {
                 .setReportedAsFake(0L)
                 .setLastActivityDate(LocalDate.now())
                 .setLastReportDate(LocalDate.now().minusDays(1L))
+                .setNotifyMessage(true)
+                .setNotifyVisit(true)
                 .createUser();
 
         // save members

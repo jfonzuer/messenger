@@ -97,11 +97,12 @@ public class AuthenticationController {
         String token = request.getHeader(tokenHeader);
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = UserMapper.toDtoWithAuthorities(userRepository.findByEmail(username));
+        User user = userRepository.findByEmail(username);
+        JwtUser jwtUser = UserMapper.toDto(userRepository.findByEmail(username));
 
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
-            return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken, user));
+            return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken, jwtUser));
         } else {
             return ResponseEntity.badRequest().body(null);
         }

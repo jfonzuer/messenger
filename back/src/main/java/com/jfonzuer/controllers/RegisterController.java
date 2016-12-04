@@ -79,10 +79,13 @@ public class RegisterController {
         User user = UserMapper.fromDto(register.getUser());
         user.setPassword(encoder.encode(register.getPasswordConfirmation().getPassword()));
         user.setEnabled(true);
+        user.setBlocked(false);
         user.setLastPasswordResetDate(new Date());
         user.setReportedAsFake(0L);
         user.setLastActivityDate(LocalDate.now());
         user.setLastReportDate(LocalDate.now().minusDays(1));
+        user.setNotifyVisit(true);
+        user.setNotifyMessage(true);
 
         user = userRepository.save(user);
         userRoleRepository.save(new UserRole(user, "ROLE_USER"));

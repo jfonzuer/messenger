@@ -1,6 +1,7 @@
 package com.jfonzuer.security;
 
 import com.jfonzuer.dto.mapper.UserMapper;
+import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,11 +47,12 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 
-            JwtUser jwtUser = UserMapper.toDtoWithAuthorities(this.userRepository.findByEmail(username));
+            User user = userRepository.findByEmail(username);
+            user.setAuthorities(UserMapper.mapToGrantedAuthorities(user.getUserRoles()));
             //System.out.println("jwtUser = " + jwtUser);
 
-            if (jwtTokenUtil.validateToken(authToken, jwtUser)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
+            if (jwtTokenUtil.validateToken(authToken, user)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

@@ -64,7 +64,7 @@ public class UserController {
     public Page<JwtUser> getAll(Pageable p, HttpServletRequest request) {
         User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
         UserType otherType = MessengerUtils.getOtherType(user);
-        return  userRepository.findAllByTypeOrderByIdDesc(otherType, p).map(UserMapper::toLightDto);
+        return  userRepository.findAllByTypeAndEnabledAndIsBlockedOrderByIdDesc(otherType, true, false, p).map(UserMapper::toLightDto);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -164,12 +164,19 @@ public class UserController {
     }
 
     @RequestMapping(value = "/alerts", method = RequestMethod.PUT)
-    public void alerts(HttpServletRequest request, @RequestBody AlertsDto alerts) {
-
+    public ResponseDto alerts(HttpServletRequest request, @RequestBody AlertsDto alerts) {
+        User user = userService.getUserFromToken(request);
+        user.setNotifyMessage(alerts.isNotifyMessage());
+        user.setNotifyVisit(alerts.isNotifyVisit());
+        user = userRepository.save(user);
+        return new ResponseDto("Vos préférences ont été mises à jour");
     }
 
     @RequestMapping(value = "/desactivate", method = RequestMethod.PUT)
-    public void desactivate(HttpServletRequest request, @RequestBody DesactivateDto desactivate) {
-
+    public ResponseDto desactivate(HttpServletRequest request, @RequestBody DesactivateDto desactivate) {
+        User user = userService.getUserFromToken(request);
+        user.setEnabled(desactivate.isDesactivate());
+        user = userRepository.save(user);
+        return new ResponseDto("Votre compte a été désactivé");
     }
 }
