@@ -69,8 +69,10 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<JwtUser> getAll(Pageable p, HttpServletRequest request) {
         User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
+        System.out.println("user.getType() = " + user.getType());
         UserType otherType = MessengerUtils.getOtherType(user);
-        return  userRepository.findAllByTypeAndEnabledAndIsBlockedOrderByIdDesc(otherType, true, false, p).map(UserMapper::toLightDto);
+        System.out.println("otherType = " + otherType);
+        return  userRepository.findAllByIdNotAndTypeAndEnabledAndIsBlockedOrderByIdDesc(user.getId(), otherType, true, false, p).map(UserMapper::toLightDto);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -84,7 +86,7 @@ public class UserController {
         System.out.println("search = " + search);
         System.out.println("search.getUserType() = " + search.getUserType());
 
-        Page<User> users = userRepository.search(search.getUserType(), search.getLocalization(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
+        Page<User> users = userRepository.search(user.getId(), search.getUserType(), search.getLocalization(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
         return users.map(UserMapper::toDto);
     }
 
@@ -132,14 +134,13 @@ public class UserController {
 
 
     @RequestMapping(value = "/password/reset", method = RequestMethod.PUT)
-    public void resetPassword(@RequestBody PasswordDto passwordDto) {
+    public void resetPassword(HttpServletRequest request, @RequestBody PasswordDto passwordDto) {
 
         if (!passwordDto.getPassword().equals(passwordDto.getConfirmation())) {
             throw new IllegalArgumentException();
         }
 
-        //TODO : set current user manually
-        User user = userRepository.findOne(1L);
+        User user = userService.getUserFromToken(request);
         user.setPassword(encoder.encode(passwordDto.getPassword()));
         userRepository.save(user);
     }

@@ -43,7 +43,7 @@ public class MailService {
             //helper.setTo(visited.getEmail());
             helper.setSubject(visitor.getUsername() + " a visité votre profil");
             helper.setText("Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a>", true);
-            javaMailSender.send(mimeMessage);
+            //javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -60,7 +60,7 @@ public class MailService {
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject(sender.getUsername() + " vous a envoyé un message votre profil");
             helper.setText("Connectez vous à l'application pour consulter vos messages : <a href=" + loginUrl + ">Connexion</a>", true);
-            javaMailSender.send(mimeMessage);
+            //javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -76,7 +76,7 @@ public class MailService {
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("Réinitialiser le mot de passe");
             helper.setText("Cliquer sur le lien suivant pour réinitialiser le mot de passe : <a href=" + resetLink + ">Réinitialiser</a>", true);
-            javaMailSender.send(mimeMessage);
+            //javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }

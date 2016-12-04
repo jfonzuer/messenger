@@ -43,8 +43,8 @@ public class VisitController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<VisitDto> getAllVisitsByUser(HttpServletRequest request, Pageable p) {
-        //TODO : set current user manually
-        User visited = userRepository.findOne(1L);
+
+        User visited = userService.getUserFromToken(request);
 
         Page<Visit> visits = this.visitRepository.findAllByVisited(visited, p);
 
@@ -55,9 +55,8 @@ public class VisitController {
     }
 
     @RequestMapping(value = "/number", method = RequestMethod.GET)
-    public Long getUnseenVisits() {
-        //TODO : set current user manually
-        User visited = userRepository.findOne(1L);
+    public Long getUnseenVisits(HttpServletRequest request) {
+        User visited = userService.getUserFromToken(request);
         return this.visitRepository.countByVisitedAndIsSeenByVisited(visited, false);
     }
 }

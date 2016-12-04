@@ -52,19 +52,17 @@ public class ConversationController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<ConversationDto> getAll(Pageable p) {
-        //TODO : set current user manually
-        User user = userRepository.findOne(1L);
+    public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
+        User user = userService.getUserFromToken(request);
         return conversationRepository.findAllByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(user, false, user, false, p).map(c -> ConversationMapper.toDto(c, user));
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ConversationDto add(@RequestBody UserMessageDto dto) {
+    public ConversationDto add(HttpServletRequest request, @RequestBody UserMessageDto dto) {
 
         MessageDto messageDto = dto.getMessage();
 
-        //TODO : set current user manually
-        User userOne = userRepository.findOne(1L);
+        User userOne = userService.getUserFromToken(request);
         User userTwo = UserMapper.fromDto(dto.getUser());
 
         if (userOne.equals(userTwo)) {
@@ -83,11 +81,10 @@ public class ConversationController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ConversationDto getConversationBetweenCurrentUserAndSpecifiedUser(@PathVariable Long id) {
+    public ConversationDto getConversationBetweenCurrentUserAndSpecifiedUser(HttpServletRequest request, @PathVariable Long id) {
         LOGGER.info(" in getConversationBetweenCurrentUserAndSpecifiedUser ");
 
-        //TODO : set current user manually
-        User currentUser = userRepository.findOne(1L);
+        User currentUser = userService.getUserFromToken(request);
         User specifiedUser = userRepository.findOne(id);
 
         List<Conversation> list = conversationRepository.findTop1ByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
@@ -96,10 +93,9 @@ public class ConversationController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteConversation(@PathVariable Long id) {
+    public void deleteConversation(HttpServletRequest request, @PathVariable Long id) {
 
-        //TODO : set current user manually
-        User currentUser = userRepository.findOne(1L);
+        User currentUser = userService.getUserFromToken(request);
         Conversation conversation = conversationRepository.findTop1ByIdAndUserOneOrUserTwo(id, currentUser, currentUser).get(0);
 
         if (MessengerUtils.isUserOne(currentUser, conversation)) {
@@ -120,8 +116,7 @@ public class ConversationController {
     @RequestMapping(value = "/unread", method = RequestMethod.GET)
     public Long getUnreadNumerConversations(HttpServletRequest request) {
 
-        //TODO : set current user manually
-        User user = userRepository.findOne(1L);
+        User user = userService.getUserFromToken(request);
 
         //User user = this.userService.getUserFromToken(request);
         return this.conversationRepository.countByUserOneAndIsReadByUserOne(user, false) +  this.conversationRepository.countByUserTwoAndIsReadByUserTwo(user, false);

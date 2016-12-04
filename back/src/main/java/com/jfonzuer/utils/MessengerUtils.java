@@ -39,14 +39,14 @@ public class MessengerUtils {
     }
 
     public static boolean isDomina(User user) {
-        return user.getType().getName() == DOMINA;
+        return user.getType().getName().equals(DOMINA);
     }
 
     public static boolean isSub(User user) {
-        return user.getType().getName() == SUBMISSIVE;
+        return user.getType().getName().equals(SUBMISSIVE);
     }
 
     public static UserType getOtherType(User user) {
-        return user.getType().getName() == DOMINA ? new UserType.UserTypeBuilder().setId(SUBMISSIVE_ID).createUserType() : new UserType.UserTypeBuilder().setId(DOMINA_ID).createUserType();
+        return user.getType().getName().equals(DOMINA) ? new UserType.UserTypeBuilder().setId(SUBMISSIVE_ID).createUserType() : new UserType.UserTypeBuilder().setId(DOMINA_ID).createUserType();
     }
 }

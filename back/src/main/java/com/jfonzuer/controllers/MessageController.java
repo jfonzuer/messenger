@@ -53,15 +53,16 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public Page<MessageDto> getByConversation(@PathVariable Long id, Pageable p) {
+    public Page<MessageDto> getByConversation(HttpServletRequest request, @PathVariable Long id, Pageable p) {
 
-        //TODO : set current user manually
-        User currentUser = userRepository.findOne(1L);
+        User currentUser = userService.getUserFromToken(request);
 
         // check if conversation exists and if user is part of this
         Conversation conversation = getConversationByIdAndUser(id, currentUser);
 
-        updateConversationIsRead(conversation, currentUser);
+        if (conversation != null) {
+            updateConversationIsRead(conversation, currentUser);
+        }
 
         // on retourne null si la conversation n'existe pas
         return conversation == null ? null : messageRepository.findByConversationOrderByIdDesc(conversation, p).map(m -> MessageMapper.toDto(m));
