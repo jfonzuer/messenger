@@ -21,12 +21,7 @@ export class UserResolve implements Resolve<User> {
       if (user) {
         return user;
       }
-      else {
-        // id not found
-        console.log("not found");
-        this.router.navigate(['/app/home']);
-        return false;
-      }
     })
+     // .catch(() => this.router.navigate(['/app/home']));
   }
 }

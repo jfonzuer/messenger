@@ -21,4 +21,9 @@
   </div>
 </div>
 
-<div class="col-sm-3" *ngIf="conversations.length == 0"></div>
+<div class="col-sm-3" *ngIf="conversations.length == 0" style="border-right: 1px solid #ccc; min-height: 400px;">
+  <div class="input-group input-group-sm">
+    <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+    <input type="text" class="form-control" placeholder="Rechercher" name="name" [(ngModel)]="name">
+  </div>
+</div>
