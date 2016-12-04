@@ -10,6 +10,7 @@ import {UnauthNavbarComponent} from "./unauth-navbar/unauth-navbar.component";
 import {SharedModule} from "../shared/shared.module";
 import {UnauthRoutingModule} from "./unauth-routing.module";
 import {UnauthFooterComponent} from "./unauth-footer/unauth-footer.component";
+import {DesactivateComponent} from "./desactivate/desactivate.component";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -27,6 +28,7 @@ import {UnauthFooterComponent} from "./unauth-footer/unauth-footer.component";
     UnauthHeadingComponent,
     UnauthNavbarComponent,
     UnauthFooterComponent,
+    DesactivateComponent
   ],
 })
 export class UnauthModule { }

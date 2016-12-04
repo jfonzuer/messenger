@@ -10,6 +10,7 @@ import {UserTypesResolve} from "../../services/resolve/user-types-resolve";
 import {FetishesResolve} from "../../services/resolve/fetishes-resolve.service";
 import {LocalizationsResolve} from "../../services/resolve/localizations-resolve";
 import {UnauthFooterComponent} from "./unauth-footer/unauth-footer.component";
+import {DesactivateComponent} from "./desactivate/desactivate.component";
 /**
  * Created by pgmatz on 29/10/16.
  */
@@ -24,6 +25,7 @@ import {UnauthFooterComponent} from "./unauth-footer/unauth-footer.component";
       { path: 'register', component: RegisterComponent, resolve: { fetishes:FetishesResolve, localizations: LocalizationsResolve, userTypes: UserTypesResolve} },
       { path: 'password/forgotten', component: PasswordForgotComponent },
       { path: 'password/reset/:id/:token', component: PasswordResetComponent },
+      { path: 'desactivate', component: DesactivateComponent },
       { path: '', component: UnauthNavbarComponent, outlet: 'header'},
       { path: '', component: UnauthHeadingComponent, outlet: 'banner'},
       { path: '', component: UnauthFooterComponent, outlet: 'footer'}

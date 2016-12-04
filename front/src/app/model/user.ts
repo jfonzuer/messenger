@@ -15,11 +15,12 @@ export class User {
   birthDate: string;
   fetishes: Fetish[];
   localization: Localization;
-  enable:boolean;
+  isActive:boolean;
   age:number;
   images:Image[];
   userType:UserType;
   lastActivityDate: string;
-  reportedAsFake:number;
-  authorities:Authority[];
+  authorities:string[];
+  notifyVisit:boolean;
+  notifyMessage:boolean;
 }

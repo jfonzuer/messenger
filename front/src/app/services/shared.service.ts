@@ -70,6 +70,10 @@ export class SharedService {
     return <User> this.localStorageService.get('user');
   }
 
+  desactivate() {
+    this.localStorageService.remove('token');
+  }
+
   isDomina() : boolean {
     return this.getCurrentUser().userType.name == 'Dominatrice';
   }

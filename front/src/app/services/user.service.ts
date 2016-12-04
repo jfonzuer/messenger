@@ -11,6 +11,8 @@ import {PasswordConfirmation} from "../model/passwordConfirmation";
 import {RequestService} from "./request.service";
 import {Pager} from "../model/pager";
 import {Search} from "../model/search";
+import {Alerts} from "../model/alerts";
+import {Desactivate} from "../model/desactivate";
 
 @Injectable()
 export class UserService {
@@ -141,6 +143,32 @@ export class UserService {
       .toPromise()
       .then(response => {
         this.rs.handleResponse(response);
+      })
+      .catch(this.rs.handleError);
+  }
+
+  updateAlerts(alerts: Alerts) {
+    let headers = this.authenticationService.getHeaders();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.put(this.baseUrl + 'users/alerts', alerts, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.rs.handleResponse(response);
+        return response.json();
+      })
+      .catch(this.rs.handleError);
+  }
+
+  desactivate(desactivate:Desactivate) {
+    let headers = this.authenticationService.getHeaders();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.put(this.baseUrl + 'users/desactivate', desactivate, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.rs.handleResponse(response);
+        return response.json();
       })
       .catch(this.rs.handleError);
   }
