@@ -23,6 +23,8 @@ export class ConversationService {
     return this.http.get(this.baseUrl + 'conversations/' + id, {headers: headers})
       .toPromise()
       .then(response => {
+        console.log("SERVICE")
+        console.log(response);
         this.rs.handleResponse(response);
         return this.rs.extractData(response);
       })

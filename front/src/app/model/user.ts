@@ -15,7 +15,8 @@ export class User {
   birthDate: string;
   fetishes: Fetish[];
   localization: Localization;
-  isActive:boolean;
+  enable:boolean;
+  isBlocked:boolean;
   age:number;
   images:Image[];
   userType:UserType;

@@ -9,5 +9,6 @@ export class Message {
   source: User;
   content: string;
   sendDate: string;
+  sendSince:string;
   conversation: Conversation;
 }

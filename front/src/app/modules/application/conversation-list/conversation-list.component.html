@@ -11,12 +11,12 @@
     </a>
     <div class="media-body" style="cursor: pointer" (click)="onSelect(conversation)">
 
-      <h5 class="media-heading" *ngIf="conversation.read">{{ conversation.userTwo.username }}</h5>
+      <h5 class="media-heading" *ngIf="conversation.readByUserOne">{{ conversation.userTwo.username }}</h5>
 
-      <p *ngIf="!conversation.read"><strong>{{ conversation.userTwo.username }}</strong></p>
+      <p *ngIf="!conversation.readByUserOne"><strong>{{ conversation.userTwo.username }}</strong></p>
 
-      <small *ngIf="conversation.read">{{ conversation.preview }}</small>
-      <strong *ngIf="!conversation.read">{{ conversation.preview }}</strong>
+      <small *ngIf="conversation.readByUserOne">{{ conversation.preview }}</small>
+      <strong *ngIf="!conversation.readByUserOne">{{ conversation.preview }}</strong>
     </div>
   </div>
 </div>

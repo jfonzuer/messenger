@@ -6,7 +6,8 @@ import {User} from "./user";
 export class Conversation {
   id: number;
   preview: string;
-  read:boolean;
+  readByUserOne:boolean;
+  readByUserTwo:boolean;
   userOne: User;
   userTwo: User;
 }

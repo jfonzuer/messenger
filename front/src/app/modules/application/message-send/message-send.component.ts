@@ -5,6 +5,7 @@ import {User} from "../../../model/user";
 import {Conversation} from "../../../model/conversation";
 import {Message} from "../../../model/message";
 import {UserMessage} from "../../../model/userMessage";
+import {MessengerService} from "../../../services/messenger.service";
 
 @Component({
   selector: 'app-message-send',
@@ -14,17 +15,17 @@ import {UserMessage} from "../../../model/userMessage";
 export class MessageSendComponent implements OnInit {
 
   @Input() user: User;
-  @Input() selectedConversation: Conversation;
-  @Output() addMessage = new EventEmitter();
-  @Output() addConversation = new EventEmitter();
+  selectedConversation: Conversation;
   @Output() successEmitter = new EventEmitter();
   @Output() errorEmitter = new EventEmitter();
+  changeConversationSubscription: any;
 
   message: Message;
   enter:boolean = true;
-  error:string;
 
-  constructor(private messageService: MessageService, private conversationService: ConversationService) { }
+  constructor(private messageService: MessageService, private conversationService: ConversationService, private messengerService:MessengerService) {
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.selectedConversation = conversation);
+  }
 
   ngOnInit() {
     this.message = new Message();
@@ -33,23 +34,8 @@ export class MessageSendComponent implements OnInit {
 
   send() {
     if (this.selectedConversation) {
-      if (this.selectedConversation.id) {
-        this.message.conversation = this.selectedConversation;
-
-        this.messageService.post(this.message)
-            .then(response => {
-              this.addMessage.emit(response);
-              this.message.content = '';
-            })
-            .catch(error => this.errorEmitter.emit(error) );
-        // s'il s'agit d'une nouvelle conversation
-      } else {
-        console.log("create new conversation");
-        this.conversationService.post(new UserMessage(this.selectedConversation.userTwo, this.message)).then(response => {
-          this.message.content = '';
-          this.addConversation.emit();
-        }).catch(error => this.errorEmitter.emit(error));
-      }
+      // si l'id n'existe pas on crée une conversation
+      this.selectedConversation.id ? this.sendMessage() : this.createConversation();
     }
   }
 
@@ -57,5 +43,21 @@ export class MessageSendComponent implements OnInit {
     if (this.enter) {
       this.send();
     }
+  }
+
+  private sendMessage() {
+    this.message.conversation = this.selectedConversation;
+    this.messageService.post(this.message).then(response => { this.messengerService.addMessage(response); this.message.content = ''; }).catch(error => this.errorEmitter.emit(error) );
+  }
+
+  private createConversation() {
+    console.log("create conversation");
+    this.conversationService.post(new UserMessage(this.selectedConversation.userTwo, this.message)).then(response => {
+      this.message.content = '';
+      console.log("conversation response");
+      console.log(response);
+      this.selectedConversation = response;
+      this.messengerService.addConversation(this.selectedConversation);
+    }).catch(error => this.errorEmitter.emit(error));
   }
 }

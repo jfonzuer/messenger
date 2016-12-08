@@ -5,24 +5,13 @@
 <div class="container">
 
   <div class="row">
-    <app-conversation-list [conversations]="conversations" (setConversation)="setConversationListener($event)"></app-conversation-list>
+    <app-conversation-list (successEmitter)="successListener($event)" (errorEmitter)="errorListener($event)"></app-conversation-list>
 
     <div class="message-wrap col-sm-8">
 
-      <app-message-list [messages]="messages" [selectedConversation]="selectedConversation" [pager]="pager"
-                        (deleteConversationEmitter)="deleteConversationListener($event)" (scrollUpEmitter)="scrollUpListener($event)">
+      <app-message-list (successEmitter)="successListener($event)" (errorEmitter)="errorListener($event)" ></app-message-list>
 
-      </app-message-list>
-
-      <app-message-send
-                        (successEmitter)="successListener($event)"
-                        (errorEmitter)="errorListener($event)"
-                        [selectedConversation]="selectedConversation"
-                        [user]="user"
-                        (addConversation)="addConversationListener($event)"
-                        (addMessage)="addMessageListener($event)"
-                        >
-      </app-message-send>
+      <app-message-send (successEmitter)="successListener($event)" (errorEmitter)="errorListener($event)" [user]="user"></app-message-send>
     </div>
   </div>
 </div>

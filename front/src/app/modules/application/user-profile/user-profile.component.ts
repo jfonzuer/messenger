@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {Localization} from "../../../model/localization";
 import {User} from "../../../model/user";
 import {Fetish} from "../../../model/fetish";

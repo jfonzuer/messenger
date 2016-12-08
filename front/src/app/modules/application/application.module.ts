@@ -28,6 +28,7 @@ import {CurrentUserResolve} from "../../services/resolve/current-user-resolve.se
 import {ProfileComponent} from "./user-profile/profile/profile.component";
 import {DesactivateComponent} from "./user-profile/desactivate/desactivate.component";
 import {AlertsComponent} from "./user-profile/alerts/alerts.component";
+import {MessengerService} from "../../services/messenger.service";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -66,7 +67,8 @@ import {AlertsComponent} from "./user-profile/alerts/alerts.component";
     VisitService,
     UserTypeService,
     UserResolve,
-    CurrentUserResolve
+    CurrentUserResolve,
+    MessengerService
   ],
 
 })
