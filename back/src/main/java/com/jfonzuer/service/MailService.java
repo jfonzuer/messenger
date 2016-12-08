@@ -47,7 +47,7 @@ public class MailService {
             //helper.setTo(visited.getEmail());
             helper.setSubject(visitor.getUsername() + " a visité votre profil");
             helper.setText("Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a>", true);
-            javaMailSender.send(mimeMessage);
+            //javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }

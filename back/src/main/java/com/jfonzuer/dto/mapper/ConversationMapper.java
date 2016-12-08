@@ -21,10 +21,15 @@ public class ConversationMapper {
     }
 
     public static ConversationDto toDto(Conversation c, User u) {
+        System.out.println("------------------------------------------");
+        System.out.println("c.getReadByUserTwo() = " + c.getReadByUserTwo());
+        System.out.println("(MessengerUtils.isUserOne(u,c) ? c.getReadByUserOne() : c.getReadByUserTwo()).toString() = " + (MessengerUtils.isUserOne(u,c) ? c.getReadByUserOne() : c.getReadByUserTwo()).toString());
+        System.out.println("MessengerUtils.isUserOne(c, u) = " + MessengerUtils.isUserOne(u,c));
 
         return c != null ? new ConversationDto.ConversationDtoBuilder()
                 .setId(c.getId())
-                .setIsRead(MessengerUtils.isUserOne(u, c) ? c.getReadByUserOne() == null ? null : c.getReadByUserOne() : c.getReadByUserTwo() == null ? null : c.getReadByUserTwo())
+                .setReadByUserOne(MessengerUtils.isUserOne(u,c) ? c.getReadByUserOne() : c.getReadByUserTwo())
+                .setReadByUserTwo(MessengerUtils.isUserOne(u,c) ? c.getReadByUserTwo() : c.getReadByUserOne())
                 .setUserOne(u == null ? null : UserMapper.toLightDto(u))
                 .setUserTwo(UserMapper.toLightDto(MessengerUtils.getOtherUser(c, u)))
                 .setPreview(c.getPreview() == null ? null : c.getPreview())

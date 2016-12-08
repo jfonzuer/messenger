@@ -82,6 +82,7 @@ public class MessageController {
         userRepository.save(target);
 
         conversation.setPreview(MessengerUtils.getPreviewFromMessage(dto));
+        //setConversationUnread(conversation, sender);
         conversationRepository.save(conversation);
 
         Message message = MessageMapper.fromDto(dto);
@@ -114,13 +115,22 @@ public class MessageController {
     }
 
     private void updateConversationIsRead(Conversation c, User user) {
-        if (MessengerUtils.isUserOne(user, c) && c.getReadByUserOne() == false) {
+        if (MessengerUtils.isUserOne(user, c) && c.getReadByUserOne().equals(Boolean.FALSE)) {
             c.setReadByUserOne(true);
             conversationRepository.save(c);
         }
-        else if (MessengerUtils.isUserTwo(user, c) && c.getReadByUserTwo() == false) {
+        else if (MessengerUtils.isUserTwo(user, c) && c.getReadByUserTwo().equals(Boolean.FALSE)) {
             c.setReadByUserTwo(true);
             conversationRepository.save(c);
+        }
+    }
+
+    private void setConversationUnread(Conversation c, User u) {
+        if (MessengerUtils.isUserOne(u, c) && c.getReadByUserTwo().equals(Boolean.TRUE)) {
+            c.setReadByUserTwo(false);
+        }
+        else if (MessengerUtils.isUserTwo(u, c) && c.getReadByUserOne().equals(Boolean.TRUE)) {
+            c.setReadByUserOne(false);
         }
     }
 }

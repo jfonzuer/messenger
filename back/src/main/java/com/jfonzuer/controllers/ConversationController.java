@@ -82,18 +82,22 @@ public class ConversationController {
         messageRepository.save(message);
         mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
 
-        return ConversationMapper.toDto(conversation);
+        /*
+        ConversationDto dto1 = ConversationMapper.toDto(conversation, userOne);
+        System.out.println("dto1 = " + dto1);
+        return dto1;
+        */
+        return ConversationMapper.toDto(conversation, userOne);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ConversationDto getConversationBetweenCurrentUserAndSpecifiedUser(HttpServletRequest request, @PathVariable Long id) {
         LOGGER.info(" in getConversationBetweenCurrentUserAndSpecifiedUser ");
-
         User currentUser = userService.getUserFromToken(request);
         User specifiedUser = userRepository.findOne(id);
 
         Conversation conversation = conversationRepository.findByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
-
+        System.out.println("conversation = " + conversation);
         // si la conversation n'existe pas on la crée
         if (conversation == null) {
             conversation = new Conversation.ConversationBuilder()
@@ -107,6 +111,7 @@ public class ConversationController {
                     .setIsDeletedByUserTwo(false)
                     .createConversation();
         }
+
         return ConversationMapper.toDto(conversation, currentUser);
     }
 

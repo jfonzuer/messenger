@@ -11,19 +11,21 @@ public class ConversationDto {
 
     private Long id;
     private String preview;
-    private boolean isRead;
     private JwtUser userOne;
     private JwtUser userTwo;
+    private Boolean readByUserOne;
+    private Boolean readByUserTwo;
 
     public ConversationDto() {
     }
 
-    public ConversationDto(Long id, String preview, boolean isRead, JwtUser userOne, JwtUser userTwo) {
+    public ConversationDto(Long id, String preview, JwtUser userOne, JwtUser userTwo, Boolean readByUserOne, Boolean readByUserTwo) {
         this.id = id;
         this.preview = preview;
-        this.isRead = isRead;
         this.userOne = userOne;
         this.userTwo = userTwo;
+        this.readByUserOne = readByUserOne;
+        this.readByUserTwo = readByUserTwo;
     }
 
     public Long getId() {
@@ -42,14 +44,6 @@ public class ConversationDto {
         this.preview = preview;
     }
 
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean isRead) {
-        isRead = isRead;
-    }
-
     public JwtUser getUserOne() {
         return userOne;
     }
@@ -66,23 +60,42 @@ public class ConversationDto {
         this.userTwo = userTwo;
     }
 
+    public Boolean getReadByUserOne() {
+        return readByUserOne;
+    }
+
+    public void setReadByUserOne(Boolean readByUserOne) {
+        this.readByUserOne = readByUserOne;
+    }
+
+    public Boolean getReadByUserTwo() {
+        return readByUserTwo;
+    }
+
+    public void setReadByUserTwo(Boolean readByUserTwo) {
+        this.readByUserTwo = readByUserTwo;
+    }
+
     @Override
     public String toString() {
         return "ConversationDto{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", preview='" + preview + '\'' +
-                ", isRead='" + isRead + '\'' +
                 ", userOne=" + userOne +
                 ", userTwo=" + userTwo +
+                ", readByUserOne=" + readByUserOne +
+                ", readByUserTwo=" + readByUserTwo +
                 '}';
     }
+
 
     public static class ConversationDtoBuilder {
         private Long id;
         private String preview;
-        private boolean isRead;
         private JwtUser userOne;
         private JwtUser userTwo;
+        private Boolean readByUserOne;
+        private Boolean readByUserTwo;
 
         public ConversationDtoBuilder setId(Long id) {
             this.id = id;
@@ -91,11 +104,6 @@ public class ConversationDto {
 
         public ConversationDtoBuilder setPreview(String preview) {
             this.preview = preview;
-            return this;
-        }
-
-        public ConversationDtoBuilder setIsRead(boolean isRead) {
-            this.isRead = isRead;
             return this;
         }
 
@@ -109,8 +117,18 @@ public class ConversationDto {
             return this;
         }
 
+        public ConversationDtoBuilder setReadByUserOne(Boolean readByUserOne) {
+            this.readByUserOne = readByUserOne;
+            return this;
+        }
+
+        public ConversationDtoBuilder setReadByUserTwo(Boolean readByUserTwo) {
+            this.readByUserTwo = readByUserTwo;
+            return this;
+        }
+
         public ConversationDto createConversationDto() {
-            return new ConversationDto(id, preview, isRead, userOne, userTwo);
+            return new ConversationDto(id, preview, userOne, userTwo, readByUserOne, readByUserTwo);
         }
     }
 }
