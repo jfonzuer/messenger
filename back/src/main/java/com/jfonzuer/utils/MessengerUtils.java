@@ -2,6 +2,7 @@ package com.jfonzuer.utils;
 
 import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.entities.Conversation;
+import com.jfonzuer.entities.Message;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserType;
 
@@ -38,6 +39,10 @@ public class MessengerUtils {
         return conversation.getDeletedByUserOne() && conversation.getDeletedByUserTwo();
     }
 
+    public static boolean isMessageDeletedByBothUsers(Message message) {
+        return message.getDeletedByUserOne() && message.getDeletedByUserTwo();
+    }
+
     public static boolean isDomina(User user) {
         return user.getType().getName().equals(DOMINA);
     }
@@ -48,5 +53,25 @@ public class MessengerUtils {
 
     public static UserType getOtherType(User user) {
         return user.getType().getName().equals(DOMINA) ? new UserType.UserTypeBuilder().setId(SUBMISSIVE_ID).createUserType() : new UserType.UserTypeBuilder().setId(DOMINA_ID).createUserType();
+    }
+
+    public static void setConversationUnread(Conversation c, User u) {
+        if (isUserOne(u, c) && c.getReadByUserTwo().equals(Boolean.TRUE)) {
+            c.setReadByUserTwo(false);
+            c.setReadByUserOne(true);
+        }
+        else if (isUserTwo(u, c) && c.getReadByUserOne().equals(Boolean.TRUE)) {
+            c.setReadByUserOne(false);
+            c.setReadByUserOne(true);
+        }
+    }
+
+    public static void setConversationDeleted(Conversation c, User sender) {
+        if (MessengerUtils.isUserOne(sender, c)) {
+            c.setDeletedByUserOne(false);
+        }
+        else if (MessengerUtils.isUserTwo(sender, c)) {
+            c.setDeletedByUserTwo(false);
+        }
     }
 }

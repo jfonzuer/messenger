@@ -54,8 +54,6 @@ export class MessageSendComponent implements OnInit {
     console.log("create conversation");
     this.conversationService.post(new UserMessage(this.selectedConversation.userTwo, this.message)).then(response => {
       this.message.content = '';
-      console.log("conversation response");
-      console.log(response);
       this.selectedConversation = response;
       this.messengerService.addConversation(this.selectedConversation);
     }).catch(error => this.errorEmitter.emit(error));

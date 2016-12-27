@@ -38,7 +38,7 @@ export class MessengerComponent implements OnInit {
       // si on arrive avec l'id d'un utilisateur spécifié
       if (params['id']) {
         let userId = +params['id'];// (+) converts string 'id' to a number
-        this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => this.messengerService.changeConversation(conversation));
+        this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => { console.log("conversation : ", conversation); this.messengerService.changeConversation(conversation) });
       }
     });
   }
@@ -52,50 +52,4 @@ export class MessengerComponent implements OnInit {
     this.success = success;
     setTimeout(() => this.success = "", 2000);
   }
-  /*
-  deleteConversationListener(conversation : Conversation) : void {
-    // on supprime la conversation de la liste
-    if (confirm("Êtes vous sûr de vouloir supprimer la conversation ?")) {
-      this.conversations = this.conversations.filter(c => c.id != conversation.id);
-      this.selectedConversation = null;
-      this.messages = [];
-      this.pager = null;
-      this.conversationService.remove(conversation).then().catch(error => this.error = error);
-    }
-  }
-
-  setConversationListener(conversation : Conversation) : void {
-    this.selectedConversation = conversation;
-    this.pager = null;
-    this.getMessages(this.selectedConversation.userTwo.id);
-
-    // TODO : à activer
-    // on définit le timer si pas encore défini
-    //this.defineMessageTimerIfInexistant(this.specifiedUser.id);
-  }
-
-  addMessageListener(message : Message) : void {
-    message.sendDate = moment(message.sendDate).fromNow();
-    this.getConversations();
-    this.messages.push(message);
-  }
-
-  addConversationListener() : void {
-    this.getMessages(this.selectedConversation.userTwo.id);
-    // on récupère l'objet conversation et on la set en selected
-    this.conversationService.getConversationBetweenSpecifiedUser(this.selectedConversation.userTwo.id).then(conversation => { console.log(conversation); this.selectedConversation = conversation; });
-    this.getConversations();
-  }
-
-
-
-
-  private defineConversationTimer() : void {
-    this.conversationTimer = Observable.timer(0, 60000);
-    this.conversationTimer.subscribe(t => this.getConversations());
-  }
-  private getConversations() {
-    this.conversationService.getAll().then(response => { console.log(response); this.conversations = response.content; }).catch(error => this.error = error);
-  }
-  */
 }

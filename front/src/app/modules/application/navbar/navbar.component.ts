@@ -59,11 +59,11 @@ export class NavbarComponent implements OnInit {
   }
 
   getUnreadConversations() {
-    this.conversationService.getUnreadNumberConversations().then(unreadConversations => { console.log(unreadConversations); this.unreadConversations = unreadConversations });
+    this.conversationService.getUnreadNumberConversations().then(unreadConversations => { this.unreadConversations = unreadConversations });
   }
 
   getUnseenVisits() {
-    this.visitService.getUnseenNumber().then(unseenVisits => { console.log(unseenVisits); this.unseenVisits = unseenVisits});
+    this.visitService.getUnseenNumber().then(unseenVisits => { this.unseenVisits = unseenVisits});
   }
 
   logout() {

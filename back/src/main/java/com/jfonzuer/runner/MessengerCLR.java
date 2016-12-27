@@ -225,10 +225,10 @@ public class MessengerCLR implements CommandLineRunner {
 
         //Conversation t1 = new Conversation(Arrays.asList(u1,u2), Arrays.asList(ms1, ms2, ms3, ms4));
 
-        Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(c1).setContent("Salut").setSentDateTime(LocalDateTime.now()).createMessage();
-        Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(c1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).createMessage();
-        Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(c1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).createMessage();
-        Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(c1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).createMessage();
+        Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(c1).setContent("Salut").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
+        Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(c1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
+        Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(c1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
+        Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(c1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
         Stream.of(ms1, ms2, ms3, ms4).forEach(ms -> messageRepository.save(ms));
     }
 }

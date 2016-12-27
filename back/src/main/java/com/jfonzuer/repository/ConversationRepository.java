@@ -25,7 +25,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
 
     Page<Conversation> findAllByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(User userOne, Boolean isDeletedByUserOne, User userTwo, Boolean isDeletedByUserTwo, Pageable p);
 
-    List<Conversation> findTop1ByIdAndUserOneOrUserTwo(Long id, User userOne, User userTwo);
+    Conversation findByIdAndUserOneOrUserTwo(Long id, User userOne, User userTwo);
     Conversation findByUserOneAndUserTwoOrUserTwoAndUserOne(User userOne, User userTwo, User userOne1, User userTwo1);
 
     /*@Query("select c from c where u.userOne = :userOne ")
