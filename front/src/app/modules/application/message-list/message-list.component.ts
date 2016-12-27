@@ -22,7 +22,7 @@ export class MessageListComponent implements OnInit {
   pager:Pager;
 
   getMessageTimer:Observable<number>;
-  formatMessageTime:Observable<number>;
+  formatMessageTimer:Observable<number>;
 
   // subscriptions
   changeConversationSubscription: any;
@@ -85,7 +85,13 @@ export class MessageListComponent implements OnInit {
   }
 
   private getNewerMessages() {
-
+    if (this.messages.length > 0) {
+      this.messageService.getNewerMessages(this.selectedConversation.userTwo.id, this.messages[this.messages.length - 1].id).then(messages => {
+        console.log(messages);
+        this.datetimeService.formatMessages(messages);
+        this.messages = this.messages.concat(messages);
+      })
+    }
   }
 
   private concatMessage(response: any) {
@@ -99,11 +105,9 @@ export class MessageListComponent implements OnInit {
   private defineTimers(userId: number) : void {
     if (!this.getMessageTimer) {
       this.getMessageTimer = Observable.timer(0, 2000);
-      // coder endpoint de l'api pr chercher les messages de la conversation avec un id supérieur à celui du dernier message
-      //this.messageTimer.subscribe(t => this.getMessages(this.selectedConversation.userTwo.id));
-      //this.getMessageTimer.subscribe(t => { console.log(this.messages); this.datetimeService.formatMessages(this.messages); });
-      this.getMessageTimer = Observable.timer(0, 60000);
-      this.getMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
+      //this.getMessageTimer.subscribe(t => { this.getNewerMessages(); });
+      this.formatMessageTimer = Observable.timer(0, 60000);
+      this.formatMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
     }
   }
 }

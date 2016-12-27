@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * Created by pgm on 21/09/16.
@@ -62,7 +63,6 @@ public class MessageController {
 
         // check if conversation exists and if user is part of this
         Conversation conversation = getConversationByIdAndUser(id, currentUser);
-
         if (conversation != null) {
             updateConversationIsRead(conversation, currentUser);
         }
@@ -70,6 +70,21 @@ public class MessageController {
         // on retourne null si la conversation n'existe pas
         return conversation == null ? null : messageRepository.findByConversationOrderByIdDesc(conversation, p).map(m -> MessageMapper.toDto(m));
     }
+
+    @RequestMapping(value = "/newer/{userId}/{messageId}", method = RequestMethod.GET)
+    public List<MessageDto> getNewerMessages(HttpServletRequest request, @PathVariable("userId") Long userId, @PathVariable("messageId") Long messageId) {
+        User currentUser = userService.getUserFromToken(request);
+        System.out.println("userId = " + userId);
+        System.out.println("messageId = " + messageId);
+
+        // check if conversation exists and if user is part of this
+        Conversation conversation = getConversationByIdAndUser(userId, currentUser);
+        if (conversation != null) {
+            updateConversationIsRead(conversation, currentUser);
+        }
+        return conversation == null ? null : messageRepository.findByConversationAndIdGreaterThanOrderByIdDesc(conversation, messageId).stream().map(MessageMapper::toDto).collect(Collectors.toList());
+    }
+
 
     @RequestMapping(method = RequestMethod.POST)
     public MessageDto addToConversation(HttpServletRequest request, @RequestBody MessageDto dto) {

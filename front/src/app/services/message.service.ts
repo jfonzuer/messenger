@@ -37,6 +37,20 @@ export class MessageService {
       .catch(this.rs.handleError);
   }
 
+  getNewerMessages(userId:number, messageId) {
+    let headers = this.authenticationService.getHeaders();
+    return this.http.get(this.baseUrl + 'messages/newer/' + userId + '/' + messageId, {headers: headers})
+      .toPromise()
+      .then(response => {
+        this.rs.handleResponse(response);
+        if (response.text()) {
+          return response.json();
+        }
+        return [];
+      })
+      .catch(this.rs.handleError);
+  }
+
   post(message:Message) {
     let headers = this.authenticationService.getHeaders();
     headers.append('Content-Type', 'application/json');
