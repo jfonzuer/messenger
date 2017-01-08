@@ -68,11 +68,8 @@ public class MessageController {
         User currentUser = userService.getUserFromToken(request);
 
         // check if conversation exists and if user is part of this
-<<<<<<< 2e055b30cdb29f73d9726ddc54b843fd36a42986
         Conversation conversation = conversationService.getConversationByIdAndUser(id, currentUser);
-=======
-        Conversation conversation = getConversationByIdAndUser(id, currentUser);
->>>>>>> [Front & Back] get newer messages
+
         if (conversation != null) {
             conversationService.updateConversationIsRead(conversation, currentUser);
         }
