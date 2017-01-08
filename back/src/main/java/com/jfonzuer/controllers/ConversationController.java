@@ -21,12 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Created by pgm on 20/09/16.
@@ -58,35 +56,53 @@ public class ConversationController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
         User user = userService.getUserFromToken(request);
-        return conversationRepository.findAllByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(user, false, user, false, p).map(c -> ConversationMapper.toDto(c, user));
+        return conversationRepository.getAllConversations(user, p).map(c -> ConversationMapper.toDto(c, user));
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ConversationDto add(HttpServletRequest request, @RequestBody UserMessageDto dto) {
 
         MessageDto messageDto = dto.getMessage();
-
         User userOne = userService.getUserFromToken(request);
         User userTwo = UserMapper.fromDto(dto.getUser());
 
         if (userOne.equals(userTwo)) {
             throw new IllegalArgumentException();
         }
-
-        Conversation conversation = conversationRepository.save(new Conversation(MessengerUtils.getPreviewFromMessage(messageDto), true, false, LocalDateTime.now(), false, false, userOne, userTwo));
+        Conversation conversation = conversationRepository.findByUserOneAndUserTwoOrUserTwoAndUserOne(userOne, userTwo, userOne, userTwo);
 
         // ajout du message
         Message message = MessageMapper.fromDto(messageDto);
         message.setSentDateTime(LocalDateTime.now());
-        message.setConversation(conversation);
-        messageRepository.save(message);
-        mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
 
-        /*
-        ConversationDto dto1 = ConversationMapper.toDto(conversation, userOne);
-        System.out.println("dto1 = " + dto1);
-        return dto1;
-        */
+
+        if (conversation == null) {
+            conversation = conversationRepository.save(new Conversation.ConversationBuilder()
+                    .setPreview(MessengerUtils.getPreviewFromMessage(messageDto))
+                    .setIsReadByUserOne(true).setIsReadByUserTwo(false)
+                    .setLastModified(LocalDateTime.now())
+                    .setUserOneCursor(0L)
+                    .setUserTwoCursor(0L)
+                    // set last message id greater than cursors
+                    .setLastMessageId(1L)
+                    .setUserOne(userOne)
+                    .setUserTwo(userTwo)
+                    .createConversation());
+            message.setConversation(conversation);
+            messageRepository.save(message);
+        }
+        // si la conversation existe (ex: conversation supprimée puis relancée)
+        else {
+            conversation.setPreview(MessengerUtils.getPreviewFromMessage(messageDto));
+            MessengerUtils.setConversationUnread(conversation, userOne);
+            conversation.setLastModified(LocalDateTime.now());
+            message.setConversation(conversation);
+            message = messageRepository.save(message);
+            conversation.setLastMessageId(message.getId());
+            conversationRepository.save(conversation);
+        }
+
+        mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
         return ConversationMapper.toDto(conversation, userOne);
     }
 
@@ -107,33 +123,31 @@ public class ConversationController {
                     .setUserTwo(specifiedUser)
                     .setIsReadByUserOne(true)
                     .setIsReadByUserTwo(false)
-                    .setIsDeletedByUserOne(false)
-                    .setIsDeletedByUserTwo(false)
                     .createConversation();
         }
 
         return ConversationMapper.toDto(conversation, currentUser);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteConversation(HttpServletRequest request, @PathVariable Long id) {
+    @RequestMapping(value = "/{conversationId}/{lastMessageId}", method = RequestMethod.DELETE)
+    public void deleteConversation(HttpServletRequest request, @PathVariable Long conversationId, @PathVariable Long lastMessageId) {
 
         User currentUser = userService.getUserFromToken(request);
-        Conversation conversation = conversationRepository.findTop1ByIdAndUserOneOrUserTwo(id, currentUser, currentUser).get(0);
+        Conversation conversation = conversationRepository.findTop1ByIdAndUserOneOrUserTwo(conversationId, currentUser, currentUser).get(0);
 
         if (MessengerUtils.isUserOne(currentUser, conversation)) {
-            conversation.setDeletedByUserOne(true);
+            conversation.setUserOneCursor(lastMessageId);
         }
         else {
-            conversation.setDeletedByUserTwo(true);
+            conversation.setUserTwoCursor(lastMessageId);
         }
+        // on trie les cursors par ordre croissant
+        long[] cursors = { conversation.getUserOneCursor(), conversation.getUserTwoCursor() };
+        Arrays.sort(cursors);
+        // on supprime tous les messages dont l'id est inférieur au curseur minimum.
+        messageRepository.deleteByConversationAndIdLessThanEqual(conversation, cursors[0]);
 
-        if (MessengerUtils.isDeletedByBothUsers(conversation)) {
-            conversationRepository.delete(conversation);
-        }
-        else {
-            conversationRepository.save(conversation);
-        }
+        conversationRepository.save(conversation);
     }
 
     @RequestMapping(value = "/unread", method = RequestMethod.GET)

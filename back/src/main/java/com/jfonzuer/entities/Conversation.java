@@ -1,7 +1,5 @@
 package com.jfonzuer.entities;
 
-import com.jfonzuer.dto.ConversationDto;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,11 +27,14 @@ public class Conversation implements Serializable {
     @Column
     private LocalDateTime lastModified;
 
-    @Column(columnDefinition="tinyint(1) default 0", nullable = false)
-    private Boolean isDeletedByUserOne;
+    @Column(nullable = false)
+    private Long userOneCursor;
 
-    @Column(columnDefinition="tinyint(1) default 0", nullable = false)
-    private Boolean isDeletedByUserTwo;
+    @Column(nullable = false)
+    private Long userTwoCursor;
+
+    @Column(nullable = false)
+    private Long lastMessageId;
 
     @ManyToOne
     private User userOne;
@@ -48,30 +49,19 @@ public class Conversation implements Serializable {
     public Conversation() {
     }
 
-    public Conversation(String preview, Boolean isReadByUserOne, Boolean isReadByUserTwo, LocalDateTime lastModified, Boolean isDeletedByUserOne, Boolean isDeletedByUserTwo, User userOne, User userTwo) {
-        this.preview = preview;
-        this.isReadByUserOne = isReadByUserOne;
-        this.isReadByUserTwo = isReadByUserTwo;
-        this.lastModified = lastModified;
-        this.isDeletedByUserOne = isDeletedByUserOne;
-        this.isDeletedByUserTwo = isDeletedByUserTwo;
-        this.userOne = userOne;
-        this.userTwo = userTwo;
-    }
-
-    public Conversation(Long id, String preview, Boolean isReadByUserOne, Boolean isReadByUserTwo, LocalDateTime lastModified, Boolean isDeletedByUserOne, Boolean isDeletedByUserTwo, User userOne, User userTwo, Collection<Message> messages) {
+    public Conversation(Long id, String preview, Boolean isReadByUserOne, Boolean isReadByUserTwo, LocalDateTime lastModified, Long userOneCursor, Long userTwoCursor, Long lastMessageId, User userOne, User userTwo, Collection<Message> messages) {
         this.id = id;
         this.preview = preview;
         this.isReadByUserOne = isReadByUserOne;
         this.isReadByUserTwo = isReadByUserTwo;
         this.lastModified = lastModified;
-        this.isDeletedByUserOne = isDeletedByUserOne;
-        this.isDeletedByUserTwo = isDeletedByUserTwo;
+        this.userOneCursor = userOneCursor;
+        this.userTwoCursor = userTwoCursor;
+        this.lastMessageId = lastMessageId;
         this.userOne = userOne;
         this.userTwo = userTwo;
         this.messages = messages;
     }
-
 
     public Long getId() {
         return id;
@@ -121,20 +111,20 @@ public class Conversation implements Serializable {
         this.lastModified = lastModified;
     }
 
-    public Boolean getDeletedByUserOne() {
-        return isDeletedByUserOne;
+    public Long getUserOneCursor() {
+        return userOneCursor;
     }
 
-    public void setDeletedByUserOne(Boolean deletedByUserOne) {
-        isDeletedByUserOne = deletedByUserOne;
+    public void setUserOneCursor(Long userOneCursor) {
+        this.userOneCursor = userOneCursor;
     }
 
-    public Boolean getDeletedByUserTwo() {
-        return isDeletedByUserTwo;
+    public Long getUserTwoCursor() {
+        return userTwoCursor;
     }
 
-    public void setDeletedByUserTwo(Boolean deletedByUserTwo) {
-        isDeletedByUserTwo = deletedByUserTwo;
+    public void setUserTwoCursor(Long userTwoCursor) {
+        this.userTwoCursor = userTwoCursor;
     }
 
     public User getUserOne() {
@@ -153,6 +143,14 @@ public class Conversation implements Serializable {
         this.userTwo = userTwo;
     }
 
+    public Long getLastMessageId() {
+        return lastMessageId;
+    }
+
+    public void setLastMessageId(Long lastMessageId) {
+        this.lastMessageId = lastMessageId;
+    }
+
     @Override
     public String toString() {
         return "Conversation{" +
@@ -161,8 +159,6 @@ public class Conversation implements Serializable {
                 ", isReadByUserOne=" + isReadByUserOne +
                 ", isReadByUserTwo=" + isReadByUserTwo +
                 ", lastModified=" + lastModified +
-                ", isDeletedByUserOne=" + isDeletedByUserOne +
-                ", isDeletedByUserTwo=" + isDeletedByUserTwo +
                 ", userOne=" + userOne +
                 ", userTwo=" + userTwo +
                 ", messages=" + messages +
@@ -175,8 +171,9 @@ public class Conversation implements Serializable {
         private Boolean isReadByUserOne;
         private Boolean isReadByUserTwo;
         private LocalDateTime lastModified;
-        private Boolean isDeletedByUserOne;
-        private Boolean isDeletedByUserTwo;
+        private Long userOneCursor;
+        private Long userTwoCursor;
+        private Long lastMessageId;
         private User userOne;
         private User userTwo;
         private Collection<Message> messages;
@@ -206,13 +203,18 @@ public class Conversation implements Serializable {
             return this;
         }
 
-        public ConversationBuilder setIsDeletedByUserOne(Boolean isDeletedByUserOne) {
-            this.isDeletedByUserOne = isDeletedByUserOne;
+        public ConversationBuilder setUserOneCursor(Long userOneCursor) {
+            this.userOneCursor = userOneCursor;
             return this;
         }
 
-        public ConversationBuilder setIsDeletedByUserTwo(Boolean isDeletedByUserTwo) {
-            this.isDeletedByUserTwo = isDeletedByUserTwo;
+        public ConversationBuilder setUserTwoCursor(Long userTwoCursor) {
+            this.userTwoCursor = userTwoCursor;
+            return this;
+        }
+
+        public ConversationBuilder setLastMessageId(Long lastMessageId) {
+            this.lastMessageId = lastMessageId;
             return this;
         }
 
@@ -232,7 +234,7 @@ public class Conversation implements Serializable {
         }
 
         public Conversation createConversation() {
-            return new Conversation(id, preview, isReadByUserOne, isReadByUserTwo, lastModified, isDeletedByUserOne, isDeletedByUserTwo, userOne, userTwo, messages);
+            return new Conversation(id, preview, isReadByUserOne, isReadByUserTwo, lastModified, userOneCursor, userTwoCursor, lastMessageId, userOne, userTwo, messages);
         }
     }
 }

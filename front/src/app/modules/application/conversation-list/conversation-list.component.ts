@@ -61,6 +61,7 @@ export class ConversationListComponent implements OnInit {
 
   private getConversations() {
     this.conversationService.getAll().then(response => {
+      // si on a un pager côté back
       this.conversations = response.content;
 
       // on refresh le readByUserTwo

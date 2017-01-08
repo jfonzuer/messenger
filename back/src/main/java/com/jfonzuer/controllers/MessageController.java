@@ -96,14 +96,15 @@ public class MessageController {
         target.setLastMessageBy(sender);
         userRepository.save(target);
 
-        conversation.setPreview(MessengerUtils.getPreviewFromMessage(dto));
-        //setConversationUnread(conversation, sender);
-        conversationRepository.save(conversation);
-
         Message message = MessageMapper.fromDto(dto);
         message.setSource(sender);
         message.setSentDateTime(LocalDateTime.now());
         message = messageRepository.save(message);
+
+        conversation.setPreview(MessengerUtils.getPreviewFromMessage(dto));
+        conversation.setLastMessageId(message.getId());
+        MessengerUtils.setConversationUnread(conversation, sender);
+        conversationRepository.save(conversation);
 
         // send email if sender is not last sender
         if (!target.getLastMessageBy().equals(sender)) {
@@ -118,7 +119,8 @@ public class MessageController {
         if (specifiedUser == null) {
             throw  new ResourceNotFoundException();
         }
-        return conversationRepository.findByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
+        List<Conversation> conversations = conversationRepository.getConversation(currentUser, specifiedUser);
+        return conversations.size() == 0 ? null : conversations.get(0);
     }
 
     private Conversation returnConversationOrThrowException(Long id) {
@@ -137,15 +139,6 @@ public class MessageController {
         else if (MessengerUtils.isUserTwo(user, c) && c.getReadByUserTwo().equals(Boolean.FALSE)) {
             c.setReadByUserTwo(true);
             conversationRepository.save(c);
-        }
-    }
-
-    private void setConversationUnread(Conversation c, User u) {
-        if (MessengerUtils.isUserOne(u, c) && c.getReadByUserTwo().equals(Boolean.TRUE)) {
-            c.setReadByUserTwo(false);
-        }
-        else if (MessengerUtils.isUserTwo(u, c) && c.getReadByUserOne().equals(Boolean.TRUE)) {
-            c.setReadByUserOne(false);
         }
     }
 }

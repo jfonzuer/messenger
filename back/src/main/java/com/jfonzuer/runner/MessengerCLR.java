@@ -201,8 +201,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setUserTwo(u2)
                 .setIsReadByUserOne(false)
                 .setIsReadByUserTwo(false)
-                .setIsDeletedByUserOne(false)
-                .setIsDeletedByUserTwo(false)
+                .setUserOneCursor(0L)
+                .setUserTwoCursor(0L)
+                .setLastMessageId(1L)
                 .createConversation();
         conversationRepository.save(c1);
 
@@ -214,8 +215,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setUserTwo(u3)
                 .setIsReadByUserOne(false)
                 .setIsReadByUserTwo(false)
-                .setIsDeletedByUserOne(false)
-                .setIsDeletedByUserTwo(false)
+                .setUserOneCursor(0L)
+                .setUserTwoCursor(0L)
+                .setLastMessageId(1L)
                 .createConversation();
         conversationRepository.save(c2);
 

@@ -51,13 +51,11 @@ export class MessageListComponent implements OnInit {
   }
 
   deleteConversation() : void {
-    //this.deleteConversationEmitter.emit(this.selectedConversation);
-
 
     // on supprime la conversation de la liste
     if (confirm("Êtes vous sûr de vouloir supprimer la conversation ?")) {
       this.messengerService.deleteConversation(this.selectedConversation);
-      this.conversationService.remove(this.selectedConversation).then().catch(error => this.errorEmitter.emit(error));
+      this.conversationService.remove(this.selectedConversation, this.messages[this.messages.length - 1]).then().catch(error => this.errorEmitter.emit(error));
       this.selectedConversation = null;
       this.messages = [];
       this.pager = null;

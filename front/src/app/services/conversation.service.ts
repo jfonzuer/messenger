@@ -6,6 +6,7 @@ import {Http, Response} from "@angular/http";
 import {UserMessage} from "../model/userMessage";
 import {Conversation} from "../model/conversation";
 import {RequestService} from "./request.service";
+import {Message} from "../model/message";
 
 @Injectable()
 export class ConversationService {
@@ -71,11 +72,11 @@ export class ConversationService {
       .catch(this.rs.handleError);
   }
 
-  remove(conversation : Conversation) {
+  remove(conversation : Conversation, lastMessage: Message) {
 
     let headers = this.authenticationService.getHeaders();
 
-    return this.http.delete(this.baseUrl + 'conversations/' + conversation.id, {headers: headers})
+    return this.http.delete(this.baseUrl + 'conversations/' + conversation.id + '/' + lastMessage.id, {headers: headers})
       .toPromise()
       .then(response => {
           console.log(response);
