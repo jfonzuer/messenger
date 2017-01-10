@@ -6,6 +6,7 @@ import {Conversation} from "../../../model/conversation";
 import {Message} from "../../../model/message";
 import {UserMessage} from "../../../model/userMessage";
 import {MessengerService} from "../../../services/messenger.service";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-message-send',
@@ -20,11 +21,17 @@ export class MessageSendComponent implements OnInit {
   @Output() errorEmitter = new EventEmitter();
   changeConversationSubscription: any;
 
+  file:File;
+  private sizeLimit:number;
+  uploadImageUrl:string;
+  sendImage:boolean = false;
   message: Message;
   enter:boolean = true;
 
   constructor(private messageService: MessageService, private conversationService: ConversationService, private messengerService:MessengerService) {
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.selectedConversation = conversation);
+    this.sizeLimit = environment.sizeLimit;
+    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {
@@ -45,6 +52,36 @@ export class MessageSendComponent implements OnInit {
     }
   }
 
+  fileChangeEvent(event:any) {
+    this.file = event.target.files[0];
+    this.sendImage = true;
+    console.log("file : ", this.file);
+  }
+
+  cancelSendImage() {
+    this.file = null;
+    this.sendImage = false;
+  }
+
+  uploadImage() {
+    if (this.file != null && this.selectedConversation && this.selectedConversation.id) {
+      if (this.file.size < this.sizeLimit) {
+        this.message.conversation = this.selectedConversation;
+        this.messageService.uploadImage(this.file, this.selectedConversation.id).subscribe(
+          response => {
+            this.messengerService.addMessage(response);
+            this.file = null;
+            this.sendImage = false;
+          },
+          error => this.errorEmitter.emit(error)
+        )
+      }
+      else {
+        this.errorEmitter.emit("La taille maximale de fichier est 2,048 MB");
+      }
+    }
+  }
+
   private sendMessage() {
     this.message.conversation = this.selectedConversation;
     this.messageService.post(this.message).then(response => { this.messengerService.addMessage(response); this.message.content = ''; }).catch(error => this.errorEmitter.emit(error) );
@@ -58,4 +95,6 @@ export class MessageSendComponent implements OnInit {
       this.messengerService.addConversation(this.selectedConversation);
     }).catch(error => this.errorEmitter.emit(error));
   }
+
+
 }

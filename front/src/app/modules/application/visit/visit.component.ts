@@ -13,10 +13,10 @@ import {environment} from "../../../../environments/environment";
 export class VisitComponent implements OnInit {
 
   visits:Visit[];
-  uploadUrl:string;
+  uploadImageUrl:string;
 
   constructor(private visitService: VisitService, private datetimeService:DatetimeService, private sharedService: SharedService) {
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {

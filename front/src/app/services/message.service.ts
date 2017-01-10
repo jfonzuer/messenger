@@ -62,4 +62,12 @@ export class MessageService {
       })
       .catch(this.rs.handleError);
   }
+
+  uploadImage(file:File, id:number) {
+    let headers = this.authenticationService.getHeaders();
+    let fileForm = new FormData();
+    fileForm.append("file", file);
+    fileForm.append("id", id);
+    return this.http.post(this.baseUrl + 'messages/image', fileForm, {headers:headers}).map(response => response.json()).catch(this.rs.handleError);
+  }
 }

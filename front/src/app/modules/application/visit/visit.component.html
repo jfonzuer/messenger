@@ -4,7 +4,7 @@
   <div class="row" *ngFor="let visit of visits">
     <div>
       <div class="col-sm-3">
-        <a [routerLink]="['/app/profile/', visit.visitor.id ]"><img style="width: 80px; height:80px;" src="{{ uploadUrl }}{{ visit.visitor.images[0].url }}" class="img-circle center-block"></a>
+        <a [routerLink]="['/app/profile/', visit.visitor.id ]"><img style="width: 80px; height:80px;" src="{{ uploadImageUrl }}{{ visit.visitor.images[0].url }}" class="img-circle center-block"></a>
       </div>
       <a [routerLink]="['/app/profile/', visit.visitor.id ]">
         <div class="col-sm-6">

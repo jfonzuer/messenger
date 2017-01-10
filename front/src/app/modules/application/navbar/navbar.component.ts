@@ -16,7 +16,7 @@ import {User} from "../../../model/user";
 })
 export class NavbarComponent implements OnInit {
 
-  uploadUrl:string;
+  uploadImageUrl:string;
   user:User;
   isUserAdmin:boolean;
 
@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   constructor(private localStorageService: LocalStorageService, private authenticationService: AuthenticationService,
               private sharedService: SharedService, private conversationService: ConversationService,
               private  router: Router, private visitService: VisitService) {
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {

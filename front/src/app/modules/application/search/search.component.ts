@@ -22,7 +22,7 @@ export class SearchComponent implements OnInit {
   searched:boolean = false;
   users:User[];
   title:string;
-  uploadUrl:string;
+  uploadImageUrl:string;
   pager:Pager;
   localizations:Localization[];
   types:UserType[];
@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit {
   localization:Localization = new Localization(0);
 
   constructor(private userService: UserService, private sharedService: SharedService, private route:ActivatedRoute, private datetimeService:DatetimeService) {
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {

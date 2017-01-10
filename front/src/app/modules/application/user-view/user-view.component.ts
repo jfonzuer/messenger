@@ -12,12 +12,12 @@ import {environment} from "../../../../environments/environment";
 export class UserViewComponent implements OnInit {
   user:User;
   loading:boolean = true;
-  uploadUrl:string;
+  uploadImageUrl:string;
   success:string;
   error:string;
 
   constructor(private route:ActivatedRoute, private userService:UserService) {
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {

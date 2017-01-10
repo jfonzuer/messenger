@@ -15,10 +15,10 @@ export class HomeComponent implements OnInit {
 
   users:User[];
   title:string;
-  uploadUrl:string;
+  uploadImageUrl:string;
 
   constructor(private userService: UserService, private sharedService: SharedService) {
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {

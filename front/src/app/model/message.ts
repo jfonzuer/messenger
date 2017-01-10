@@ -7,6 +7,8 @@ import {Conversation} from "./conversation";
 export class Message {
   id: number;
   source: User;
+  type: String;
+  url: String;
   content: string;
   sendDate: string;
   sendSince:string;

@@ -24,7 +24,7 @@ export class ConversationListComponent implements OnInit {
 
   // filter
   name:string;
-  uploadUrl:string;
+  uploadImageUrl:string;
 
   // subscriptions
   addMessageSubscription:any;
@@ -33,7 +33,7 @@ export class ConversationListComponent implements OnInit {
   changeConversationSubscription:any;
 
   constructor(private conversationService: ConversationService, private sharedService: SharedService, private messengerService:MessengerService) {
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
 
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.getConversations());
     this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.conversations = this.conversations.filter(c => c.id != conversation.id));

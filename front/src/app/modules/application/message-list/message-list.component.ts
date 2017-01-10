@@ -9,6 +9,7 @@ import {DatetimeService} from "../../../services/datetime.service";
 import * as moment from 'moment/moment';
 import 'moment/locale/fr';
 import {ConversationService} from "../../../services/conversation.service";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-message-list',
@@ -29,17 +30,16 @@ export class MessageListComponent implements OnInit {
   isReadConversationSubscription: any;
   addMessageSubscription:any;
   addConversationSubscription:any;
-  refreshMessagesSubscription:any;
 
   isRead:boolean;
+  uploadUrl:string;
 
 
   @Output() successEmitter = new EventEmitter();
   @Output() errorEmitter = new EventEmitter();
 
-
   constructor(private messageService: MessageService, private messengerService:MessengerService, private datetimeService:DatetimeService, private conversationService:ConversationService) {
-
+    this.uploadUrl = environment.uploadUrl;
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.changeConversation(conversation));
     this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.addMessage(message));
@@ -51,7 +51,6 @@ export class MessageListComponent implements OnInit {
   }
 
   deleteConversation() : void {
-    //this.deleteConversationEmitter.emit(this.selectedConversation);
 
     // on supprime la conversation de la liste
     if (confirm("Êtes vous sûr de vouloir supprimer la conversation ?")) {
@@ -83,9 +82,10 @@ export class MessageListComponent implements OnInit {
 
   private getMessages(userId : number) {
     this.messageService.getMessages(userId, this.pager).then(response => {
-        this.concatMessage(response);
-        this.pager = new Pager(response.number, response.last, response.size);
-      })
+      console.debug("messages", response);
+      this.concatMessage(response);
+      this.pager = new Pager(response.number, response.last, response.size);
+    })
       .catch(e => this.errorEmitter.emit(e));
   }
 

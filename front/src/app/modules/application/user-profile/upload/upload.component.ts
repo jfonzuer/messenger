@@ -20,12 +20,12 @@ export class UploadComponent implements OnInit {
   file:File;
   addImage:boolean = false;
   orderNumber:number;
-  uploadUrl:string;
+  uploadImageUrl:string;
   private sizeLimit:number;
 
   constructor(private http:Http, private uploadService: UploadService, private sharedService: SharedService) {
     this.sizeLimit = environment.sizeLimit;
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   // methode qui check si on peut ajouter une image, qui recalcul l'ordre, qui remet file à null
