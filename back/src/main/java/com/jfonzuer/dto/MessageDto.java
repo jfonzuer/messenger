@@ -14,16 +14,20 @@ public class MessageDto {
     private String content;
     private String sendDate;
     private ConversationDto conversation;
+    private String url;
+    private String type;
 
     public MessageDto() {
     }
 
-    public MessageDto(Long id, JwtUser source, String content, String sendDate, ConversationDto conversation) {
+    public MessageDto(Long id, JwtUser source, String content, String sendDate, ConversationDto conversation, String url, String type) {
         this.id = id;
         this.source = source;
         this.content = content;
         this.sendDate = sendDate;
         this.conversation = conversation;
+        this.url = url;
+        this.type = type;
     }
 
     public Long getId() {
@@ -66,37 +70,20 @@ public class MessageDto {
         this.conversation = conversation;
     }
 
-    public static class Builder {
-        private Long id;
-        private JwtUser source;
-        private String content;
-        private String sendDate;
-        private ConversationDto conversation;
+    public String getUrl() {
+        return url;
+    }
 
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-        public Builder source(JwtUser source) {
-            this.source = source;
-            return this;
-        }
-        public Builder content(String content) {
-            this.content = content;
-            return this;
-        }
-        public Builder sendDate(String sendDate) {
-            this.sendDate = sendDate;
-            return this;
-        }
-        public Builder conversation(ConversationDto conversation) {
-            this.conversation = conversation;
-            return this;
-        }
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-        public MessageDto build() {
-            return new MessageDto(id, source, content, sendDate, conversation);
-        }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -108,5 +95,54 @@ public class MessageDto {
                 ", sendDate='" + sendDate + '\'' +
                 ", conversation=" + conversation +
                 '}';
+    }
+
+    public static class MessageDtoBuilder {
+        private Long id;
+        private JwtUser source;
+        private String content;
+        private String sendDate;
+        private ConversationDto conversation;
+        private String url;
+        private String type;
+
+        public MessageDtoBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public MessageDtoBuilder setSource(JwtUser source) {
+            this.source = source;
+            return this;
+        }
+
+        public MessageDtoBuilder setContent(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public MessageDtoBuilder setSendDate(String sendDate) {
+            this.sendDate = sendDate;
+            return this;
+        }
+
+        public MessageDtoBuilder setConversation(ConversationDto conversation) {
+            this.conversation = conversation;
+            return this;
+        }
+
+        public MessageDtoBuilder setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public MessageDtoBuilder setType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public MessageDto createMessageDto() {
+            return new MessageDto(id, source, content, sendDate, conversation, url, type);
+        }
     }
 }

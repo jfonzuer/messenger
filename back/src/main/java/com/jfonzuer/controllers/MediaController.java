@@ -52,7 +52,8 @@ public class MediaController {
     @Autowired
     private ImageRepository imageRepository;
 
-    private String defaultImage;
+    @Value("${upload.images.directory}")
+    private String imagesLocation;
 
     private final static Integer MAX_NUMBER = 3;
 
@@ -86,7 +87,7 @@ public class MediaController {
         String filename = order + "_" + user.getUsername() + mediaValidator.getExtension(file.getContentType());
         Image image = new Image.ImageBuilder().setUrl(filename).setUser(user).setOrderNumber(order).createImage();
         imageRepository.save(image);
-        storageService.store(file, filename);
+        storageService.store(file, imagesLocation, filename);
         return ImageMapper.toDto(image);
     }
 
@@ -116,7 +117,7 @@ public class MediaController {
             for (Image i : secondaryImages) {
                 // on définit le nouveau fichier avec le nouveau nom
                 String newFilename = index + i.getUrl().substring(1, i.getUrl().length());
-                storageService.move(i.getUrl(), newFilename);
+                storageService.rename(i.getUrl(), newFilename);
                 i.setUrl(newFilename);
                 i.setOrderNumber(2);
                 imageRepository.save(i);
@@ -146,15 +147,15 @@ public class MediaController {
         String prefix = "tmp_";
 
         // deplacement profile vers un fichier temporaire
-        storageService.move(profile.getUrl(), prefix + profile.getUrl());
+        storageService.rename(profile.getUrl(), prefix + profile.getUrl());
 
         // deplacement other image en tant que photo de profil
         String newProfileName = 1 + otherImage.getUrl().substring(1, otherImage.getUrl().length());
-        storageService.move(otherImage.getUrl(), newProfileName);
+        storageService.rename(otherImage.getUrl(), newProfileName);
 
         // deplacement de tmp vers son nouveau nom
         String newOtherImageName = order + profile.getUrl().substring(1, profile.getUrl().length());
-        storageService.move(prefix + profile.getUrl(), newOtherImageName);
+        storageService.rename(prefix + profile.getUrl(), newOtherImageName);
 
         // on intervertit les deux liens au niveau de la db
         profile.setUrl(newProfileName);

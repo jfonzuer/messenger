@@ -33,6 +33,12 @@ public class Message implements Serializable {
     @Column(columnDefinition="tinyint(1) default 0", nullable = false)
     private Boolean isDeletedByUserTwo;
 
+    @Enumerated(EnumType.STRING)
+    private MessageType type;
+
+    @Column(nullable = true)
+    private String url;
+
     @ManyToOne
     private User userOne;
 
@@ -42,7 +48,7 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(Long id, User source, Conversation conversation, String content, LocalDateTime sentDateTime, Boolean isDeletedByUserOne, Boolean isDeletedByUserTwo, User userOne, User userTwo) {
+    public Message(Long id, User source, Conversation conversation, String content, LocalDateTime sentDateTime, Boolean isDeletedByUserOne, Boolean isDeletedByUserTwo, MessageType type, String url, User userOne, User userTwo) {
         this.id = id;
         this.source = source;
         this.conversation = conversation;
@@ -50,6 +56,8 @@ public class Message implements Serializable {
         this.sentDateTime = sentDateTime;
         this.isDeletedByUserOne = isDeletedByUserOne;
         this.isDeletedByUserTwo = isDeletedByUserTwo;
+        this.type = type;
+        this.url = url;
         this.userOne = userOne;
         this.userTwo = userTwo;
     }
@@ -126,6 +134,22 @@ public class Message implements Serializable {
         this.userTwo = userTwo;
     }
 
+    public MessageType getType() {
+        return type;
+    }
+
+    public void setType(MessageType type) {
+        this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
@@ -145,6 +169,8 @@ public class Message implements Serializable {
         private LocalDateTime sentDateTime;
         private Boolean isDeletedByUserOne;
         private Boolean isDeletedByUserTwo;
+        private MessageType type;
+        private String url;
         private User userOne;
         private User userTwo;
 
@@ -183,6 +209,16 @@ public class Message implements Serializable {
             return this;
         }
 
+        public MessageBuilder setType(MessageType type) {
+            this.type = type;
+            return this;
+        }
+
+        public MessageBuilder setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
         public MessageBuilder setUserOne(User userOne) {
             this.userOne = userOne;
             return this;
@@ -194,7 +230,7 @@ public class Message implements Serializable {
         }
 
         public Message createMessage() {
-            return new Message(id, source, conversation, content, sentDateTime, isDeletedByUserOne, isDeletedByUserTwo, userOne, userTwo);
+            return new Message(id, source, conversation, content, sentDateTime, isDeletedByUserOne, isDeletedByUserTwo, type, url, userOne, userTwo);
         }
     }
 }

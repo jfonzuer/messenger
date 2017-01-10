@@ -1,15 +1,18 @@
 package com.jfonzuer.storage;
 
+import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.exception.StorageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 
 @Service
 public class FileSystemStorageService implements StorageService {
@@ -18,15 +21,59 @@ public class FileSystemStorageService implements StorageService {
     private String rootLocation;
 
     @Override
-    public void store(MultipartFile file, String filename) {
+    public void recursiveDelete(String path) {
+        Path rootPath = Paths.get(rootLocation + path);
+        if (Files.exists(rootPath)) {
+            // return all files/directories below rootPath including
+            try {
+                Files.walk(rootPath)
+                        // sort the list in reverse order, so the directory itself comes after the including subdirectories and files
+                        .sorted(Comparator.reverseOrder())
+                        // .map - path the Path to File
+                        .map(Path::toFile)
+                        .peek(System.out::println)
+                        // forEach - calls an every File object the .delete() method
+                        .forEach(File::delete);
+            } catch (IOException e) {
+                throw new StorageException("Failed to delete file/folder recursively " + path, e);
+            }
+        }
+    }
+
+    @Override
+    public void createDirectory(String path) {
+        try {
+            Files.createDirectory(Paths.get(rootLocation + path));
+        } catch (IOException e) {
+            throw new StorageException("Failed to create directory " + path, e);
+        }
+    }
+
+    @Override
+    public void createDirectories(String path) {
+        try {
+            Files.createDirectories(Paths.get(rootLocation + path));
+        } catch (IOException e) {
+            throw new StorageException("Failed to create directory " + path, e);
+        }
+    }
+
+    @Override
+    public void store(MultipartFile file, String path, String filename) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            Files.copy(file.getInputStream(), Paths.get(rootLocation).resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), Paths.get(rootLocation + path).resolve(filename), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
         }
+    }
+
+    @Override
+    public void createDirectoriesAndStore(MultipartFile file, String folderPath, String filename) {
+        createDirectories(folderPath);
+        store(file, folderPath, filename);
     }
 
     @Override
@@ -40,7 +87,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void move(String filename, String newFilename) {
+    public void rename(String filename, String newFilename) {
         try {
             Files.move(Paths.get(rootLocation).resolve(filename), Paths.get(rootLocation).resolve(newFilename));
         } catch (IOException e) {

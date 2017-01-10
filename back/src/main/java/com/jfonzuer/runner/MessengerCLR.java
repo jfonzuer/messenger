@@ -2,18 +2,26 @@ package com.jfonzuer.runner;
 
 import com.jfonzuer.entities.*;
 import com.jfonzuer.repository.*;
+import com.jfonzuer.storage.StorageService;
 import com.jfonzuer.utils.MessengerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,9 +41,19 @@ public class MessengerCLR implements CommandLineRunner {
     private final VisitRepository visitRepository;
     private final ImageRepository imageRepository;
     private final UserTypeRepository userTypeRepository;
+    private final StorageService storageService;
+
+    @Value("${upload.directory}")
+    private String rootLocation;
+
+    @Value("${upload.conversation.directory}")
+    private String conversationLocation;
+
+    @Value("${upload.images.directory}")
+    private String imagesLocation;
 
     @Autowired
-    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository) {
+    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository, StorageService storageService) {
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
@@ -45,14 +63,21 @@ public class MessengerCLR implements CommandLineRunner {
         this.visitRepository = visitRepository;
         this.imageRepository = imageRepository;
         this.userTypeRepository = userTypeRepository;
+        this.storageService = storageService;
     }
 
     @Override
     @Transactional
     public void run(String... strings) throws Exception {
 
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        storageService.recursiveDelete(conversationLocation);
+        storageService.recursiveDelete(imagesLocation);
 
+        Files.createDirectories(Paths.get(rootLocation + imagesLocation));
+        Files.createDirectories(Paths.get(rootLocation + conversationLocation));
+        Files.copy(Paths.get(rootLocation + "profile.png"), Paths.get(rootLocation + imagesLocation + "profile.png"));
+
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
         Fetish f1 = new Fetish.FetishBuilder().setId(1L).setName("fetish1").createFetish();
         Fetish f2 = new Fetish.FetishBuilder().setId(2L).setName("fetish2").createFetish();
         Fetish f3 = new Fetish.FetishBuilder().setId(3L).setName("fetish3").createFetish();
@@ -225,10 +250,10 @@ public class MessengerCLR implements CommandLineRunner {
 
         //Conversation t1 = new Conversation(Arrays.asList(u1,u2), Arrays.asList(ms1, ms2, ms3, ms4));
 
-        Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(c1).setContent("Salut").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
-        Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(c1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
-        Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(c1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
-        Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(c1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).createMessage();
+        Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(c1).setContent("Salut").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
+        Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(c1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
+        Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(c1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
+        Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(c1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
         Stream.of(ms1, ms2, ms3, ms4).forEach(ms -> messageRepository.save(ms));
     }
 }

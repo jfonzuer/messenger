@@ -2,6 +2,7 @@ package com.jfonzuer.dto.mapper;
 
 import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.entities.Message;
+import com.jfonzuer.entities.MessageType;
 import com.jfonzuer.security.JwtUser;
 
 /**
@@ -20,12 +21,14 @@ public class MessageMapper {
     }
 
     public static MessageDto toDto(Message message) {
-        return message != null ? new MessageDto.Builder()
-                .id(message.getId())
-                .conversation((message.getConversation() == null) ? null : ConversationMapper.toDto(message.getConversation()))
-                .content(message.getContent())
-                .sendDate(message.getSentDateTime().toString())
-                .source(UserMapper.toLightDto(message.getSource()))
-                .build() : null;
+        return message != null ? new MessageDto.MessageDtoBuilder()
+                .setId(message.getId())
+                .setConversation(message.getConversation() == null ? null : ConversationMapper.toDto(message.getConversation()))
+                .setContent(message.getContent())
+                .setSendDate(message.getSentDateTime().toString())
+                .setSource(UserMapper.toLightDto(message.getSource()))
+                .setUrl(message.getUrl())
+                .setType(message.getType().toString())
+                .createMessageDto() : null;
     }
 }
