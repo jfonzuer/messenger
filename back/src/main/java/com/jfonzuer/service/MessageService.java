@@ -4,8 +4,10 @@ import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.Message;
+import com.jfonzuer.entities.MessageType;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.MessageRepository;
+import com.jfonzuer.storage.StorageService;
 import com.jfonzuer.utils.MessengerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,10 +24,12 @@ import java.util.List;
 public class MessageService {
     
     private final MessageRepository messageRepository;
+    private final StorageService storageService;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository) {
+    public MessageService(MessageRepository messageRepository, StorageService storageService) {
         this.messageRepository = messageRepository;
+        this.storageService = storageService;
     }
 
     public void deleteByUserOne(Conversation conversation) {
@@ -56,6 +60,10 @@ public class MessageService {
     private void deleteOrUpdate(Message message) {
         if (MessengerUtils.isMessageDeletedByBothUsers(message)) {
             messageRepository.delete(message);
+            if (message.getType().equals(MessageType.IMAGE)) {
+                storageService.delete(message.getUrl());
+            }
+
         }
         else {
             messageRepository.save(message);
