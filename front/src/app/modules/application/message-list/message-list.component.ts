@@ -19,6 +19,7 @@ import {environment} from "../../../../environments/environment";
 export class MessageListComponent implements OnInit {
 
   selectedConversation:Conversation;
+  selectedImage:Message;
   messages: Message[] = [];
   pager:Pager;
 
@@ -51,7 +52,6 @@ export class MessageListComponent implements OnInit {
   }
 
   deleteConversation() : void {
-
     // on supprime la conversation de la liste
     if (confirm("Êtes vous sûr de vouloir supprimer la conversation ?")) {
       this.messengerService.deleteConversation(this.selectedConversation);

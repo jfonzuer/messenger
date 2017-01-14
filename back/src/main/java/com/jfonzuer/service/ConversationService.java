@@ -5,6 +5,7 @@ import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.Message;
+import com.jfonzuer.entities.MessageType;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ConversationRepository;
 import com.jfonzuer.repository.MessageRepository;
@@ -57,6 +58,7 @@ public class ConversationService {
         Conversation conversation = conversationRepository.save(new Conversation(MessengerUtils.getPreviewFromMessage(messageDto), true, false, LocalDateTime.now(), false, false, userOne, userTwo));
         Message message = MessageMapper.fromDto(messageDto);
         message.setConversation(conversation);
+        message.setType(MessageType.TEXT);
         messageService.saveMessage(message, userOne, userTwo);
         return conversation;
     }
