@@ -184,4 +184,30 @@ export class UserService {
       })
       .catch(this.rs.handleError)
   }
+
+  blockUser(userToBlock:User) {
+    let headers = this.authenticationService.getHeaders();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.baseUrl + 'users/block', userToBlock, {headers:headers})
+      .toPromise()
+      .then(response => {
+        this.rs.handleResponse(response);
+        return response.json();
+      })
+      .catch(this.rs.handleError)
+  }
+  unblockUser(userToUnblock:User) {
+    let headers = this.authenticationService.getHeaders();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.baseUrl + 'users/unblock', userToUnblock, {headers:headers})
+      .toPromise()
+      .then(response => {
+        this.rs.handleResponse(response);
+        return response.json();
+      })
+      .catch(this.rs.handleError)
+  }
+
 }

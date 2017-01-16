@@ -24,4 +24,5 @@ export class User {
   authorities:string[];
   notifyVisit:boolean;
   notifyMessage:boolean;
+  blockedUsers:User[];
 }

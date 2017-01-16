@@ -10,7 +10,14 @@ export class RequestService {
 
   handleError(error: any) {
     let message:string;
-    error.status == 0 ? message = 'Server unreachable' : error._body.message ? message = JSON.parse(error._body).message : message = error._body;
+    if (error.status == 0) {
+      message = 'Connexion au serveur impossible';
+    } else if (error._body) {
+      let body = JSON.parse(error._body);
+      if (body.message) {
+        message = body.message;
+      }
+    }
     return Promise.reject(message);
   }
 

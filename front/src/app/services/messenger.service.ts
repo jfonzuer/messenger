@@ -24,6 +24,9 @@ export class MessengerService {
   isConversationReadObservable: Observable<boolean>;
   private isConversationReadObserver: Observer<boolean>;
 
+  blockUserObservable: Observable<boolean>;
+  private blockUserObserver: Observer<boolean>;
+
 
   constructor() {
     this.changeConversationObservable = new Observable<Conversation>(observer => this.changeConversationObserver = observer).share();
@@ -31,6 +34,7 @@ export class MessengerService {
     this.addMessageObservable = new Observable<Message>(observer => this.addMessageObserver = observer).share();
     this.isConversationReadObservable = new Observable<boolean>(observer => this.isConversationReadObserver = observer).share();
     this.addConversationObservable = new Observable<Conversation>(observer => this.addConversationObserver = observer).share();
+    this.blockUserObservable = new Observable<boolean>(observer => this.blockUserObserver = observer).share();
   }
 
   changeConversation(conversation:Conversation) {
@@ -52,5 +56,9 @@ export class MessengerService {
   addConversation(conversation:Conversation) {
     console.log("add conversation observer");
     this.addConversationObserver.next(conversation);
+  }
+
+  blockUser(block:boolean) {
+    this.blockUserObserver.next(block);
   }
 }

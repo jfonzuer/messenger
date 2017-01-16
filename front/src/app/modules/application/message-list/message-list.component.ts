@@ -10,6 +10,9 @@ import * as moment from 'moment/moment';
 import 'moment/locale/fr';
 import {ConversationService} from "../../../services/conversation.service";
 import {environment} from "../../../../environments/environment";
+import {UserService} from "../../../services/user.service";
+import {SharedService} from "../../../services/shared.service";
+import {User} from "../../../model/user";
 
 @Component({
   selector: 'app-message-list',
@@ -33,13 +36,14 @@ export class MessageListComponent implements OnInit {
   addConversationSubscription:any;
 
   isRead:boolean;
+  isUserBlocked:boolean;
   uploadUrl:string;
 
 
   @Output() successEmitter = new EventEmitter();
   @Output() errorEmitter = new EventEmitter();
 
-  constructor(private messageService: MessageService, private messengerService:MessengerService, private datetimeService:DatetimeService, private conversationService:ConversationService) {
+  constructor(private messageService: MessageService, private messengerService:MessengerService, private datetimeService:DatetimeService, private conversationService:ConversationService, private us: UserService, private sharedService: SharedService) {
     this.uploadUrl = environment.uploadUrl;
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.changeConversation(conversation));
     this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
@@ -49,6 +53,34 @@ export class MessageListComponent implements OnInit {
 
   ngOnInit() {
     moment().locale('fr');
+  }
+
+  block() {
+    if (confirm("Êtes vous sûr de vouloir bloquer cet utilisateur ?")) {
+      let currentUser:User = this.sharedService.getCurrentUser();
+      this.us.blockUser(this.selectedConversation.userTwo)
+        .then(users => {
+          currentUser.blockedUsers = users;
+          this.sharedService.refreshUser(currentUser);
+          this.isUserBlocked = true;
+          this.messengerService.blockUser(true);
+        })
+        .catch(error => this.errorEmitter.emit(error));
+    }
+  }
+
+  unblock() {
+    if (confirm("Êtes vous sûr de vouloir débloquer cet utilisateur ?")) {
+      let currentUser:User = this.sharedService.getCurrentUser();
+      this.us.unblockUser(this.selectedConversation.userTwo)
+        .then(users => {
+          currentUser.blockedUsers = users;
+          this.sharedService.refreshUser(currentUser);
+          this.isUserBlocked = false;
+          this.messengerService.blockUser(false);
+        })
+        .catch(error => this.errorEmitter.emit(error));
+    }
   }
 
   deleteConversation() : void {
@@ -78,6 +110,8 @@ export class MessageListComponent implements OnInit {
     this.getMessages(this.selectedConversation.userTwo.id);
     this.isRead = this.selectedConversation.readByUserTwo;
     this.defineTimers(this.selectedConversation.id);
+    this.isUserBlocked = this.sharedService.isUserBlocked(conversation.userTwo);
+    console.debug("is user blocked", this.isUserBlocked);
   }
 
   private getMessages(userId : number) {

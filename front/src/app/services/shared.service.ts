@@ -78,4 +78,14 @@ export class SharedService {
     return this.getCurrentUser().userType.name == 'Dominatrice';
   }
 
+  isUserBlocked(user:User) : boolean {
+    let currentUser = this.getCurrentUser();
+    console.log("user blocked ", currentUser.blockedUsers);
+    // return true if blocked
+    console.log("ternaire", currentUser.blockedUsers != null ? currentUser.blockedUsers.find(u => u.id == user.id) != null : false);
+    console.log("currentUser.blockedUsers.find(u => u.id == user.id) ", currentUser.blockedUsers.find(u => u.id == user.id));
+
+    return currentUser.blockedUsers != null ? currentUser.blockedUsers.find(u => u.id == user.id) != null : false;
+  }
+
 }

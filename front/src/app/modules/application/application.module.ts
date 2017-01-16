@@ -29,6 +29,7 @@ import {ProfileComponent} from "./user-profile/profile/profile.component";
 import {DesactivateComponent} from "./user-profile/desactivate/desactivate.component";
 import {AlertsComponent} from "./user-profile/alerts/alerts.component";
 import {MessengerService} from "../../services/messenger.service";
+import {BlockUserComponent} from "./user-profile/block-user/block-user.component";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -59,6 +60,7 @@ import {MessengerService} from "../../services/messenger.service";
     ProfileComponent,
     AlertsComponent,
     DesactivateComponent,
+    BlockUserComponent
   ],
   providers: [
     ConversationService,

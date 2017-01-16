@@ -1,0 +1,12 @@
+<form class="form-horizontal" [hidden]="!show">
+  <fieldset>
+    <div class="form-group" *ngFor="let user of user.blockedUsers">
+      <div class="col-sm-3">
+        <p>{{ user.username }}</p>
+      </div>
+      <div class="col-sm-2">
+        <button type="submit" (click)="unblock(user)" class="btn btn-sm btn-primary">Débloquer</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

@@ -7,6 +7,7 @@ import {Message} from "../../../model/message";
 import {UserMessage} from "../../../model/userMessage";
 import {MessengerService} from "../../../services/messenger.service";
 import {environment} from "../../../../environments/environment";
+import {SharedService} from "../../../services/shared.service";
 
 @Component({
   selector: 'app-message-send',
@@ -20,6 +21,7 @@ export class MessageSendComponent implements OnInit {
   @Output() successEmitter = new EventEmitter();
   @Output() errorEmitter = new EventEmitter();
   changeConversationSubscription: any;
+  blockUserSubscription:any;
 
   file:File;
   private sizeLimit:number;
@@ -27,9 +29,15 @@ export class MessageSendComponent implements OnInit {
   sendImage:boolean = false;
   message: Message;
   enter:boolean = true;
+  isUserBlocked = false;
 
-  constructor(private messageService: MessageService, private conversationService: ConversationService, private messengerService:MessengerService) {
-    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.selectedConversation = conversation);
+  constructor(private messageService: MessageService, private conversationService: ConversationService, private messengerService:MessengerService, private sharedService: SharedService) {
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation =>  {
+      this.selectedConversation = conversation;
+      this.isUserBlocked = this.sharedService.isUserBlocked(this.selectedConversation.userTwo);
+      console.log("isUserBlocked", this.isUserBlocked);
+    });
+    this.blockUserSubscription = this.messengerService.blockUserObservable.subscribe(block => this.isUserBlocked = block);
     this.sizeLimit = environment.sizeLimit;
     this.uploadImageUrl = environment.uploadImageUrl;
   }
