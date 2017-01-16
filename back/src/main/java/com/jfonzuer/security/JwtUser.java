@@ -28,11 +28,12 @@ public class JwtUser {
     private Boolean notifyVisit;
     private Boolean enabled;
     private Boolean isBlocked;
+    private List<JwtUser> blockedUsers;
 
     public JwtUser() {
     }
 
-    public JwtUser(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked) {
+    public JwtUser(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<JwtUser> blockedUsers) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -49,6 +50,7 @@ public class JwtUser {
         this.notifyVisit = notifyVisit;
         this.enabled = enabled;
         this.isBlocked = isBlocked;
+        this.blockedUsers = blockedUsers;
     }
 
     public Long getId() {
@@ -116,6 +118,10 @@ public class JwtUser {
         return isBlocked;
     }
 
+    public List<JwtUser> getBlockedUsers() {
+        return blockedUsers;
+    }
+
     @Override
     public String toString() {
         return "JwtUser{" +
@@ -129,6 +135,7 @@ public class JwtUser {
                 ", authorities=" + authorities +
                 '}';
     }
+
 
     public static class JwtUserBuilder {
         private Long id;
@@ -147,6 +154,7 @@ public class JwtUser {
         private Boolean notifyVisit;
         private Boolean enabled;
         private Boolean isBlocked;
+        private List<JwtUser> blockedUsers;
 
         public JwtUserBuilder setId(Long id) {
             this.id = id;
@@ -228,8 +236,13 @@ public class JwtUser {
             return this;
         }
 
+        public JwtUserBuilder setBlockedUsers(List<JwtUser> blockedUsers) {
+            this.blockedUsers = blockedUsers;
+            return this;
+        }
+
         public JwtUser createJwtUser() {
-            return new JwtUser(id, username, email, description, birthDate, fetishes, localization, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked);
+            return new JwtUser(id, username, email, description, birthDate, fetishes, localization, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers);
         }
     }
 }

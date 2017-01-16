@@ -20,10 +20,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -194,7 +191,11 @@ public class MessengerCLR implements CommandLineRunner {
                 .setNotifyVisit(true)
                 .createUser();
 
-        // save members
+        Set<User> blockedUser = new HashSet<>();
+        blockedUser.add(u1);
+        u2.setBlockedUsers(blockedUser);
+
+        // save users
         Stream.of(u1, u2, u3, u4).forEach( m -> userRepository.save(m));
 
         Image u1i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u1).createImage();

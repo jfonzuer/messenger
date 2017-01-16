@@ -105,6 +105,8 @@ public class MessageController {
         User sender = userService.getUserFromToken(request);
         Conversation conversation = conversationService.returnConversationOrThrowException(dto.getConversation().getId());
         User target = MessengerUtils.getOtherUser(conversation, sender);
+        userService.throwExceptionIfBlocked(sender, target);
+
         target.setLastMessageBy(sender);
         userRepository.save(target);
 

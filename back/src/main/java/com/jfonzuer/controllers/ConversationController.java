@@ -67,6 +67,7 @@ public class ConversationController {
         MessageDto messageDto = dto.getMessage();
         User userOne = userService.getUserFromToken(request);
         User userTwo = UserMapper.fromDto(dto.getUser());
+        userService.throwExceptionIfBlocked(userOne, userTwo);
 
         if (userOne.equals(userTwo)) {
             throw new IllegalArgumentException();

@@ -183,4 +183,22 @@ public class UserController {
         user = userRepository.save(user);
         return new ResponseDto("Votre compte a été désactivé");
     }
+
+    @RequestMapping(value = "/block", method = RequestMethod.POST)
+    public List<JwtUser> block(HttpServletRequest request, @RequestBody JwtUser dto) {
+        User user = userService.getUserFromToken(request);
+        User userToBlock = UserMapper.fromDto(dto);
+        System.out.println("user.getEnabled() = " + user.getEnabled());
+        System.out.println("userToBlock.getId() = " + userToBlock.getId());
+        return userService.blockUser(user, userToBlock).stream().map(UserMapper::toLightDto).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/unblock", method = RequestMethod.POST)
+    public List<JwtUser> unblock(HttpServletRequest request, @RequestBody JwtUser dto) {
+        System.err.println("osoeheohf");
+        User user = userService.getUserFromToken(request);
+        User userToBlock = UserMapper.fromDto(dto);
+        userService.unblockUser(user, userToBlock);
+        return user.getBlockedUsers().stream().map(UserMapper::toLightDto).collect(Collectors.toList());
+    }
 }

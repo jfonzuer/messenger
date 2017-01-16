@@ -57,6 +57,7 @@ public class UserMapper {
                 .setReportedAsFake(user.getReportedAsFake())
                 .setNotifyVisit(user.getNotifyVisit())
                 .setNotifyMessage(user.getNotifyMessage())
+                .setBlockedUsers(user.getBlockedUsers() != null ? user.getBlockedUsers().stream().map(UserMapper::toDto).collect(Collectors.toList()) : null)
                 .createJwtUser();
     }
 

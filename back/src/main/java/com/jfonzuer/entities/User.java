@@ -81,10 +81,13 @@ public class User implements UserDetails, Serializable {
     @ManyToOne
     private User lastMessageBy;
 
+    @ManyToMany
+    private Set<User> blockedUsers;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -107,6 +110,7 @@ public class User implements UserDetails, Serializable {
         this.isBlocked = isBlocked;
         this.lastVisitedBy = lastVisitedBy;
         this.lastMessageBy = lastMessageBy;
+        this.blockedUsers = blockedUsers;
     }
 
     @Override
@@ -304,6 +308,14 @@ public class User implements UserDetails, Serializable {
         this.lastMessageBy = lastMessageBy;
     }
 
+    public Set<User> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(Set<User> blockedUsers) {
+        this.blockedUsers = blockedUsers;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -328,7 +340,6 @@ public class User implements UserDetails, Serializable {
         return false;
     }
 
-
     public static class UserBuilder {
         private Long id;
         private String username;
@@ -352,6 +363,7 @@ public class User implements UserDetails, Serializable {
         private Boolean isBlocked;
         private User lastVisitedBy;
         private User lastMessageBy;
+        private Set<User> blockedUsers;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -463,8 +475,13 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
+        public UserBuilder setBlockedUsers(Set<User> blockedUsers) {
+            this.blockedUsers = blockedUsers;
+            return this;
+        }
+
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked, lastVisitedBy, lastMessageBy);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked, lastVisitedBy, lastMessageBy, blockedUsers);
         }
     }
 }
