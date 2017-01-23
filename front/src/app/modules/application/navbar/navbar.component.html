@@ -11,6 +11,7 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a [routerLink]="['/app/conversation']">Accueil</a></li>
+        <li><a [routerLink]="['/app/admin']"><span class="glyphicon glyphicon-cog"></span> Administration</a></li>
         <li><a [routerLink]="['/app/conversation']" routerLinkActive="active"><span class="glyphicon glyphicon-envelope"></span> Messagerie  <span class="badge" *ngIf="unreadConversations != 0">{{ unreadConversations }}</span></a></li>
         <li><a [routerLink]="['/app/visits']" routerLinkActive="active"> <span class="glyphicon glyphicon-eye-open"></span> Visites  <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
         <li><a [routerLink]="['/app/search']" routerLinkActive="active"> <span class="glyphicon glyphicon-search"></span> Rechercher</a></li>

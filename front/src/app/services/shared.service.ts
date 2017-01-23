@@ -56,11 +56,10 @@ export class SharedService {
     return (this.localStorageService.get('token') != null && this.localStorageService.get('user') != null);
   }
 
-  /*
   isAdmin(user:User) {
-    return user.authorities.find(a => a.authority == "ROLE_ADMIN") != null;
+    console.debug("isAdmin ", user.authorities.find(a => a == "ROLE_ADMIN") != null)
+    return user.authorities.find(a => a == "ROLE_ADMIN") != null;
   }
-  */
 
   getLocalizations() {
     return this.localStorageService.get('localizations');

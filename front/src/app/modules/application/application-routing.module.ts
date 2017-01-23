@@ -15,6 +15,8 @@ import {FooterComponent} from "./footer/footer.component";
 import {SearchComponent} from "./search/search.component";
 import {UserTypesResolve} from "../../services/resolve/user-types-resolve";
 import {CurrentUserResolve} from "../../services/resolve/current-user-resolve.service";
+import {AdminComponent} from "./admin/admin.component";
+import {AdminGuardService} from "../../services/admin-guard.service";
 
 /**
  * Created by pgmatz on 28/10/16.
@@ -25,9 +27,10 @@ import {CurrentUserResolve} from "../../services/resolve/current-user-resolve.se
     {
       path: 'app', canActivate: [AuthGuardService], children: [
       { path: '', redirectTo: 'home', pathMatch: 'full'},
+      { path: 'admin', component: AdminComponent, canActivate: [AdminGuardService]},
       { path: 'home', component: HomeComponent },
       { path: 'profile/:id', component: UserViewComponent, resolve: { user: UserResolve } },
-       { path: 'profile', component: UserProfileComponent,  resolve: { fetishes:FetishesResolve, localizations: LocalizationsResolve, user: CurrentUserResolve} },
+      { path: 'profile', component: UserProfileComponent,  resolve: { fetishes:FetishesResolve, localizations: LocalizationsResolve, user: CurrentUserResolve} },
       { path: 'conversation', component: MessengerComponent, resolve: {user:CurrentUserResolve} },
       { path: 'conversation/:id', component: MessengerComponent, resolve: {user:CurrentUserResolve} },
       { path: 'visits', component: VisitComponent },

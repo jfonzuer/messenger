@@ -24,7 +24,6 @@ export class UserService {
   }
 
   getUsers(pager:Pager) : any {
-
     let headers = this.authenticationService.getHeaders();
     let queryParams = '?l=20';
     if (pager) {
@@ -197,6 +196,7 @@ export class UserService {
       })
       .catch(this.rs.handleError)
   }
+
   unblockUser(userToUnblock:User) {
     let headers = this.authenticationService.getHeaders();
     headers.append('Content-Type', 'application/json');
@@ -209,5 +209,4 @@ export class UserService {
       })
       .catch(this.rs.handleError)
   }
-
 }

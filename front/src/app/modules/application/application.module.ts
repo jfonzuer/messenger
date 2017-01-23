@@ -30,6 +30,9 @@ import {DesactivateComponent} from "./user-profile/desactivate/desactivate.compo
 import {AlertsComponent} from "./user-profile/alerts/alerts.component";
 import {MessengerService} from "../../services/messenger.service";
 import {BlockUserComponent} from "./user-profile/block-user/block-user.component";
+import {AdminComponent} from "./admin/admin.component";
+import {AdminGuardService} from "../../services/admin-guard.service";
+import {AdminService} from "../../services/admin.service";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -60,7 +63,8 @@ import {BlockUserComponent} from "./user-profile/block-user/block-user.component
     ProfileComponent,
     AlertsComponent,
     DesactivateComponent,
-    BlockUserComponent
+    BlockUserComponent,
+    AdminComponent
   ],
   providers: [
     ConversationService,
@@ -70,8 +74,9 @@ import {BlockUserComponent} from "./user-profile/block-user/block-user.component
     UserTypeService,
     UserResolve,
     CurrentUserResolve,
-    MessengerService
+    MessengerService,
+    AdminGuardService,
+    AdminService
   ],
-
 })
 export class ApplicationModule { }

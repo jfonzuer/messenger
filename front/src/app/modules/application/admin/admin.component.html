@@ -1,0 +1,26 @@
+<table class="table table-striped table-hover ">
+  <thead>
+  <tr>
+    <th>Login</th>
+    <th>Email</th>
+    <th>Nombre de signalements</th>
+    <th>Statut</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let user of users">
+    <td>{{ user.username }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.reportedAsFake }}</td>
+    <td [ngSwitch]="user.blocked">
+      <strong *ngSwitchCase="false">Activé</strong>
+      <strong *ngSwitchCase="true">Désactivé</strong>
+    </td>
+    <td>
+      <button *ngIf="!user.blocked" (click)="block(user)" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-ban-circle"></i></button>
+      <button *ngIf="user.blocked" (click)="unblock(user)" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-ok"></i></button>
+    </td>
+  </tr>
+  </tbody>
+</table>
