@@ -5,6 +5,7 @@ import com.jfonzuer.dto.RegisterDto;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserRole;
+import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.UserRoleRepository;
 import com.jfonzuer.security.JwtTokenUtil;
@@ -64,6 +65,10 @@ public class AuthenticationController {
         System.out.println("userRepository.findByEmail(authenticationRequest.getEmail()).getImages() = " + userRepository.findByEmail(authenticationRequest.getEmail()).getFetishes());
 
         User user = userRepository.findByEmail(authenticationRequest.getEmail());
+
+        if (user.getBlocked()) {
+            throw new UnauthorizedException("Votre compte a été suspendu, contactez l'administration de l'application : contact@dominapp.com");
+        }
 
         // update last activity date
         user.setLastActivityDate(LocalDate.now());

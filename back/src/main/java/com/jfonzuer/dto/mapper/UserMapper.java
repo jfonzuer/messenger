@@ -36,6 +36,7 @@ public class UserMapper {
                 .setUserType(UserTypeMapper.toDto(user.getType()))
                 .setEnabled(user.getEnabled())
                 .setIsBlocked(user.getBlocked())
+                .setReportedAsFake(user.getReportedAsFake())
                 .createJwtUser();
     }
 

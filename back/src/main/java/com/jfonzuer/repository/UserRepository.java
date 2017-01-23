@@ -32,5 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> search(@Param("id") Long id, @Param("type") UserType type, @Param("localization") Localization localization, @Param("keyword") String keyword, @Param("dateOne") LocalDate dateOne, @Param("dateTwo") LocalDate dateTwo, Pageable p);
 
 
+    List<User> findByReportedAsFakeGreaterThanOrderByReportedAsFakeDesc(Long reportedTime);
+
     Page<User> findAllByTypeAndLocalizationAndDescriptionIgnoreCaseContainingOrUsernameIgnoreCaseContaining(UserType type, Localization localization, String keyword, String username, Pageable pageable);
 }
