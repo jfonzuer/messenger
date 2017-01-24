@@ -61,9 +61,6 @@ public class AuthenticationController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        System.out.println("userRepository.findByEmail(authenticationRequest.getEmail()).getImages() = " + userRepository.findByEmail(authenticationRequest.getEmail()).getImages());
-        System.out.println("userRepository.findByEmail(authenticationRequest.getEmail()).getImages() = " + userRepository.findByEmail(authenticationRequest.getEmail()).getFetishes());
-
         User user = userRepository.findByEmail(authenticationRequest.getEmail());
 
         if (user.getBlocked()) {
@@ -78,10 +75,6 @@ public class AuthenticationController {
 
         // Reload password post-security so we can generate token
         JwtUser jwtUser = UserMapper.toDto(user);
-        System.out.println("jwtUser------------------------------------------- = " + jwtUser.getImages());
-        System.out.println("jwtUser.getFetishes() = " + jwtUser.getFetishes());
-        System.out.println("jwtUser.getAuthorities() = " + jwtUser.getAuthorities());
-
         final String token = jwtTokenUtil.generateToken(jwtUser, device);
 
         // Return the token
