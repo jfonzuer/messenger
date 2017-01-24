@@ -13,13 +13,16 @@ export class UserResolve implements Resolve<User> {
 
   constructor(private us: UserService, private router:Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Promise<User>|boolean {
+  resolve(route: ActivatedRouteSnapshot): Promise<User> {
 
     let id = +route.params['id'];
 
     return this.us.getUserById(id).then(user => {
       if (user) {
         return user;
+      } else {
+        this.router.navigate(['home']);
+        return null;
       }
     })
      // .catch(() => this.router.navigate(['/app/home']));

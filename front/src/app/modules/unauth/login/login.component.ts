@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from 'angular-2-local-storage';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Http} from "@angular/http";
 import {Router} from "@angular/router";
 import {environment} from "../../../../environments/environment";
 import {SharedService} from "../../../services/shared.service";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {Authentication} from "../../../model/authentication";
+import {CoolLocalStorage} from "angular2-cool-storage";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-login',
@@ -18,17 +19,15 @@ export class LoginComponent implements OnInit {
   private authentication: Authentication = new Authentication();
   error:string;
 
-  constructor(private http:Http, private localStorageService: LocalStorageService, private authenticationService: AuthenticationService, private router: Router, private sharedService: SharedService) {
+  constructor(private http:Http, private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.baseUrl = environment.baseUrl;
+    this.toastr.setRootViewContainerRef(vRef)
   }
 
   ngOnInit() {
     //this.sharedService.redirectHome();
     this.authentication.email = "pgiraultmatz@gmail.com";
     this.authentication.password = "test";
-
-    //this.authentication.email = "member4@gmail.com";
-    //this.authentication.password = "password4";
 
     //TODO raffraichissement du token ?
   }
@@ -37,13 +36,14 @@ export class LoginComponent implements OnInit {
     if (form.valid) {
       this.authenticationService.post(this.authentication).then(response => {
 
-        this.localStorageService.set("token", response.token);
-        this.localStorageService.set("user", response.user);
+        this.localStorageService.setObject("token", response.token);
+        this.localStorageService.setObject("user", response.user);
         console.log(response.user);
         this.router.navigate(['/app/home']);
 
       })
         .catch(error => {
+          this.toastr.error("ok");
           this.error = error;
           setTimeout(() => this.error = "", 2000);
         })

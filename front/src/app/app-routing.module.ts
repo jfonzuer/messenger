@@ -6,7 +6,7 @@ import {Routes, RouterModule, PreloadAllModules} from "@angular/router";
 
 export const routes: Routes = [
     { path: '', redirectTo: 'unauth', pathMatch: 'full'},
-    { path: 'app', loadChildren: 'app/modules/application/application.module#ApplicationModule' },
+    /*{ path: 'app', loadChildren: 'app/modules/application/application.module#ApplicationModule' },*/
 ];
 
 @NgModule({

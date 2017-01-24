@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {LocalStorageService} from 'angular-2-local-storage';
 import {Router, ActivatedRoute} from "@angular/router";
 import {PasswordConfirmation} from "../../../model/passwordConfirmation";
 import {User} from "../../../model/user";
@@ -12,6 +11,7 @@ import {FetishService} from "../../../services/fetish.service";
 import {Register} from "../../../model/register";
 import {UserType} from "../../../model/userType";
 import {UserTypeService} from "../../../services/user-type.service";
+import {CoolLocalStorage} from "angular2-cool-storage";
 
 @Component({
   selector: 'app-register',
@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
   selectedFetishId:number[] = [];
   types: UserType[];
 
-  constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: LocalStorageService,
+  constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: CoolLocalStorage,
               private router:Router, private localizationService:LocalizationService, private fetishService:FetishService, private typeService:UserTypeService) { }
 
   ngOnInit() {

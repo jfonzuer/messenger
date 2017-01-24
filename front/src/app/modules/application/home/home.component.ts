@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
 import {User} from "../../../model/user";
 import {UserService} from "../../../services/user.service";
 import {SharedService} from "../../../services/shared.service";
-import {LocalStorageService} from 'angular-2-local-storage';
 import {environment} from "../../../../environments/environment";
 
 @Component({

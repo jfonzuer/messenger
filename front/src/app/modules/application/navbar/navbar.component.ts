@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {Observable} from "rxjs";
-import {LocalStorageService} from 'angular-2-local-storage';
 import {Router} from "@angular/router";
 import {SharedService} from "../../../services/shared.service";
 import {AuthenticationService} from "../../../services/authentication.service";
@@ -8,6 +7,7 @@ import {environment} from "../../../../environments/environment";
 import {VisitService} from "../../../services/visit.service";
 import {ConversationService} from "../../../services/conversation.service";
 import {User} from "../../../model/user";
+import {CoolLocalStorage} from "angular2-cool-storage";
 
 @Component({
   selector: 'app-navbar',
@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
   unseenVisitsTimer:Observable<number>;
 
 
-  constructor(private localStorageService: LocalStorageService, private authenticationService: AuthenticationService,
+  constructor(private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService,
               private sharedService: SharedService, private conversationService: ConversationService,
               private  router: Router, private visitService: VisitService) {
     this.uploadImageUrl = environment.uploadImageUrl;
@@ -54,7 +54,7 @@ export class NavbarComponent implements OnInit {
     //this.unseenVisitsTimer = Observable.timer(0, 60000);
     //this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
 
-    this.user = <User> this.localStorageService.get('user');
+    this.user = <User> this.localStorageService.getObject('user');
     this.isUserAdmin = this.sharedService.isAdmin(this.user);
   }
 
@@ -67,8 +67,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.localStorageService.remove('token');
-    this.localStorageService.remove('user');
+    this.localStorageService.removeItem('token');
+    this.localStorageService.removeItem('user');
     this.router.navigate(['/unauth/login']);
   }
 }

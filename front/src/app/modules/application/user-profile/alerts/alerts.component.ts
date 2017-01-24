@@ -1,7 +1,6 @@
 import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
 import {User} from "../../../../model/user";
 import {UserService} from "../../../../services/user.service";
-import Alert = webdriver.Alert;
 import {Alerts} from "../../../../model/alerts";
 import {SharedService} from "../../../../services/shared.service";
 
@@ -18,7 +17,7 @@ export class AlertsComponent implements OnInit {
   @Output() errorEmitter = new EventEmitter();
   alerts:Alerts = new Alerts();
 
-  constructor(private userService:UserService, private sharedService:SharedService) { }
+  constructor(private userService :UserService, private sharedService:SharedService) { }
 
   ngOnInit() {
     console.log(this.user);

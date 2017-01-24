@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {User} from "../model/user";
 import {Observable, Observer} from "rxjs";
-import { LocalStorageService } from 'angular-2-local-storage';
 import {Router} from "@angular/router";
+import {CoolLocalStorage} from "angular2-cool-storage";
 
 @Injectable()
 export class SharedService {
@@ -15,7 +15,7 @@ export class SharedService {
   private userObserver: Observer<User>;
 
 
-  constructor (private localStorageService: LocalStorageService, private router: Router) {
+  constructor (private localStorageService: CoolLocalStorage, private router: Router) {
     this.unreadNumberConversationsRefresh = new Observable<boolean>(observer => this.unreadNumberConversationsObserver = observer).share();
     this.unseenNumberVisitsRefresh = new Observable<boolean>(observer => this.unseenVisitsObserver = observer).share();
     this.userRefresh = new Observable<User>(observer => this.userObserver = observer).share();
@@ -26,7 +26,7 @@ export class SharedService {
   }
 
   refreshUser(user:User) {
-    this.localStorageService.set('user', user);
+    this.localStorageService.setObject('user', user);
     this.userObserver.next(user);
   }
 
@@ -49,11 +49,11 @@ export class SharedService {
 
 
   isConnected() {
-    return (this.localStorageService.get('token') != null);
+    return (this.localStorageService.getItem('token') != null);
   }
 
   isAuthenticated() {
-    return (this.localStorageService.get('token') != null && this.localStorageService.get('user') != null);
+    return (this.localStorageService.getItem('token') != null && this.localStorageService.getObject('user') != null);
   }
 
   isAdmin(user:User) {
@@ -62,15 +62,15 @@ export class SharedService {
   }
 
   getLocalizations() {
-    return this.localStorageService.get('localizations');
+    return this.localStorageService.getObject('localizations');
   }
 
   getCurrentUser() : User {
-    return <User> this.localStorageService.get('user');
+    return <User> this.localStorageService.getObject('user');
   }
 
   desactivate() {
-    this.localStorageService.remove('token');
+    this.localStorageService.removeItem('token');
   }
 
   isDomina() : boolean {

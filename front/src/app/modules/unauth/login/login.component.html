@@ -9,7 +9,7 @@
 
       <input type="email" name="email" class="form-control" placeholder="Email" required autofocus [(ngModel)]="authentication.email">
       <br>
-      <input type="password" name="password" class="form-control" placeholder="Mot de passe" required [(ngModel)]="authentication.password" (keyup.enter)="login(loginForm)">
+      <input type="password" name="password" class="form-control" placeholder="Mot de passe" required [(ngModel)]="authentication.password">
 
       <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Connexion</button>
     </form>

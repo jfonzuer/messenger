@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import {Http, Headers} from "@angular/http";
 import {Router} from "@angular/router";
-import { LocalStorageService } from 'angular-2-local-storage';
 import {DatetimeService} from "./datetime.service";
 import {environment} from "../../environments/environment";
 import {Authentication} from "../model/authentication";
 import {User} from "../model/user";
 import {RequestService} from "./request.service";
+import {CoolLocalStorage} from "angular2-cool-storage";
 
 @Injectable()
 export class AuthenticationService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, private router: Router, private localStorageService: LocalStorageService, private datetimeService: DatetimeService, private rs:RequestService) {
+  constructor (private http:Http, private router: Router, private localStorageService: CoolLocalStorage, private datetimeService: DatetimeService, private rs:RequestService) {
     this.baseUrl = environment.baseUrl;
   }
 
@@ -70,7 +70,7 @@ export class AuthenticationService {
 
   getHeaders() : Headers {
     let headers = new Headers();
-    let token = this.localStorageService.get("token");
+    let token = this.localStorageService.getObject("token");
     headers.append('Authorization', '' + token);
     return headers;
   }

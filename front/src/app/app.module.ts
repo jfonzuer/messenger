@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { LocalStorageService, LOCAL_STORAGE_SERVICE_CONFIG } from 'angular-2-local-storage';
 import { AppComponent } from './app.component';
 import {UserService} from "./services/user.service";
 import {SharedService} from "./services/shared.service";
@@ -17,14 +16,8 @@ import {RequestService} from "./services/request.service";
 import {UserTypesResolve} from "./services/resolve/user-types-resolve";
 import {FetishesResolve} from "./services/resolve/fetishes-resolve.service";
 import {LocalizationsResolve} from "./services/resolve/localizations-resolve";
-import { AdminComponent } from './modules/application/admin/admin.component';
-
-// Create config options (see ILocalStorageServiceConfigOptions) for deets:
-let localStorageServiceConfig = {
-  prefix: 'app-root',
-  storageType: 'sessionStorage'
-};
-
+import {ToastModule} from "ng2-toastr";
+import {CoolStorageModule} from "angular2-cool-storage";
 
 @NgModule({
   declarations: [
@@ -36,6 +29,8 @@ let localStorageServiceConfig = {
     UnauthModule,
     ApplicationModule,
     AppRoutingModule,
+    ToastModule,
+    CoolStorageModule
   ],
   providers: [
     UserService,
@@ -49,11 +44,6 @@ let localStorageServiceConfig = {
     UserTypesResolve,
     FetishesResolve,
     LocalizationsResolve,
-    LocalStorageService,
-
-    {
-      provide: LOCAL_STORAGE_SERVICE_CONFIG, useValue: localStorageServiceConfig
-    }
   ],
   bootstrap: [AppComponent]
 })
