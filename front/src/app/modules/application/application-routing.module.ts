@@ -17,6 +17,7 @@ import {UserTypesResolve} from "../../services/resolve/user-types-resolve";
 import {CurrentUserResolve} from "../../services/resolve/current-user-resolve.service";
 import {AdminComponent} from "./admin/admin.component";
 import {AdminGuardService} from "../../services/admin-guard.service";
+import {WebsocketComponent} from "./websocket/websocket.component";
 
 /**
  * Created by pgmatz on 28/10/16.
@@ -34,6 +35,7 @@ import {AdminGuardService} from "../../services/admin-guard.service";
       { path: 'conversation', component: MessengerComponent, resolve: {user:CurrentUserResolve} },
       { path: 'conversation/:id', component: MessengerComponent, resolve: {user:CurrentUserResolve} },
       { path: 'visits', component: VisitComponent },
+      { path: 'websocket', component: WebsocketComponent },
       { path: 'search', component: SearchComponent, resolve: { types:UserTypesResolve, localizations: LocalizationsResolve}  },
       { path: '', component: NavbarComponent, outlet: 'header'},
       { path: '', component: HeadingComponent, outlet: 'banner'},

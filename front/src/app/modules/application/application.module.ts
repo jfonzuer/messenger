@@ -33,6 +33,7 @@ import {BlockUserComponent} from "./user-profile/block-user/block-user.component
 import {AdminComponent} from "./admin/admin.component";
 import {AdminGuardService} from "../../services/admin-guard.service";
 import {AdminService} from "../../services/admin.service";
+import {WebsocketComponent} from "./websocket/websocket.component";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -64,7 +65,8 @@ import {AdminService} from "../../services/admin.service";
     AlertsComponent,
     DesactivateComponent,
     BlockUserComponent,
-    AdminComponent
+    AdminComponent,
+    WebsocketComponent
   ],
   providers: [
     ConversationService,
