@@ -16,6 +16,7 @@ public class ConversationHanshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
         ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) serverHttpRequest;
         System.err.println("servletRequest = " + servletRequest);
+
         //servletRequest.getServletRequest().getParameter()
 
         return true;
