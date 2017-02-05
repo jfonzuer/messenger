@@ -30,16 +30,17 @@ export class MessengerComponent implements OnInit {
   user:User;
   baseUrl:string;
   stompClient:any;
+  changeConversationSubscription: any;
 
   constructor(private route:ActivatedRoute, private conversationService: ConversationService, private messengerService:MessengerService, private localStorageService:CoolLocalStorage) {
     this.baseUrl = environment.baseUrl;
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.connect(conversation.id ? conversation.id : null));
   }
 
   ngOnInit() {
     this.route.data.forEach((data:any) => {
       this.user = data.user;
     });
-    this.connect(2);
 
     this.route.params.forEach((params: Params) => {
       // si on arrive avec l'id d'un utilisateur spécifié
@@ -52,6 +53,16 @@ export class MessengerComponent implements OnInit {
       }
     });
   }
+
+  /*
+  subscribe(conversationId) {
+    if (conversationId) {
+      this.stompClient.subscribe('/topic/greetings/' + conversationId, function (greeting) {
+        console.log('greeting', greeting);
+      });
+    }
+  }
+  */
 
   connect(conversationId) {
     var that = this;
