@@ -26,8 +26,6 @@ import java.util.Collections;
 
 public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @Autowired
     private UserRepository userRepository;
@@ -42,17 +40,9 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-        System.out.println("httpRequest.getHeader('test') = " + httpRequest.getHeader("test"));
-        System.out.println("httpRequest.getQueryString() = " + httpRequest.getQueryString());
-        System.out.println("httpRequest.getContextPath() = " + httpRequest.getContextPath());
-        System.out.println("httpRequest.getRequestURI() = " + httpRequest.getRequestURI());
-
         String authToken = httpRequest.getHeader(this.tokenHeader);
-        System.out.println("authToken = " + authToken);
 
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
-        System.out.println("username = " + username);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 

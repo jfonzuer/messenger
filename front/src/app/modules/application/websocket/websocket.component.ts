@@ -32,7 +32,8 @@ export class WebsocketComponent implements OnInit {
 
   connect() {
     var that = this;
-    var socket = new SockJS(this.baseUrl + '/hello?token=lol');
+    let url:string = this.baseUrl + 'hello?token=' + this.localStorageService.getObject('token') + '&id=' + 2;
+    var socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
 

@@ -1,5 +1,6 @@
 package com.jfonzuer.websocket;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -21,7 +22,6 @@ import java.security.Principal;
  * Created by pgm on 31/01/17.
  */
 @Configuration
-@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
@@ -64,6 +64,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         });
     }
     */
+    @Bean
+    public ConversationHanshakeInterceptor conversationHanshakeInterceptorBean() {
+        return new ConversationHanshakeInterceptor();
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -73,7 +77,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/hello").setAllowedOrigins("*").withSockJS().setInterceptors(new ConversationHanshakeInterceptor());
+        registry.addEndpoint("/hello").setAllowedOrigins("*").withSockJS().setInterceptors(conversationHanshakeInterceptorBean());
     }
 
 }

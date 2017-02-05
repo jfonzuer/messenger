@@ -163,9 +163,8 @@ public class Conversation implements Serializable {
                 ", lastModified=" + lastModified +
                 ", isDeletedByUserOne=" + isDeletedByUserOne +
                 ", isDeletedByUserTwo=" + isDeletedByUserTwo +
-                ", userOne=" + userOne +
-                ", userTwo=" + userTwo +
-                ", messages=" + messages +
+                ", userOneId=" + userOne.getId() +
+                ", userTwoId=" + userTwo.getId() +
                 '}';
     }
 

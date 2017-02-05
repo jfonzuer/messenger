@@ -48,7 +48,6 @@ public class MessageController {
     private final MessageRepository messageRepository;
     private final MessageService messageService;
     private final UserRepository userRepository;
-    private final ConversationRepository conversationRepository;
     private final ConversationService conversationService;
     private final MailService mailService;
     private final UserService userService;
@@ -59,11 +58,10 @@ public class MessageController {
     private String conversationLocation;
 
     @Autowired
-    public MessageController(MessageRepository messageRepository, MessageService messageService, UserRepository userRepository, ConversationRepository conversationRepository, ConversationService conversationService, MailService mailService, UserService userService, MediaValidator mediaValidator, StorageService storageService) {
+    public MessageController(MessageRepository messageRepository, MessageService messageService, UserRepository userRepository, ConversationService conversationService, MailService mailService, UserService userService, MediaValidator mediaValidator, StorageService storageService) {
         this.messageRepository = messageRepository;
         this.messageService = messageService;
         this.userRepository = userRepository;
-        this.conversationRepository = conversationRepository;
         this.conversationService = conversationService;
         this.mailService = mailService;
         this.userService = userService;
