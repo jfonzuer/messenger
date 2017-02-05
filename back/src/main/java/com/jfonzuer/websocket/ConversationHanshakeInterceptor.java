@@ -45,6 +45,7 @@ public class ConversationHanshakeInterceptor implements HandshakeInterceptor {
             User userOne = userRepository.findByEmail(username);
 
             if (userOne != null && !userOne.getBlocked()) {
+                map.put("connectedUser", userOne);
                 connection = true;
             }
         }

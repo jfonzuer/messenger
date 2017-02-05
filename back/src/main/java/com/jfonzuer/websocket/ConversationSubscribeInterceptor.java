@@ -35,6 +35,7 @@ public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter 
 
             // on récupère le paramètre conversationId
             Long conversationId = Long.parseLong(String.valueOf(destination.charAt(destination.length() - 1)));
+            System.out.println("conversationId = " + conversationId);
             Conversation conversation = conversationRepository.findOne(conversationId);
             User connectedUser = (User) headerAccessor.getSessionAttributes().get("connectedUser");
 
