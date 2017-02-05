@@ -35,6 +35,10 @@ public class ConversationService {
         this.userRepository = userRepository;
     }
 
+    public Boolean isUserPartOfConversation(Conversation c, User u) {
+        return c.getUserOne().equals(u) || c.getUserTwo().equals(u);
+    }
+
     public Conversation getConversationOrCreateOne(User currentUser, User specifiedUser) {
         Conversation conversation = conversationRepository.findByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
         System.out.println("conversation = " + conversation);

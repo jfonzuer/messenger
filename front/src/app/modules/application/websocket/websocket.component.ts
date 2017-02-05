@@ -18,7 +18,6 @@ export class WebsocketComponent implements OnInit {
   stompClient: any;
   baseUrl:string;
 
-  activityId: any;
   text: any;
   messages:String[] = [];
 
@@ -36,24 +35,9 @@ export class WebsocketComponent implements OnInit {
     var socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
-
-    var headers = {
-      'Authorization': this.localStorageService.getObject('token')
-    }
-    /*
-    headers['Authorization'] = this.localStorageService.getObject('token');
-    console.log(headers);
-    var headers = {
-      login: 'mylogin',
-      passcode: 'mypasscode',
-      // additional header
-      'test': 'my-client-id'
-    };
-    */
-
-    this.stompClient.connect(headers, function (frame) {
+    this.stompClient.connect({}, function (frame) {
       console.log('Connected: ' + frame);
-      that.stompClient.subscribe('/topic/greetings/' + 1, function (greeting) {
+      that.stompClient.subscribe('/topic/greetings/' + 9, function (greeting) {
         console.log('greeting', greeting);
         that.messages.push(JSON.parse(greeting.body).content);
         console.log(that.messages);

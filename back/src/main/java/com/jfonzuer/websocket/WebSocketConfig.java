@@ -68,6 +68,15 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     public ConversationHanshakeInterceptor conversationHanshakeInterceptorBean() {
         return new ConversationHanshakeInterceptor();
     }
+    @Bean
+    public ConversationSubscribeInterceptor conversationSubscribeInterceptorBean() {
+        return new ConversationSubscribeInterceptor();
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.setInterceptors(conversationSubscribeInterceptorBean());
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -79,5 +88,4 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/hello").setAllowedOrigins("*").withSockJS().setInterceptors(conversationHanshakeInterceptorBean());
     }
-
 }
