@@ -37,20 +37,14 @@ public class ConversationHanshakeInterceptor implements HandshakeInterceptor {
         HttpServletRequest request = servletRequest.getServletRequest();
 
         String authToken = request.getParameter("token");
-        String paramId = request.getParameter("id");
         boolean connection = false;
 
-        if (authToken != null && paramId != null) {
+        if (authToken != null) {
 
             String username = jwtTokenUtil.getUsernameFromToken(authToken);
             User userOne = userRepository.findByEmail(username);
-            Long userTwoId = Long.parseLong(paramId);
 
-            Conversation conversation = conversationService.getConversationByIdAndUser(userTwoId, userOne);
-
-            if (conversation != null) {
-                map.put("connectedUser", userOne);
-                map.put("conversation", conversation);
+            if (userOne != null && !userOne.getBlocked()) {
                 connection = true;
             }
         }
