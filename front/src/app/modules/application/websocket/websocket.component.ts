@@ -13,7 +13,6 @@ var Stomp = require('stompjs');
 export class WebsocketComponent implements OnInit {
 
   ngOnInit(): void {
-    this.connect();
   }
 
   stompClient: any;
@@ -33,11 +32,24 @@ export class WebsocketComponent implements OnInit {
 
   connect() {
     var that = this;
-    var socket = new SockJS(this.baseUrl + '/hello/');
+    var socket = new SockJS(this.baseUrl + '/hello?token=lol');
     this.stompClient = Stomp.over(socket);
 
-    var headers = {};
-    headers['Authorization'] = '' + this.localStorageService.getObject('token');
+
+    var headers = {
+      'Authorization': this.localStorageService.getObject('token')
+    }
+    /*
+    headers['Authorization'] = this.localStorageService.getObject('token');
+    console.log(headers);
+    var headers = {
+      login: 'mylogin',
+      passcode: 'mypasscode',
+      // additional header
+      'test': 'my-client-id'
+    };
+    */
+
     this.stompClient.connect(headers, function (frame) {
       console.log('Connected: ' + frame);
       that.stompClient.subscribe('/topic/greetings/' + 1, function (greeting) {
@@ -48,6 +60,12 @@ export class WebsocketComponent implements OnInit {
     }, function (err) {
       console.log('err', err);
     });
+  }
+
+  disconnect() {
+    if (this.stompClient != null) {
+      this.stompClient.disconnect();
+    }
   }
 
 }
