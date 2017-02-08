@@ -50,6 +50,10 @@ export class DatetimeService {
     }
   }
 
+  formatMessage(message:Message) {
+      message.sendSince = moment(message.sendDate).fromNow();
+  }
+
   formatBirthDate(user:User) {
     user.birthDate = moment(user.birthDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
   }

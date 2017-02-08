@@ -32,8 +32,8 @@ export class MessageListComponent implements OnInit {
   // subscriptions
   changeConversationSubscription: any;
   isReadConversationSubscription: any;
-  addMessageSubscription:any;
   addConversationSubscription:any;
+  receiveMessageSubscription:any;
 
   isRead:boolean;
   isUserBlocked:boolean;
@@ -47,8 +47,8 @@ export class MessageListComponent implements OnInit {
     this.uploadUrl = environment.uploadUrl;
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.changeConversation(conversation));
     this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
-    this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.addMessage(message));
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.pager = null; this.selectedConversation = conversation; this.getMessages(this.selectedConversation.userTwo.id)});
+    this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(message => this.addMessage(message));
   }
 
   ngOnInit() {
@@ -123,16 +123,6 @@ export class MessageListComponent implements OnInit {
       .catch(e => this.errorEmitter.emit(e));
   }
 
-  private getNewerMessages() {
-    if (this.messages.length > 0) {
-      this.messageService.getNewerMessages(this.selectedConversation.userTwo.id, this.messages[this.messages.length - 1].id).then(messages => {
-        console.log(messages);
-        this.datetimeService.formatMessages(messages);
-        this.messages = this.messages.concat(messages);
-      })
-    }
-  }
-
   private concatMessage(response: any) {
     if (response.content) {
       let messages: Message[] = response.content;
@@ -143,8 +133,6 @@ export class MessageListComponent implements OnInit {
 
   private defineTimers(userId: number) : void {
     if (!this.getMessageTimer) {
-      this.getMessageTimer = Observable.timer(0, 2000);
-      //this.getMessageTimer.subscribe(t => { this.getNewerMessages(); });
       this.formatMessageTimer = Observable.timer(0, 60000);
       this.formatMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
     }

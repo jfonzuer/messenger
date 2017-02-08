@@ -46,6 +46,7 @@ public class ConversationHanshakeInterceptor implements HandshakeInterceptor {
 
             if (userOne != null && !userOne.getBlocked()) {
                 map.put("connectedUser", userOne);
+                map.put("locale", request.getLocale());
                 connection = true;
             }
         }

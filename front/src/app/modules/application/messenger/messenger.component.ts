@@ -30,11 +30,18 @@ export class MessengerComponent implements OnInit {
   user:User;
   baseUrl:string;
   stompClient:any;
+
+  addMessageSubscription:any;
   changeConversationSubscription: any;
+  addConversationSubscription:any;
+  selectedConversation:Conversation;
 
   constructor(private route:ActivatedRoute, private conversationService: ConversationService, private messengerService:MessengerService, private localStorageService:CoolLocalStorage) {
     this.baseUrl = environment.baseUrl;
-    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.connect(conversation.id ? conversation.id : null));
+
+    this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.selectedConversation.id ? this.send(message) : null );
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
+    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
   }
 
   ngOnInit() {
@@ -54,27 +61,22 @@ export class MessengerComponent implements OnInit {
     });
   }
 
-  /*
-  subscribe(conversationId) {
-    if (conversationId) {
-      this.stompClient.subscribe('/topic/greetings/' + conversationId, function (greeting) {
-        console.log('greeting', greeting);
-      });
-    }
+  send(message: Message) {
+    this.stompClient.send('/app/ws-conversation-endpoint/' + this.selectedConversation.id, {}, JSON.stringify(message));
   }
-  */
 
   connect(conversationId) {
     var that = this;
-    let url:string = this.baseUrl + 'hello?token=' + this.localStorageService.getObject('token');
+    let url:string = this.baseUrl + 'ws-conversation-endpoint?token=' + this.localStorageService.getObject('token');
     var socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, function (frame) {
       console.log('Connected: ' + frame);
       if (conversationId) {
-        that.stompClient.subscribe('/topic/greetings/' + conversationId, function (greeting) {
-          console.log('greeting', greeting);
+        that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
+          console.log(response);
+          that.messengerService.receiveMessage(JSON.parse(response.body));
         });
       }
     }, function (err) {

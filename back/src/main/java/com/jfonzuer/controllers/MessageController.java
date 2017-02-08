@@ -110,6 +110,7 @@ public class MessageController {
 
         conversationService.updateConversation(conversation, sender, dto);
 
+        System.err.println("controller : " + dto.getSendDate());
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.TEXT);
         message = messageService.saveMessage(message, conversation.getUserOne(), conversation.getUserTwo());

@@ -92,7 +92,15 @@ export class MessageSendComponent implements OnInit {
 
   private sendMessage() {
     this.message.conversation = this.selectedConversation;
-    this.messageService.post(this.message).then(response => { this.messengerService.addMessage(response); this.message.content = ''; }).catch(error => this.errorEmitter.emit(error) );
+    this.messengerService.addMessage(this.message);
+    this.message.content = '';
+    /*
+    this.messageService.post(this.message).then(response => {
+      this.messengerService.addMessage(response); this.message.content = '';
+    }).catch(error => {
+      this.errorEmitter.emit(error); }
+    );
+    */
   }
 
   private createConversation() {

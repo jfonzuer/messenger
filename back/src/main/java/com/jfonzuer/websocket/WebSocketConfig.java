@@ -80,12 +80,13 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/topic", "/ws-conversation-broker");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/hello").setAllowedOrigins("*").withSockJS().setInterceptors(conversationHanshakeInterceptorBean());
+        registry.addEndpoint("/ws-conversation-endpoint").setAllowedOrigins("*").withSockJS().setInterceptors(conversationHanshakeInterceptorBean());
     }
 }
