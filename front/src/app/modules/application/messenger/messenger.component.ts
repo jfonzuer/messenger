@@ -75,7 +75,7 @@ export class MessengerComponent implements OnInit {
       console.log('Connected: ' + frame);
       if (conversationId) {
         that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
-          console.log(response);
+          console.log("web socket response", response);
           that.messengerService.receiveMessage(JSON.parse(response.body));
         });
       }

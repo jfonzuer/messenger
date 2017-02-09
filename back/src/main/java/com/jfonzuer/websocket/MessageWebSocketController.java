@@ -1,6 +1,8 @@
 package com.jfonzuer.websocket;
 
+import com.jfonzuer.dto.ConversationDto;
 import com.jfonzuer.dto.MessageDto;
+import com.jfonzuer.dto.mapper.ConversationMapper;
 import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.Message;
@@ -21,6 +23,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +52,9 @@ public class MessageWebSocketController {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private SimpMessagingTemplate template;
+
 
 
 
@@ -62,33 +68,37 @@ public class MessageWebSocketController {
 
     @Transactional
     @MessageMapping("/ws-conversation-endpoint/{id}")
-    @SendTo("/ws-conversation-broker/conversation/{id}")
-    public MessageDto addMessage(@DestinationVariable String id, MessageDto dto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public void addMessage(@DestinationVariable String id, MessageDto dto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
 
         User sender = (User) headerAccessor.getSessionAttributes().get("connectedUser");
         Locale locale = (Locale) headerAccessor.getSessionAttributes().get("locale");
 
 
-        Conversation conversation = conversationService.returnConversationOrThrowException(dto.getConversation().getId());
-        User target = MessengerUtils.getOtherUser(conversation, sender);
+        Conversation c = conversationService.returnConversationOrThrowException(dto.getConversation().getId());
+        User target = MessengerUtils.getOtherUser(c, sender);
         //TODO : see how handle exceptions in websocket
         userService.throwExceptionIfBlocked(sender, target);
 
         target.setLastMessageBy(sender);
         userRepository.save(target);
 
-        conversationService.updateConversation(conversation, sender, dto);
+        Conversation conversation = conversationService.updateConversation(c, sender, dto);
         System.err.println("ws : " + dto.getSendDate());
+
+        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
+        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
+
+
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.TEXT);
-        message = messageService.saveMessage(message, conversation.getUserOne(), conversation.getUserTwo());
+        message = messageService.saveMessage(message, c.getUserOne(), c.getUserTwo());
 
         // send email if sender is not last sender
         if (!target.getLastMessageBy().equals(sender)) {
-            mailService.sendAsync(() -> mailService.sendMessageNotification(locale, MessengerUtils.getOtherUser(conversation, sender), sender));
+            mailService.sendAsync(() -> mailService.sendMessageNotification(locale, MessengerUtils.getOtherUser(c, sender), sender));
         }
         System.out.println("message = " + message);
-        return  MessageMapper.toDto(message);
+        this.template.convertAndSend("/ws-conversation-broker/conversation/" + id, MessageMapper.toDto(message));
     }
 
     @MessageMapping("/hello/{id}")

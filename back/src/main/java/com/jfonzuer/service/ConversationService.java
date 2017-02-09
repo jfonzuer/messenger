@@ -113,11 +113,11 @@ public class ConversationService {
         return conversation;
     }
 
-    public void updateConversation(Conversation conversation, User sender, MessageDto dto) {
+    public Conversation updateConversation(Conversation conversation, User sender, MessageDto dto) {
         conversation.setLastModified(LocalDateTime.now());
         conversation.setPreview(MessengerUtils.getPreviewFromMessage(dto));
         MessengerUtils.setConversationUnread(conversation, sender);
         MessengerUtils.setConversationDeleted(conversation, sender);
-        conversationRepository.save(conversation);
+        return conversationRepository.save(conversation);
     }
 }

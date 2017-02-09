@@ -80,7 +80,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/ws-conversation-broker");
+        config.enableSimpleBroker("/topic", "/ws-conversation-broker", "/ws-user-broker");
         config.setApplicationDestinationPrefixes("/app");
     }
 
