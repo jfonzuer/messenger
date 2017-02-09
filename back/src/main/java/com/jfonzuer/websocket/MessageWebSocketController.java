@@ -84,7 +84,7 @@ public class MessageWebSocketController {
 
         Conversation conversation = conversationService.updateConversation(c, sender, dto);
         System.err.println("ws : " + dto.getSendDate());
-
+        // on renvoit la conversation aux deux utilisateurs qui ont souscrit à la websocket.
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
 

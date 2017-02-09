@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,16 +44,18 @@ public class ConversationController {
     private final UserService userService;
     private final MailService mailService;
     private final ConversationService conversationService;
+    private final SimpMessagingTemplate template;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConversationController.class);
 
     @Autowired
-    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, UserService userService, MailService mailService, ConversationService conversationService) {
+    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, UserService userService, MailService mailService, ConversationService conversationService, SimpMessagingTemplate template) {
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.conversationService = conversationService;
+        this.template = template;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -75,6 +78,9 @@ public class ConversationController {
 
         Conversation conversation = conversationService.createConversationAndAddMessage(userOne, userTwo, messageDto);
         // TODO : send created conversation or new conversation via 2 websocket channels
+        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
+        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
+
         mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
         return ConversationMapper.toDto(conversation, userOne);
     }
