@@ -31,6 +31,7 @@ export class ConversationListComponent implements OnInit {
   deleteConversationSubscription:any;
   addConversationSubscription:any;
   changeConversationSubscription:any;
+  updateConversationSubscription:any;
 
   constructor(private conversationService: ConversationService, private sharedService: SharedService, private messengerService:MessengerService) {
     this.uploadImageUrl = environment.uploadImageUrl;
@@ -39,6 +40,7 @@ export class ConversationListComponent implements OnInit {
     this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.conversations = this.conversations.filter(c => c.id != conversation.id));
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => this.addConversation(conversation));
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.selectedConversation = conversation);
+    this.updateConversationSubscription = this.messengerService.updateConversationObservable.subscribe(conversation => this.updateConversation(conversation));
   }
 
   ngOnInit() {
@@ -57,6 +59,12 @@ export class ConversationListComponent implements OnInit {
   private defineConversationTimer() : void {
     this.conversationTimer = Observable.timer(0, 60000);
     //this.conversationTimer.subscribe(t => this.getConversations());
+  }
+
+  private updateConversation(conversation:Conversation) {
+    let c = this.conversations.find(c => c.id === conversation.id);
+    // si la conversation existe, on la met à jour, sinon, il s'agit d'une nouvelle et dans ce cas on la concatène en premier.
+    c ? conversation = c : [c].concat(this.conversations);
   }
 
   private getConversations() {

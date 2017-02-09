@@ -21,6 +21,9 @@ export class MessengerService {
   receiveMessageObservable: Observable<Message>;
   private receiveMessageObserver:Observer<Message>;
 
+  updateConversationObservable: Observable<Conversation>;
+  private updateConversationObserver:Observer<Conversation>;
+
   deleteConversationObservable: Observable<Conversation>;
   private deleteConversationObserver: Observer<Conversation>;
 
@@ -36,6 +39,7 @@ export class MessengerService {
     this.deleteConversationObservable = new Observable<Conversation>(observer => this.deleteConversationObserver = observer).share();
     this.addMessageObservable = new Observable<Message>(observer => this.addMessageObserver = observer).share();
     this.receiveMessageObservable = new Observable<Message>(observer => this.receiveMessageObserver = observer).share();
+    this.updateConversationObservable = new Observable<Conversation>(observer => this.updateConversationObserver = observer).share();
     this.isConversationReadObservable = new Observable<boolean>(observer => this.isConversationReadObserver = observer).share();
     this.addConversationObservable = new Observable<Conversation>(observer => this.addConversationObserver = observer).share();
     this.blockUserObservable = new Observable<boolean>(observer => this.blockUserObserver = observer).share();
@@ -43,6 +47,10 @@ export class MessengerService {
 
   receiveMessage(message:Message) {
     this.receiveMessageObserver.next(message);
+  }
+
+  updateConversation(conversation:Conversation) {
+    this.updateConversationObserver.next(conversation);
   }
 
   changeConversation(conversation:Conversation) {

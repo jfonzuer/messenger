@@ -78,6 +78,11 @@ export class MessengerComponent implements OnInit {
           console.log("web socket response", response);
           that.messengerService.receiveMessage(JSON.parse(response.body));
         });
+
+        that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
+          console.log("web socket response", response);
+          that.messengerService.updateConversation(JSON.parse(response.body));
+        });
       }
     }, function (err) {
       console.log('err', err);

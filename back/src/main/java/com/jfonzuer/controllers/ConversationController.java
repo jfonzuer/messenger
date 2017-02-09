@@ -74,6 +74,7 @@ public class ConversationController {
         }
 
         Conversation conversation = conversationService.createConversationAndAddMessage(userOne, userTwo, messageDto);
+        // TODO : send created conversation or new conversation via 2 websocket channels
         mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
         return ConversationMapper.toDto(conversation, userOne);
     }
