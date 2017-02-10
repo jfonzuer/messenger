@@ -25,45 +25,6 @@ import java.security.Principal;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
-    /*
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/websocket");
-        config.setApplicationDestinationPrefixes("/app");
-    }
-
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
-        stompEndpointRegistry.addEndpoint("/conversation").withSockJS().setInterceptors(new ConversationHanshakeInterceptor());
-    }
-    */
-
-    /*
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.setInterceptors(new ChannelInterceptorAdapter() {
-
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-
-                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    System.out.println("accessor.getHeader('Authorization') = " + accessor.getHeader("Authorization"));
-                    System.out.println("accessor.getHeader('test') = " + accessor.getHeader("test"));
-                    System.out.println("accessor.getDestination() = " + accessor.getDestination());
-
-                    /*
-                    Principal user = accessor.getHeader()
-                    Principal user = ... ; // access authentication header(s)
-                    accessor.setUser(user);
-                    *//*
-                }
-                return message;
-            }
-        });
-    }
-    */
     @Bean
     public ConversationHanshakeInterceptor conversationHanshakeInterceptorBean() {
         return new ConversationHanshakeInterceptor();
@@ -80,13 +41,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/ws-conversation-broker", "/ws-user-broker");
+        config.enableSimpleBroker("/ws-conversation-broker", "/ws-user-broker");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/hello").setAllowedOrigins("*").withSockJS().setInterceptors(conversationHanshakeInterceptorBean());
         registry.addEndpoint("/ws-conversation-endpoint").setAllowedOrigins("*").withSockJS().setInterceptors(conversationHanshakeInterceptorBean());
     }
 }

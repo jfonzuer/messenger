@@ -55,17 +55,6 @@ public class MessageWebSocketController {
     @Autowired
     private SimpMessagingTemplate template;
 
-
-
-
-    /*
-    @MessageMapping("/conversation/{id}")
-    @SendTo("conversation/{id}")
-    public MessageDto addMessage(@Payload MessageDto dto, Principal user) {
-        return  dto;
-    }
-    */
-
     @Transactional
     @MessageMapping("/ws-conversation-endpoint/{id}")
     public void addMessage(@DestinationVariable String id, MessageDto dto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
@@ -84,6 +73,7 @@ public class MessageWebSocketController {
 
         Conversation conversation = conversationService.updateConversation(c, sender, dto);
         System.err.println("ws : " + dto.getSendDate());
+
         // on renvoit la conversation aux deux utilisateurs qui ont souscrit à la websocket.
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
@@ -99,13 +89,5 @@ public class MessageWebSocketController {
         }
         System.out.println("message = " + message);
         this.template.convertAndSend("/ws-conversation-broker/conversation/" + id, MessageMapper.toDto(message));
-    }
-
-    @MessageMapping("/hello/{id}")
-    @SendTo("/topic/greetings/{id}")
-    public Greeting greeting(@DestinationVariable String id, HelloMessage message, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-        //System.out.println("messageHeaders = " + messageHeaders.get("ok"));
-        System.out.println("headerAccessor.getSessionAttributes().get(\"handshake\"); = " + headerAccessor.getSessionAttributes().get("handshake"));
-        return new Greeting("Hello, " + message.getName() + "!");
     }
 }

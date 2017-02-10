@@ -60,10 +60,7 @@ public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter 
                 if (!user.equals(connectedUser)) {
                     throw new UnauthorizedException("Vous n'avez pas les droits.");
                 }
-
             }
-
-
         }
 
         return message;
