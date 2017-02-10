@@ -26,7 +26,6 @@ export class MessageListComponent implements OnInit {
   messages: Message[] = [];
   pager:Pager;
 
-  getMessageTimer:Observable<number>;
   formatMessageTimer:Observable<number>;
 
   // subscriptions
@@ -132,9 +131,7 @@ export class MessageListComponent implements OnInit {
   }
 
   private defineTimers(userId: number) : void {
-    if (!this.getMessageTimer) {
       this.formatMessageTimer = Observable.timer(0, 60000);
       this.formatMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
-    }
   }
 }

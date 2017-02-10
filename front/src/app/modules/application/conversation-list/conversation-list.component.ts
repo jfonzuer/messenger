@@ -16,9 +16,6 @@ export class ConversationListComponent implements OnInit {
   conversations: Conversation[] = [];
   selectedConversation:Conversation;
 
-  // timers
-  conversationTimer:Observable<number>;
-
   @Output() successEmitter = new EventEmitter();
   @Output() errorEmitter = new EventEmitter();
 
@@ -38,7 +35,7 @@ export class ConversationListComponent implements OnInit {
 
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.getConversations());
     this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.conversations = this.conversations.filter(c => c.id != conversation.id));
-    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => this.addConversation(conversation));
+    //this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => this.addConversation(conversation));
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.selectedConversation = conversation);
     this.updateConversationSubscription = this.messengerService.updateConversationObservable.subscribe(conversation => this.updateConversation(conversation));
   }
@@ -47,18 +44,12 @@ export class ConversationListComponent implements OnInit {
     this.selectedConversation = new Conversation();
     this.selectedConversation.id = 0;
     this.getConversations();
-    this.defineConversationTimer();
   }
 
   onSelect(conversation : Conversation) {
     conversation.readByUserOne = true;
     this.selectedConversation = conversation;
     this.messengerService.changeConversation(conversation);
-  }
-
-  private defineConversationTimer() : void {
-    this.conversationTimer = Observable.timer(0, 60000);
-    //this.conversationTimer.subscribe(t => this.getConversations());
   }
 
   private updateConversation(conversation:Conversation) {
@@ -77,9 +68,11 @@ export class ConversationListComponent implements OnInit {
     }).catch(error => this.errorEmitter.emit(error));
   }
 
+  /*
   private addConversation(conversation:Conversation) {
     console.log(this.selectedConversation.userTwo);
     this.selectedConversation = conversation;
     this.getConversations();
   }
+  */
 }

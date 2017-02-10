@@ -104,7 +104,6 @@ public class ConversationController {
     public Long getUnreadNumerConversations(HttpServletRequest request) {
 
         User user = userService.getUserFromToken(request);
-        //User user = this.userService.getUserFromToken(request);
         return this.conversationRepository.countByUserOneAndIsReadByUserOne(user, false) +  this.conversationRepository.countByUserTwoAndIsReadByUserTwo(user, false);
     }
 }

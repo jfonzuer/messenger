@@ -84,44 +84,6 @@ public class MessageController {
         return conversation == null ? null : messageService.getByConversationAndUser(conversation, currentUser, p);
     }
 
-    @RequestMapping(value = "/newer/{userId}/{messageId}", method = RequestMethod.GET)
-    public List<MessageDto> getNewerMessages(HttpServletRequest request, @PathVariable("userId") Long userId, @PathVariable("messageId") Long messageId) {
-        User currentUser = userService.getUserFromToken(request);
-
-        // check if conversation exists and if user is part of this
-        Conversation conversation = conversationService.getConversationByIdAndUser(userId, currentUser);
-        if (conversation != null) {
-            conversationService.updateConversationIsRead(conversation, currentUser);
-        }
-        return conversation == null ? null : messageRepository.findByConversationAndIdGreaterThanOrderByIdDesc(conversation, messageId).stream().map(MessageMapper::toDto).collect(Collectors.toList());
-    }
-
-
-    @RequestMapping(method = RequestMethod.POST)
-    public MessageDto addToConversation(HttpServletRequest request, @RequestBody MessageDto dto) {
-
-        User sender = userService.getUserFromToken(request);
-        Conversation conversation = conversationService.returnConversationOrThrowException(dto.getConversation().getId());
-        User target = MessengerUtils.getOtherUser(conversation, sender);
-        userService.throwExceptionIfBlocked(sender, target);
-
-        target.setLastMessageBy(sender);
-        userRepository.save(target);
-
-        conversationService.updateConversation(conversation, sender, dto);
-
-        System.err.println("controller : " + dto.getSendDate());
-        Message message = MessageMapper.fromDto(dto);
-        message.setType(MessageType.TEXT);
-        message = messageService.saveMessage(message, conversation.getUserOne(), conversation.getUserTwo());
-
-        // send email if sender is not last sender
-        if (!target.getLastMessageBy().equals(sender)) {
-            mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender));
-        }
-        return  MessageMapper.toDto(message);
-    }
-
     @RequestMapping(value = "/image", method = RequestMethod.POST)
     public MessageDto addImage(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file, @RequestParam(value = "id") Long id) {
 
