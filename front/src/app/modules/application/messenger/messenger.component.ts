@@ -65,7 +65,7 @@ export class MessengerComponent implements OnInit {
 
   connect(conversationId) {
     var that = this;
-    let url:string = this.baseUrl + 'ws-conversation-endpoint?token='; //+ this.localStorageService.getObject('token');
+    let url:string = this.baseUrl + 'ws-conversation-endpoint?token=' + this.localStorageService.getObject('token');
     var socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
@@ -83,7 +83,7 @@ export class MessengerComponent implements OnInit {
         });
       }
     }, function (err) {
-      that.toastr.error("Erreur lors de la connexion");
+      that.toastr.error("Erreur lors de la connexion", null, {toastLife: 5000});
     });
   }
 }
