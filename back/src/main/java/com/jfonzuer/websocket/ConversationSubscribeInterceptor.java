@@ -38,6 +38,10 @@ public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter 
             String destination = (String) headerAccessor.getHeader("simpDestination");
             User connectedUser = (User) headerAccessor.getSessionAttributes().get("connectedUser");
 
+            if (destination.contains("queue/errors")) {
+                return message;
+            }
+
             // on récupère le paramètre id
             Long id = Long.parseLong(String.valueOf(destination.charAt(destination.length() - 1)));
 

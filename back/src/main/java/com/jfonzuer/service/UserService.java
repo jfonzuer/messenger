@@ -50,9 +50,13 @@ public class UserService {
     }
 
     public void throwExceptionIfBlocked(User sender, User target) {
-        if (target.getBlockedUsers() != null && target.getBlockedUsers().contains(sender)) {
-            throw new IllegalArgumentException("Vous ne pouvez pas envoyer de message à cet utilisateur");
+
+        if (target.getBlockedUsers() != null /* && target.getBlockedUsers().contains(sender) */) {
+            long nb = target.getBlockedUsers().stream().filter(u -> u.equals(sender)).count();
+            System.err.println("err = " + nb);
+            if (nb == 1l) {
+                throw new IllegalArgumentException("Vous ne pouvez pas envoyer de message à cet utilisateur");
+            }
         }
     }
-
 }

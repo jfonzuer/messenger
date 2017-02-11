@@ -336,6 +336,12 @@ public class User implements UserDetails, Serializable {
         if (obj == this) return true;
         if (!(obj instanceof User)) return false;
         User user = (User) obj;
+        /*
+        System.out.println("EQUALS user = " + user);
+        System.out.println("EQUALS user.getId() = " + user.getId());
+        System.out.println("EQUALS this.getId() = " + this.getId());
+        System.out.println(user.getId() == this.getId());
+        */
         if (user.getId() == this.getId()) return true;
         return false;
     }

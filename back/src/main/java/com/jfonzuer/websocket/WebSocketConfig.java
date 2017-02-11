@@ -41,7 +41,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/ws-conversation-broker", "/ws-user-broker");
+        config.enableSimpleBroker("/ws-conversation-broker", "/ws-user-broker", "/queue/errors");
         config.setApplicationDestinationPrefixes("/app");
     }
 

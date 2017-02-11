@@ -64,8 +64,17 @@ public class MessageWebSocketController {
 
         Conversation c = conversationService.returnConversationOrThrowException(dto.getConversation().getId());
         User target = MessengerUtils.getOtherUser(c, sender);
-        //TODO : see how handle exceptions in websocket
-        userService.throwExceptionIfBlocked(sender, target);
+
+
+        // si user est bloqué on renvoit l'erreur à la session correspondante dans le channel queue/errors
+        System.err.println("target.getBlockedUsers().contains(sender) = " + target.getBlockedUsers().contains(sender));
+
+        try {
+            userService.throwExceptionIfBlocked(sender, target);
+        } catch (IllegalArgumentException e) {
+            this.template.convertAndSend("/queue/errors/" + sender.getId(), e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
+        }
 
         target.setLastMessageBy(sender);
         userRepository.save(target);

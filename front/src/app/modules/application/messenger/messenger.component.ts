@@ -52,7 +52,7 @@ export class MessengerComponent implements OnInit {
       if (params['id']) {
         let userId = +params['id'];// (+) converts string 'id' to a number
         this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => {
-          console.log("conversation : ", conversation);
+          //console.log("conversation : ", conversation);
           this.messengerService.changeConversation(conversation)
         });
       }
@@ -60,7 +60,9 @@ export class MessengerComponent implements OnInit {
   }
 
   send(message: Message) {
-    this.stompClient.send('/app/ws-conversation-endpoint/' + this.selectedConversation.id, {}, JSON.stringify(message));
+    if (message.content != '' && message.type != 'IMAGE') {
+      this.stompClient.send('/app/ws-conversation-endpoint/' + this.selectedConversation.id, {}, JSON.stringify(message));
+    }
   }
 
   connect(conversationId) {
@@ -70,15 +72,20 @@ export class MessengerComponent implements OnInit {
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, function (frame) {
-      console.log('Connected: ' + frame);
+      //console.log('Connected: ' + frame);
       if (conversationId) {
+
+        that.stompClient.subscribe('/queue/errors/' + that.user.id, function (response) {
+          that.toastr.error(response.body);
+        });
+
         that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
-          console.log("web socket response", response);
+          //console.log("web socket response", response);
           that.messengerService.receiveMessage(JSON.parse(response.body));
         });
 
         that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
-          console.log("web socket response", response);
+          //console.log("web socket response", response);
           that.messengerService.updateConversation(JSON.parse(response.body));
         });
       }
