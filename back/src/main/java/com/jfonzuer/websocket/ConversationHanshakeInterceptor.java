@@ -2,6 +2,7 @@ package com.jfonzuer.websocket;
 
 import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.User;
+import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.service.ConversationService;
@@ -49,6 +50,9 @@ public class ConversationHanshakeInterceptor implements HandshakeInterceptor {
                 map.put("locale", request.getLocale());
                 connection = true;
             }
+        }
+        if (!connection) {
+            throw new UnauthorizedException();
         }
         return connection;
     }
