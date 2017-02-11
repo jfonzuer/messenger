@@ -62,7 +62,6 @@ public class MessageWebSocketController {
         User sender = (User) headerAccessor.getSessionAttributes().get("connectedUser");
         Locale locale = (Locale) headerAccessor.getSessionAttributes().get("locale");
 
-
         Conversation c = conversationService.returnConversationOrThrowException(dto.getConversation().getId());
         User target = MessengerUtils.getOtherUser(c, sender);
         //TODO : see how handle exceptions in websocket
@@ -72,12 +71,10 @@ public class MessageWebSocketController {
         userRepository.save(target);
 
         Conversation conversation = conversationService.updateConversation(c, sender, dto);
-        System.err.println("ws : " + dto.getSendDate());
 
         // on renvoit la conversation aux deux utilisateurs qui ont souscrit à la websocket.
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
-
 
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.TEXT);

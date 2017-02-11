@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import * as moment from 'moment/moment';
 import 'moment/locale/fr';
 import {Observable} from "rxjs";
@@ -15,6 +15,7 @@ import {DatetimeService} from "../../../services/datetime.service";
 import {MessengerService} from "../../../services/messenger.service";
 import {environment} from "../../../../environments/environment";
 import {CoolLocalStorage} from "angular2-cool-storage";
+import {ToastsManager} from "ng2-toastr";
 var SockJS = require('sockjs-client');
 var Stomp = require('stompjs');
 
@@ -24,9 +25,6 @@ var Stomp = require('stompjs');
   styleUrls: ['messenger.component.css']
 })
 export class MessengerComponent implements OnInit {
-
-  error:string;
-  success:string;
   user:User;
   baseUrl:string;
   stompClient:any;
@@ -36,9 +34,9 @@ export class MessengerComponent implements OnInit {
   addConversationSubscription:any;
   selectedConversation:Conversation;
 
-  constructor(private route:ActivatedRoute, private conversationService: ConversationService, private messengerService:MessengerService, private localStorageService:CoolLocalStorage) {
+  constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef, private conversationService: ConversationService, private messengerService:MessengerService, private localStorageService:CoolLocalStorage) {
     this.baseUrl = environment.baseUrl;
-
+    this.toastr.setRootViewContainerRef(vRef);
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.selectedConversation.id ? this.send(message) : null );
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
@@ -67,7 +65,7 @@ export class MessengerComponent implements OnInit {
 
   connect(conversationId) {
     var that = this;
-    let url:string = this.baseUrl + 'ws-conversation-endpoint?token=' + this.localStorageService.getObject('token');
+    let url:string = this.baseUrl + 'ws-conversation-endpoint?token='; //+ this.localStorageService.getObject('token');
     var socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
@@ -85,17 +83,7 @@ export class MessengerComponent implements OnInit {
         });
       }
     }, function (err) {
-      console.log('err', err);
+      that.toastr.error("Erreur lors de la connexion");
     });
-  }
-
-  errorListener(error:string) : void {
-    this.error = error;
-    setTimeout(() => this.error = "", 2000);
-  }
-
-  successListener(success:string) : void {
-    this.success = success;
-    setTimeout(() => this.success = "", 2000);
   }
 }

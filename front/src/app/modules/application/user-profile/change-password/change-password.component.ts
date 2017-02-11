@@ -1,9 +1,10 @@
-import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output, ViewContainerRef} from '@angular/core';
 import {User} from "../../../../model/user";
 import {AuthenticationService} from "../../../../services/authentication.service";
 import {UserService} from "../../../../services/user.service";
 import {PasswordConfirmation} from "../../../../model/passwordConfirmation";
 import {CoolLocalStorage} from "angular2-cool-storage";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-change-password',
@@ -14,12 +15,12 @@ export class ChangePasswordComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
-  @Output() successEmitter = new EventEmitter();
-  @Output() errorEmitter = new EventEmitter();
 
   passwordConfirmation: PasswordConfirmation = new PasswordConfirmation();
 
-  constructor(private authenticationService: AuthenticationService, private userService: UserService, private localStorageService: CoolLocalStorage) { }
+  constructor(private authenticationService: AuthenticationService, private userService: UserService, private localStorageService: CoolLocalStorage, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
+  }
 
   ngOnInit() {
   }
@@ -28,11 +29,11 @@ export class ChangePasswordComponent implements OnInit {
     if (valid) {
       if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
         this.userService.updatePassword(this.passwordConfirmation).then(() => {
-          this.successEmitter.emit("Le mot de passe a été modifié avec succés.");
-          this.authenticationService.refreshToken().then(response => { this.localStorageService.setObject('token', response.token) }).catch(error => this.errorEmitter.emit(error));
+          this.toastr.success("Le mot de passe a été modifié avec succés.");
+          this.authenticationService.refreshToken().then(response => { this.localStorageService.setObject('token', response.token) }).catch(error => this.toastr.error(error));
         })
       } else {
-        this.errorEmitter.emit("Les mots de passe doivent être identiques");
+        this.toastr.error("Les mots de passe doivent être identiques");
       }
     }
   }

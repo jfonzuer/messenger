@@ -1,9 +1,10 @@
-import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output, ViewContainerRef} from '@angular/core';
 import {User} from "../../../../model/user";
 import {Http} from "@angular/http";
 import {UploadService} from "../../../../services/upload.service";
 import {SharedService} from "../../../../services/shared.service";
 import {environment} from "../../../../../environments/environment";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-upload',
@@ -14,8 +15,6 @@ export class UploadComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
-  @Output() successEmitter = new EventEmitter();
-  @Output() errorEmitter = new EventEmitter();
 
   file:File;
   addImage:boolean = false;
@@ -23,9 +22,10 @@ export class UploadComponent implements OnInit {
   uploadImageUrl:string;
   private sizeLimit:number;
 
-  constructor(private http:Http, private uploadService: UploadService, private sharedService: SharedService) {
+  constructor(private http:Http, private uploadService: UploadService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.sizeLimit = environment.sizeLimit;
     this.uploadImageUrl = environment.uploadImageUrl;
+    this.toastr.setRootViewContainerRef(vRef);
   }
 
   // methode qui check si on peut ajouter une image, qui recalcul l'ordre, qui remet file à null
@@ -55,11 +55,11 @@ export class UploadComponent implements OnInit {
 
             this.checkAll();
           },
-          error => this.errorEmitter.emit(error)
+          error => this.toastr.error(error)
         )
       }
       else {
-        this.errorEmitter.emit("La taille maximale de fichier est 2,048 MB");
+        this.toastr.error("La taille maximale de fichier est 2,048 MB");
       }
     }
   }
@@ -74,7 +74,7 @@ export class UploadComponent implements OnInit {
 
         this.checkAll();
       },
-      error => this.errorEmitter.emit(error)
+      error => this.toastr.error(error)
     );
   }
 
@@ -86,7 +86,7 @@ export class UploadComponent implements OnInit {
         this.user.images = images;
         this.sharedService.refreshUser(this.user);
       },
-      error => this.errorEmitter.emit(error)
+      error => this.toastr.error(error)
     )
   }
 

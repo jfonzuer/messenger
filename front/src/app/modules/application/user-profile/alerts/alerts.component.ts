@@ -1,8 +1,9 @@
-import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, Input, ViewContainerRef} from '@angular/core';
 import {User} from "../../../../model/user";
 import {UserService} from "../../../../services/user.service";
 import {Alerts} from "../../../../model/alerts";
 import {SharedService} from "../../../../services/shared.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-alerts',
@@ -13,16 +14,13 @@ export class AlertsComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
-  @Output() successEmitter = new EventEmitter();
-  @Output() errorEmitter = new EventEmitter();
   alerts:Alerts = new Alerts();
 
-  constructor(private userService :UserService, private sharedService:SharedService) { }
+  constructor(private userService :UserService, private sharedService:SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
+  }
 
   ngOnInit() {
-    console.log(this.user);
-    console.log(this.user.notifyMessage);
-    console.log("prout " + this.user.notifyVisit);
     this.alerts.notifyMessage = this.user.notifyMessage;
     this.alerts.notifyVisit = this.user.notifyVisit;
   }
@@ -30,7 +28,7 @@ export class AlertsComponent implements OnInit {
   send() {
     // si les préférences ont changé
     if (this.alerts.notifyMessage != this.user.notifyMessage || this.alerts.notifyVisit != this.user.notifyVisit) {
-      this.userService.updateAlerts(this.alerts).then(response =>  { this.successEmitter.emit(response.message); this.setAlerts(this.alerts); }).catch(error => this.errorEmitter.emit(error))
+      this.userService.updateAlerts(this.alerts).then(response =>  { this.toastr.success(response.message); this.setAlerts(this.alerts); }).catch(error => this.toastr.error(error))
     }
   }
 

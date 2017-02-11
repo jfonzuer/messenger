@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Router, ActivatedRoute} from "@angular/router";
 import {PasswordConfirmation} from "../../../model/passwordConfirmation";
 import {User} from "../../../model/user";
@@ -12,6 +12,7 @@ import {Register} from "../../../model/register";
 import {UserType} from "../../../model/userType";
 import {UserTypeService} from "../../../services/user-type.service";
 import {CoolLocalStorage} from "angular2-cool-storage";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-register',
@@ -23,15 +24,15 @@ export class RegisterComponent implements OnInit {
   user:User = new User();
   passwordRegister:PasswordConfirmation = new PasswordConfirmation();
   birthDate:string = '29/03/1992';
-  error:string;
-  success:string;
   localizations:Localization[];
   fetishes: Fetish[];
   selectedFetishId:number[] = [];
   types: UserType[];
 
   constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: CoolLocalStorage,
-              private router:Router, private localizationService:LocalizationService, private fetishService:FetishService, private typeService:UserTypeService) { }
+              private router:Router, private localizationService:LocalizationService, private fetishService:FetishService, private typeService:UserTypeService, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
+  }
 
   ngOnInit() {
     this.user.localization = new Localization(0);
@@ -48,9 +49,10 @@ export class RegisterComponent implements OnInit {
     this.user.userType.id = 1;
 
     this.route.data.forEach((data:any) => {
-      data.userTypes instanceof Array ? this.types = data.userTypes : this.error = data.userTypes;
-      data.localizations instanceof Array ? this.localizations = data.localizations : this.error = data.localizations;
-      data.fetishes instanceof Array ? this.fetishes = data.fetishes : this.error = data.fetishes;
+      // si les resolvers renvoient une erreur, elles se trouvent dans data
+      data.userTypes instanceof Array ? this.types = data.userTypes : this.toastr.error(data.userTypes);
+      data.localizations instanceof Array ? this.localizations = data.localizations : this.toastr.error(data.localizations);
+      data.fetishes instanceof Array ? this.fetishes = data.fetishes : this.toastr.error(data.fetishes);
     });
   }
 
@@ -66,11 +68,11 @@ export class RegisterComponent implements OnInit {
         // on met à jour la liste des fetishes
         this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
         this.userService.post(new Register(this.user, this.passwordRegister))
-          .then(response => { this.success = "Inscription effectuée, vous allez être redirigé vers le login"; setTimeout(() => this.router.navigate(['/unauth/login']), 3000); })
-          .catch(error => { this.error = error; setTimeout(() => this.error = "", 2000); })
+          .then(response => { this.toastr.success("Inscription effectuée, vous allez être redirigé vers le login"); setTimeout(() => this.router.navigate(['/unauth/login']), 3000); })
+          .catch(error => this.toastr.error(error))
       }
       else {
-        this.error = "Les mots de passe doivent être identiques"; setTimeout(() => this.error = "", 2000);
+        this.toastr.error("Les mots de passe doivent être identiques");
       }
     }
   }

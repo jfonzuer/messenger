@@ -1,10 +1,11 @@
-import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, Input, ViewContainerRef} from '@angular/core';
 import {Observable} from "rxjs";
 import {ConversationService} from "../../../services/conversation.service";
 import {SharedService} from "../../../services/shared.service";
 import {Conversation} from "../../../model/conversation";
 import {environment} from "../../../../environments/environment";
 import {MessengerService} from "../../../services/messenger.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-conversation-list',
@@ -15,9 +16,6 @@ export class ConversationListComponent implements OnInit {
 
   conversations: Conversation[] = [];
   selectedConversation:Conversation;
-
-  @Output() successEmitter = new EventEmitter();
-  @Output() errorEmitter = new EventEmitter();
 
   // filter
   name:string;
@@ -30,8 +28,9 @@ export class ConversationListComponent implements OnInit {
   changeConversationSubscription:any;
   updateConversationSubscription:any;
 
-  constructor(private conversationService: ConversationService, private sharedService: SharedService, private messengerService:MessengerService) {
+  constructor(private conversationService: ConversationService, private sharedService: SharedService, private messengerService:MessengerService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadImageUrl = environment.uploadImageUrl;
+    this.toastr.setRootViewContainerRef(vRef);
 
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.getConversations());
     this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.conversations = this.conversations.filter(c => c.id != conversation.id));
@@ -65,7 +64,7 @@ export class ConversationListComponent implements OnInit {
       // on refresh le readByUserTwo
       let selectedConversation = this.conversations.find(c => c.id == this.selectedConversation.id);
       this.messengerService.changeConversationRead(selectedConversation ? selectedConversation.readByUserTwo : this.selectedConversation.readByUserTwo);
-    }).catch(error => this.errorEmitter.emit(error));
+    }).catch(error => this.toastr.error(error));
   }
 
   /*

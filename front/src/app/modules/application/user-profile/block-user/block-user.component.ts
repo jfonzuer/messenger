@@ -1,7 +1,8 @@
-import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, Input, ViewContainerRef} from '@angular/core';
 import {User} from "../../../../model/user";
 import {UserService} from "../../../../services/user.service";
 import {SharedService} from "../../../../services/shared.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-block-user',
@@ -12,10 +13,10 @@ export class BlockUserComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
-  @Output() successEmitter = new EventEmitter();
-  @Output() errorEmitter = new EventEmitter();
 
-  constructor(private us:UserService, private sharedService:SharedService) { }
+  constructor(private us:UserService, private sharedService:SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
+  }
 
   ngOnInit() {
   }
@@ -27,6 +28,6 @@ export class BlockUserComponent implements OnInit {
         currentUser.blockedUsers = users;
         this.sharedService.refreshUser(currentUser);
       })
-      .catch(error => this.errorEmitter.emit(error));
+      .catch(error => this.toastr.error(error));
   }
 }

@@ -1,17 +1,15 @@
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-<app-flash-message [error]="error" [success]="success"></app-flash-message>
-
 <div class="container">
 
   <div class="row">
-    <app-conversation-list (successEmitter)="successListener($event)" (errorEmitter)="errorListener($event)"></app-conversation-list>
+    <app-conversation-list></app-conversation-list>
 
     <div class="message-wrap col-sm-8">
 
-      <app-message-list (successEmitter)="successListener($event)" (errorEmitter)="errorListener($event)" ></app-message-list>
+      <app-message-list></app-message-list>
 
-      <app-message-send (successEmitter)="successListener($event)" (errorEmitter)="errorListener($event)" [user]="user"></app-message-send>
+      <app-message-send [user]="user"></app-message-send>
     </div>
   </div>
 </div>

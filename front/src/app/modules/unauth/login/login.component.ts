@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit {
 
   private baseUrl:string;
   private authentication: Authentication = new Authentication();
-  error:string;
 
   constructor(private http:Http, private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.baseUrl = environment.baseUrl;
@@ -43,9 +42,7 @@ export class LoginComponent implements OnInit {
 
       })
         .catch(error => {
-          this.toastr.error("ok");
-          this.error = error;
-          setTimeout(() => this.error = "", 2000);
+          this.toastr.error(error);
         })
     }
   }

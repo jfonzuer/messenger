@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewContainerRef} from '@angular/core';
 import {MessageService} from "../../../services/message.service";
 import {ConversationService} from "../../../services/conversation.service";
 import {User} from "../../../model/user";
@@ -8,6 +8,7 @@ import {UserMessage} from "../../../model/userMessage";
 import {MessengerService} from "../../../services/messenger.service";
 import {environment} from "../../../../environments/environment";
 import {SharedService} from "../../../services/shared.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-message-send',
@@ -18,8 +19,6 @@ export class MessageSendComponent implements OnInit {
 
   @Input() user: User;
   selectedConversation: Conversation;
-  @Output() successEmitter = new EventEmitter();
-  @Output() errorEmitter = new EventEmitter();
   changeConversationSubscription: any;
   blockUserSubscription:any;
 
@@ -31,7 +30,8 @@ export class MessageSendComponent implements OnInit {
   enter:boolean = true;
   isUserBlocked = false;
 
-  constructor(private messageService: MessageService, private conversationService: ConversationService, private messengerService:MessengerService, private sharedService: SharedService) {
+  constructor(private messageService: MessageService, private conversationService: ConversationService, private messengerService:MessengerService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation =>  {
       this.selectedConversation = conversation;
       this.isUserBlocked = this.sharedService.isUserBlocked(this.selectedConversation.userTwo);
@@ -81,11 +81,11 @@ export class MessageSendComponent implements OnInit {
             this.file = null;
             this.sendImage = false;
           },
-          error => this.errorEmitter.emit(error)
+          error => this.toastr.error(error)
         )
       }
       else {
-        this.errorEmitter.emit("La taille maximale de fichier est 2,048 MB");
+        this.toastr.error("La taille maximale de fichier est 2,048 MB");
       }
     }
   }
@@ -109,7 +109,7 @@ export class MessageSendComponent implements OnInit {
       this.message.content = '';
       this.selectedConversation = response;
       this.messengerService.addConversation(this.selectedConversation);
-    }).catch(error => this.errorEmitter.emit(error));
+    }).catch(error => this.toastr.error(error));
   }
 
 

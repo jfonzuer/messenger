@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../../services/authentication.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-password-forgot',
@@ -10,10 +11,9 @@ import {AuthenticationService} from "../../../services/authentication.service";
 export class PasswordForgotComponent implements OnInit {
 
   email:string;
-  error:string;
-  success:string;
-
-  constructor(private authenticationService:AuthenticationService, private router:Router) { }
+  constructor(private authenticationService:AuthenticationService, private router:Router, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
+  }
 
   ngOnInit() {
     this.email = 'pgiraultmatz@gmail.com';
@@ -21,12 +21,12 @@ export class PasswordForgotComponent implements OnInit {
 
   send(valid:boolean) {
     if (valid) {
-      this.success = "Envoi du mail ...";
+      this.toastr.success("Envoi du mail ...")
       this.authenticationService.resetPasswordByEmail(this.email).then(() => {
-        this.success = "Un email vous a été envoyé pour réinitialiser le mot de passe, vous allez être redirigé vers le login";
+        this.toastr.success("Un email vous a été envoyé pour réinitialiser le mot de passe, vous allez être redirigé vers le login")
         setTimeout(this.router.navigate(['/unauth/login']), 2000);
       })
-        .catch(error => { this.error = error; setTimeout(this.error = "", 2000)});
+        .catch(error => this.toastr.error(error));
     }
   }
 

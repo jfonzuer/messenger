@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {User} from "../../../model/user";
 import {SharedService} from "../../../services/shared.service";
 import {UserService} from "../../../services/user.service";
@@ -10,6 +10,7 @@ import {UserType} from "../../../model/userType";
 import {Search} from "../../../model/search";
 import * as moment from 'moment/moment';
 import {DatetimeService} from "../../../services/datetime.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-search',
@@ -26,13 +27,13 @@ export class SearchComponent implements OnInit {
   pager:Pager;
   localizations:Localization[];
   types:UserType[];
-  error:string;
   ageOne:number = 18;
   ageTwo:number = 99;
   localization:Localization = new Localization(0);
 
-  constructor(private userService: UserService, private sharedService: SharedService, private route:ActivatedRoute, private datetimeService:DatetimeService) {
+  constructor(private userService: UserService, private sharedService: SharedService, private route:ActivatedRoute, private datetimeService:DatetimeService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadImageUrl = environment.uploadImageUrl;
+    this.toastr.setRootViewContainerRef(vRef);
   }
 
   ngOnInit() {
@@ -42,8 +43,9 @@ export class SearchComponent implements OnInit {
     this.search.keyword = '';
 
     this.route.data.forEach((data:any) => {
-      data.localizations instanceof Array ? this.localizations = data.localizations : this.error = data.localizations;
-      data.types instanceof Array ? this.types = data.types : this.error = data.types;
+      // si data n'est pas un array, il contient alors une erreur
+      data.localizations instanceof Array ? this.localizations = data.localizations : this.toastr.error(data.localizations);
+      data.types instanceof Array ? this.types = data.types : this.toastr.error(data.types);
 
     });
     this.getUsers();
@@ -53,10 +55,7 @@ export class SearchComponent implements OnInit {
     this.userService.getUsers(this.pager).then(response => {
       this.pager == null ? this.users = response.content : this.users = this.users.concat(response.content);
       this.pager = new Pager(response.number, response.last, response.size);
-      console.log(response);
-      console.log(this.pager);
-      console.log(this.pager.last);
-    }).catch(e => this.error = e);
+    }).catch(e => this.toastr.error(e));
   }
 
   searchUsers() {
@@ -70,10 +69,7 @@ export class SearchComponent implements OnInit {
       if (this.search.keyword) {
 
       }
-    }).catch(e => {
-      console.error(e);
-      this.error = e;
-    });
+    }).catch(e => this.toastr.error(e));
   }
 
   scrollDown() {

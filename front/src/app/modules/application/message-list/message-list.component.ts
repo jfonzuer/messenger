@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewContainerRef} from '@angular/core';
 import {Conversation} from "../../../model/conversation";
 import {Message} from "../../../model/message";
 import {MessageService} from "../../../services/message.service";
@@ -13,6 +13,7 @@ import {environment} from "../../../../environments/environment";
 import {UserService} from "../../../services/user.service";
 import {SharedService} from "../../../services/shared.service";
 import {User} from "../../../model/user";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
   selector: 'app-message-list',
@@ -38,12 +39,9 @@ export class MessageListComponent implements OnInit {
   isUserBlocked:boolean;
   uploadUrl:string;
 
-
-  @Output() successEmitter = new EventEmitter();
-  @Output() errorEmitter = new EventEmitter();
-
-  constructor(private messageService: MessageService, private messengerService:MessengerService, private datetimeService:DatetimeService, private conversationService:ConversationService, private us: UserService, private sharedService: SharedService) {
+  constructor(private messageService: MessageService, private messengerService:MessengerService, private datetimeService:DatetimeService, private conversationService:ConversationService, private us: UserService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadUrl = environment.uploadUrl;
+    this.toastr.setRootViewContainerRef(vRef);
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.changeConversation(conversation));
     this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.pager = null; this.selectedConversation = conversation; this.getMessages(this.selectedConversation.userTwo.id)});
@@ -64,7 +62,7 @@ export class MessageListComponent implements OnInit {
           this.isUserBlocked = true;
           this.messengerService.blockUser(true);
         })
-        .catch(error => this.errorEmitter.emit(error));
+        .catch(error => this.toastr.error(error));
     }
   }
 
@@ -78,7 +76,7 @@ export class MessageListComponent implements OnInit {
           this.isUserBlocked = false;
           this.messengerService.blockUser(false);
         })
-        .catch(error => this.errorEmitter.emit(error));
+        .catch(error => this.toastr.error(error));
     }
   }
 
@@ -86,7 +84,7 @@ export class MessageListComponent implements OnInit {
     // on supprime la conversation de la liste
     if (confirm("Êtes vous sûr de vouloir supprimer la conversation ?")) {
       this.messengerService.deleteConversation(this.selectedConversation);
-      this.conversationService.remove(this.selectedConversation).then().catch(error => this.errorEmitter.emit(error));
+      this.conversationService.remove(this.selectedConversation).then().catch(error => this.toastr.error(error));
       this.selectedConversation = null;
       this.messages = [];
       this.pager = null;
@@ -119,7 +117,7 @@ export class MessageListComponent implements OnInit {
       this.concatMessage(response);
       this.pager = new Pager(response.number, response.last, response.size);
     })
-      .catch(e => this.errorEmitter.emit(e));
+      .catch(e => error => this.toastr.error(e));
   }
 
   private concatMessage(response: any) {
