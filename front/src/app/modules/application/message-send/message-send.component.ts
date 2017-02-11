@@ -77,7 +77,7 @@ export class MessageSendComponent implements OnInit {
         this.message.conversation = this.selectedConversation;
         this.messageService.uploadImage(this.file, this.selectedConversation.id).subscribe(
           response => {
-            this.messengerService.addMessage(response);
+            this.messengerService.receiveMessage(response);
             this.file = null;
             this.sendImage = false;
           },

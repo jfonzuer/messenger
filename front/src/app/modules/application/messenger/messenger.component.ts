@@ -37,6 +37,7 @@ export class MessengerComponent implements OnInit {
   constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef, private conversationService: ConversationService, private messengerService:MessengerService, private localStorageService:CoolLocalStorage) {
     this.baseUrl = environment.baseUrl;
     this.toastr.setRootViewContainerRef(vRef);
+    // si on ajoute un message et que la conversation existe, on send le message via websocket sinon on l'envoit via une requête.
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.selectedConversation.id ? this.send(message) : null );
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
@@ -60,7 +61,7 @@ export class MessengerComponent implements OnInit {
   }
 
   send(message: Message) {
-    if (message.content != '' && message.type != 'IMAGE') {
+    if (message.content != '') {
       this.stompClient.send('/app/ws-conversation-endpoint/' + this.selectedConversation.id, {}, JSON.stringify(message));
     }
   }
@@ -80,12 +81,12 @@ export class MessengerComponent implements OnInit {
         });
 
         that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
-          //console.log("web socket response", response);
           that.messengerService.receiveMessage(JSON.parse(response.body));
         });
 
         that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
           //console.log("web socket response", response);
+          console.error(JSON.parse(response.body));
           that.messengerService.updateConversation(JSON.parse(response.body));
         });
       }

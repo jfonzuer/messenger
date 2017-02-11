@@ -32,7 +32,7 @@ export class ConversationListComponent implements OnInit {
     this.uploadImageUrl = environment.uploadImageUrl;
     this.toastr.setRootViewContainerRef(vRef);
 
-    this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.getConversations());
+    //this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.getConversations());
     this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.conversations = this.conversations.filter(c => c.id != conversation.id));
     //this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => this.addConversation(conversation));
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.selectedConversation = conversation);
@@ -52,9 +52,8 @@ export class ConversationListComponent implements OnInit {
   }
 
   private updateConversation(conversation:Conversation) {
-    let c = this.conversations.find(c => c.id === conversation.id);
-    // si la conversation existe, on la met à jour, sinon, il s'agit d'une nouvelle et dans ce cas on la concatène en premier.
-    c ? conversation = c : [c].concat(this.conversations);
+    let index:number = this.conversations.findIndex(c => c.id == conversation.id);
+    index >= 0 ? this.conversations[index] = conversation : [conversation].concat(this.conversations);
   }
 
   private getConversations() {
