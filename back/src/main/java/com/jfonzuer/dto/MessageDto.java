@@ -1,7 +1,6 @@
 package com.jfonzuer.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jfonzuer.security.JwtUser;
 
 /**
  * Created by pgm on 20/09/16.
@@ -10,7 +9,7 @@ import com.jfonzuer.security.JwtUser;
 public class MessageDto {
 
     private Long id;
-    private JwtUser source;
+    private UserDto source;
     private String content;
     private String sendDate;
     private ConversationDto conversation;
@@ -20,7 +19,7 @@ public class MessageDto {
     public MessageDto() {
     }
 
-    public MessageDto(Long id, JwtUser source, String content, String sendDate, ConversationDto conversation, String url, String type) {
+    public MessageDto(Long id, UserDto source, String content, String sendDate, ConversationDto conversation, String url, String type) {
         this.id = id;
         this.source = source;
         this.content = content;
@@ -38,11 +37,11 @@ public class MessageDto {
         this.id = id;
     }
 
-    public JwtUser getSource() {
+    public UserDto getSource() {
         return source;
     }
 
-    public void setSource(JwtUser source) {
+    public void setSource(UserDto source) {
         this.source = source;
     }
 
@@ -99,7 +98,7 @@ public class MessageDto {
 
     public static class MessageDtoBuilder {
         private Long id;
-        private JwtUser source;
+        private UserDto source;
         private String content;
         private String sendDate;
         private ConversationDto conversation;
@@ -111,7 +110,7 @@ public class MessageDto {
             return this;
         }
 
-        public MessageDtoBuilder setSource(JwtUser source) {
+        public MessageDtoBuilder setSource(UserDto source) {
             this.source = source;
             return this;
         }

@@ -1,6 +1,5 @@
 package com.jfonzuer.entities;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 /**
@@ -8,22 +7,60 @@ import java.time.LocalDate;
  */
 public class Search {
     private String keyword;
-    private Localization localization;
+    private Area area;
+    private Country country;
     private UserType userType;
     private LocalDate birthDateOne;
     private LocalDate birthDateTwo;
 
-    public Search(String keyword, Localization localization, UserType userType, LocalDate birthDateOne, LocalDate birthDateTwo) {
+    public Search(String keyword, Area area, Country country, UserType userType, LocalDate birthDateOne, LocalDate birthDateTwo) {
         this.keyword = keyword;
-        this.localization = localization;
+        this.area = area;
+        this.country = country;
         this.userType = userType;
         this.birthDateOne = birthDateOne;
         this.birthDateTwo = birthDateTwo;
     }
 
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public LocalDate getBirthDateOne() {
+        return birthDateOne;
+    }
+
+    public LocalDate getBirthDateTwo() {
+        return birthDateTwo;
+    }
+
+    public Area getArea() {
+        return area;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    @Override
+    public String toString() {
+        return "Search{" +
+                "keyword='" + keyword + '\'' +
+                ", userType=" + userType +
+                ", birthDateOne=" + birthDateOne +
+                ", birthDateTwo=" + birthDateTwo +
+                '}';
+    }
+
     public static class SearchBuilder {
         private String keyword;
-        private Localization localization;
+        private Area area;
+        private Country country;
         private UserType userType;
         private LocalDate birthDateOne;
         private LocalDate birthDateTwo;
@@ -33,8 +70,13 @@ public class Search {
             return this;
         }
 
-        public SearchBuilder setLocalization(Localization localization) {
-            this.localization = localization;
+        public SearchBuilder setArea(Area area) {
+            this.area = area;
+            return this;
+        }
+
+        public SearchBuilder setCountry(Country country) {
+            this.country = country;
             return this;
         }
 
@@ -54,38 +96,7 @@ public class Search {
         }
 
         public Search createSearch() {
-            return new Search(keyword, localization, userType, birthDateOne, birthDateTwo);
+            return new Search(keyword, area, country, userType, birthDateOne, birthDateTwo);
         }
-    }
-
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public Localization getLocalization() {
-        return localization;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public LocalDate getBirthDateOne() {
-        return birthDateOne;
-    }
-
-    public LocalDate getBirthDateTwo() {
-        return birthDateTwo;
-    }
-
-    @Override
-    public String toString() {
-        return "Search{" +
-                "keyword='" + keyword + '\'' +
-                ", localization=" + localization +
-                ", userType=" + userType +
-                ", birthDateOne=" + birthDateOne +
-                ", birthDateTwo=" + birthDateTwo +
-                '}';
     }
 }

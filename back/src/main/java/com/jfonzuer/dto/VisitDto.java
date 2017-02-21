@@ -1,21 +1,19 @@
 package com.jfonzuer.dto;
 
-import com.jfonzuer.security.JwtUser;
-
 /**
  * Created by pgm on 17/10/16.
  */
 public class VisitDto {
     private Long id;
     private String visitedDate;
-    private JwtUser visitor;
-    private JwtUser visited;
+    private UserDto visitor;
+    private UserDto visited;
     private boolean isSeenByVisited;
 
     public VisitDto() {
     }
 
-    public VisitDto(Long id, String visitedDate, JwtUser visitor, JwtUser visited, boolean isSeenByVisited) {
+    public VisitDto(Long id, String visitedDate, UserDto visitor, UserDto visited, boolean isSeenByVisited) {
         this.id = id;
         this.visitedDate = visitedDate;
         this.visitor = visitor;
@@ -39,19 +37,19 @@ public class VisitDto {
         this.visitedDate = visitedDate;
     }
 
-    public JwtUser getVisitor() {
+    public UserDto getVisitor() {
         return visitor;
     }
 
-    public void setVisitor(JwtUser visitor) {
+    public void setVisitor(UserDto visitor) {
         this.visitor = visitor;
     }
 
-    public JwtUser getVisited() {
+    public UserDto getVisited() {
         return visited;
     }
 
-    public void setVisited(JwtUser visited) {
+    public void setVisited(UserDto visited) {
         this.visited = visited;
     }
 
@@ -66,8 +64,8 @@ public class VisitDto {
     public static class VisitDtoBuilder {
         private Long id;
         private String visitedDate;
-        private JwtUser visitor;
-        private JwtUser visited;
+        private UserDto visitor;
+        private UserDto visited;
         private boolean isSeenByVisited;
 
         public VisitDtoBuilder setId(Long id) {
@@ -80,12 +78,12 @@ public class VisitDto {
             return this;
         }
 
-        public VisitDtoBuilder setVisitor(JwtUser visitor) {
+        public VisitDtoBuilder setVisitor(UserDto visitor) {
             this.visitor = visitor;
             return this;
         }
 
-        public VisitDtoBuilder setVisited(JwtUser visited) {
+        public VisitDtoBuilder setVisited(UserDto visited) {
             this.visited = visited;
             return this;
         }

@@ -17,6 +17,12 @@ public class MessengerUtils {
     private final static int MAX_CHARACTER_OF_PREVIEW = 50;
     public final static String DOMINA = "Dominatrice";
     public final static String SUBMISSIVE = "Soumis";
+
+    public final static Long FRANCE_ID = 1L;
+    public final static Long BELGIUM_ID = 2L;
+    public final static Long LUX_ID = 3L;
+    public final static Long SWISS_ID = 4L;
+
     public final static Long DOMINA_ID = 1L;
     public final static Long SUBMISSIVE_ID = 2L;
 

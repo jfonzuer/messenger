@@ -10,7 +10,6 @@ import com.jfonzuer.entities.Visit;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.VisitRepository;
 import com.jfonzuer.security.JwtTokenUtil;
-import com.jfonzuer.security.JwtUser;
 import com.jfonzuer.service.MailService;
 import com.jfonzuer.service.UserService;
 import com.jfonzuer.utils.MessengerUtils;
@@ -30,9 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +38,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -67,31 +63,27 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<JwtUser> getAll(Pageable p, HttpServletRequest request) {
+    public Page<UserDto> getAll(Pageable p, HttpServletRequest request) {
         User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
         System.out.println("user.getType() = " + user.getType());
         UserType otherType = MessengerUtils.getOtherType(user);
         System.out.println("otherType = " + otherType);
-        return  userRepository.findAllByIdNotAndTypeAndEnabledAndIsBlockedOrderByIdDesc(user.getId(), otherType, true, false, p).map(UserMapper::toLightDto);
+        return  userRepository.findByIdNotAndTypeAndEnabledAndIsBlockedOrderByIdDesc(user.getId(), otherType, true, false, p).map(UserMapper::toLightDto);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Page<JwtUser> searchUsers(@RequestBody SearchDto searchDto, Pageable p, HttpServletRequest request) {
+    public Page<UserDto> searchUsers(@RequestBody SearchDto searchDto, Pageable p, HttpServletRequest request) {
         User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
         System.out.println("searchDto.getUserType() = " + searchDto.getUserType());
 
         Search search = SearchMapper.fromDto(searchDto);
 
-        System.out.println("-----------------------------------");
-        System.out.println("search = " + search);
-        System.out.println("search.getUserType() = " + search.getUserType());
-
-        Page<User> users = userRepository.search(user.getId(), search.getUserType(), search.getLocalization(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
+        Page<User> users = userRepository.search(user.getId(), search.getUserType(), search.getCountry(), search.getArea(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
         return users.map(UserMapper::toDto);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public JwtUser getById(HttpServletRequest request, @PathVariable Long id) {
+    public UserDto getById(HttpServletRequest request, @PathVariable Long id) {
         User visitor = userService.getUserFromToken(request);
         User visited = userRepository.findByIdAndEnabledAndIsBlocked(id, true, false);
 
@@ -105,24 +97,25 @@ public class UserController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
-    public JwtUser updateProfile(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
+    public UserDto updateProfile(HttpServletRequest request, @RequestBody UserDto userDto) {
         User user = userService.getUserFromToken(request);
-        User updatedUser = UserMapper.fromDto(jwtUser);
+        User updatedUser = UserMapper.fromDto(userDto);
 
         //User user = userService.getUserFromToken(request);
         // TODO : validation via annotation and exception handling
 
         user.setDescription(updatedUser.getDescription());
-        user.setLocalization(updatedUser.getLocalization());
+        user.setArea(updatedUser.getArea());
+        user.setCountry(updatedUser.getCountry());
         user.setFetishes(updatedUser.getFetishes());
 
         return UserMapper.toDto(userRepository.save(user));
     }
 
     @RequestMapping(value = "/informations", method = RequestMethod.PUT)
-    public JwtUser updateInformation(HttpServletRequest request, @RequestBody JwtUser jwtUser) {
+    public UserDto updateInformation(HttpServletRequest request, @RequestBody UserDto userDto) {
         User user = userService.getUserFromToken(request);
-        User updatedUser = UserMapper.fromDto(jwtUser);
+        User updatedUser = UserMapper.fromDto(userDto);
 
         // TODO : validation via annotation and exception handling
         user.setUsername(updatedUser.getUsername());
@@ -184,14 +177,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/block", method = RequestMethod.POST)
-    public List<JwtUser> block(HttpServletRequest request, @RequestBody JwtUser dto) {
+    public List<UserDto> block(HttpServletRequest request, @RequestBody UserDto dto) {
         User user = userService.getUserFromToken(request);
         User userToBlock = UserMapper.fromDto(dto);
         return userService.blockUser(user, userToBlock).stream().map(UserMapper::toLightDto).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/unblock", method = RequestMethod.POST)
-    public List<JwtUser> unblock(HttpServletRequest request, @RequestBody JwtUser dto) {
+    public List<UserDto> unblock(HttpServletRequest request, @RequestBody UserDto dto) {
         User user = userService.getUserFromToken(request);
         User userToBlock = UserMapper.fromDto(dto);
         userService.unblockUser(user, userToBlock);

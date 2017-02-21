@@ -39,6 +39,8 @@ public class MessengerCLR implements CommandLineRunner {
     private final ImageRepository imageRepository;
     private final UserTypeRepository userTypeRepository;
     private final StorageService storageService;
+    private final CountryRepository countryRepository;
+    private final AreaRepository areaRepository;
 
     @Value("${upload.directory}")
     private String rootLocation;
@@ -50,7 +52,7 @@ public class MessengerCLR implements CommandLineRunner {
     private String imagesLocation;
 
     @Autowired
-    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository, StorageService storageService) {
+    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository, StorageService storageService, CountryRepository countryRepository, AreaRepository areaRepository) {
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
@@ -61,6 +63,8 @@ public class MessengerCLR implements CommandLineRunner {
         this.imageRepository = imageRepository;
         this.userTypeRepository = userTypeRepository;
         this.storageService = storageService;
+        this.countryRepository = countryRepository;
+        this.areaRepository = areaRepository;
     }
 
     @Override
@@ -84,37 +88,86 @@ public class MessengerCLR implements CommandLineRunner {
 
         // on insére les fetishes dans la bdd
         fetishes.stream().forEach(f -> fetishRepository.save(f));
+        
+        Country c1 = new Country.CountryBuilder().setId(MessengerUtils.FRANCE_ID).setName("France").createCountry();
+        Country c2 = new Country.CountryBuilder().setId(MessengerUtils.BELGIUM_ID).setName("Belgique").createCountry();
+        Country c3 = new Country.CountryBuilder().setId(MessengerUtils.LUX_ID).setName("Luxembourg").createCountry();
+        Country c4 = new Country.CountryBuilder().setId(MessengerUtils.SWISS_ID).setName("Suisse").createCountry();
+        
+        Arrays.asList(c1, c2, c3, c4).stream().forEach(countryRepository::save);
 
-        Localization l1 = new Localization.LocalizationBuilder().setId(1L).setName("Alsace").createLocalization();
-        Localization l2 = new Localization.LocalizationBuilder().setId(2L).setName("Aquitaine").createLocalization();
-        Localization l3 = new Localization.LocalizationBuilder().setId(3L).setName("Auvergne").createLocalization();
-        Localization l4 = new Localization.LocalizationBuilder().setId(4L).setName("Basse Normandie").createLocalization();
-        Localization l5 = new Localization.LocalizationBuilder().setId(5L).setName("Bourgogne").createLocalization();
-        Localization l6 = new Localization.LocalizationBuilder().setId(6L).setName("Bretagne").createLocalization();
-        Localization l7 = new Localization.LocalizationBuilder().setId(7L).setName("Centre").createLocalization();
-        Localization l8 = new Localization.LocalizationBuilder().setId(8L).setName("Champagne-Ardenne").createLocalization();
-        Localization l9 = new Localization.LocalizationBuilder().setId(9L).setName("Corse").createLocalization();
-        Localization l10 = new Localization.LocalizationBuilder().setId(10L).setName("Franche-Comté").createLocalization();
-        Localization l11 = new Localization.LocalizationBuilder().setId(11L).setName("Haute-Normandie").createLocalization();
-        Localization l12 = new Localization.LocalizationBuilder().setId(12L).setName("Ile-de-France").createLocalization();
-        Localization l13 = new Localization.LocalizationBuilder().setId(13L).setName("Languedoc-Roussilon").createLocalization();
-        Localization l14 = new Localization.LocalizationBuilder().setId(14L).setName("Limousin").createLocalization();
-        Localization l15 = new Localization.LocalizationBuilder().setId(15L).setName("Lorraine").createLocalization();
-        Localization l16 = new Localization.LocalizationBuilder().setId(16L).setName("Midi-Pyrénées").createLocalization();
-        Localization l17 = new Localization.LocalizationBuilder().setId(17L).setName("Nord-Pas-de-Calais").createLocalization();
-        Localization l18 = new Localization.LocalizationBuilder().setId(18L).setName("Pays de la Loire").createLocalization();
-        Localization l19 = new Localization.LocalizationBuilder().setId(19L).setName("Picardie").createLocalization();
-        Localization l20 = new Localization.LocalizationBuilder().setId(20L).setName("Poitou-Charentes").createLocalization();
-        Localization l21 = new Localization.LocalizationBuilder().setId(21L).setName("Provence-Alpes-Côtes-d'Azur").createLocalization();
-        Localization l22 = new Localization.LocalizationBuilder().setId(22L).setName("Guadeloupe").createLocalization();
-        Localization l23 = new Localization.LocalizationBuilder().setId(23L).setName("Martinique").createLocalization();
-        Localization l24 = new Localization.LocalizationBuilder().setId(24L).setName("Guyane").createLocalization();
-        Localization l25 = new Localization.LocalizationBuilder().setId(25L).setName("La Réunion").createLocalization();
-        Localization l26 = new Localization.LocalizationBuilder().setId(26L).setName("Mayotte").createLocalization();
+        // régions françaises
+        Area a1 = new Area.AreaBuilder().setId(1L).setName("Alsace").setCountry(c1).createArea();
+        Area a2 = new Area.AreaBuilder().setId(2L).setName("Aquitaine").setCountry(c1).createArea();
+        Area a3 = new Area.AreaBuilder().setId(3L).setName("Auvergne").setCountry(c1).createArea();
+        Area a4 = new Area.AreaBuilder().setId(4L).setName("Basse Normandie").setCountry(c1).createArea();
+        Area a5 = new Area.AreaBuilder().setId(5L).setName("Bourgogne").setCountry(c1).createArea();
+        Area a6 = new Area.AreaBuilder().setId(6L).setName("Bretagne").setCountry(c1).createArea();
+        Area a7 = new Area.AreaBuilder().setId(7L).setName("Centre").setCountry(c1).createArea();
+        Area a8 = new Area.AreaBuilder().setId(8L).setName("Champagne-Ardenne").setCountry(c1).createArea();
+        Area a9 = new Area.AreaBuilder().setId(9L).setName("Corse").setCountry(c1).createArea();
+        Area a10 = new Area.AreaBuilder().setId(10L).setName("Franche-Comté").setCountry(c1).createArea();
+        Area a11 = new Area.AreaBuilder().setId(11L).setName("Haute-Normandie").setCountry(c1).createArea();
+        Area a12 = new Area.AreaBuilder().setId(12L).setName("Ile-de-France").setCountry(c1).createArea();
+        Area a13 = new Area.AreaBuilder().setId(13L).setName("Languedoc-Roussilon").setCountry(c1).createArea();
+        Area a14 = new Area.AreaBuilder().setId(14L).setName("Limousin").setCountry(c1).createArea();
+        Area a15 = new Area.AreaBuilder().setId(15L).setName("Lorraine").setCountry(c1).createArea();
+        Area a16 = new Area.AreaBuilder().setId(16L).setName("Midi-Pyrénées").setCountry(c1).createArea();
+        Area a17 = new Area.AreaBuilder().setId(17L).setName("Nord-Pas-de-Calais").setCountry(c1).createArea();
+        Area a18 = new Area.AreaBuilder().setId(18L).setName("Pays de la Loire").setCountry(c1).createArea();
+        Area a19 = new Area.AreaBuilder().setId(19L).setName("Picardie").setCountry(c1).createArea();
+        Area a20 = new Area.AreaBuilder().setId(20L).setName("Poitou-Charentes").setCountry(c1).createArea();
+        Area a21 = new Area.AreaBuilder().setId(21L).setName("Provence-Alpes-Côtes-d'Azur").setCountry(c1).createArea();
+        Area a22 = new Area.AreaBuilder().setId(22L).setName("Guadeloupe").setCountry(c1).createArea();
+        Area a23 = new Area.AreaBuilder().setId(23L).setName("Martinique").setCountry(c1).createArea();
+        Area a24 = new Area.AreaBuilder().setId(24L).setName("Guyane").setCountry(c1).createArea();
+        Area a25 = new Area.AreaBuilder().setId(25L).setName("La Réunion").setCountry(c1).createArea();
+        Area a26 = new Area.AreaBuilder().setId(26L).setName("Mayotte").setCountry(c1).createArea();
 
-        List<Localization> localizations = Arrays.asList(l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, l26);
-        localizations.stream().forEach(l -> localizationRepository.save(l));
+        // régions belges
+        Area a27 = new Area.AreaBuilder().setName("Anvers").setCountry(c2).createArea();
+        Area a28 = new Area.AreaBuilder().setName("Brabant").setCountry(c2).createArea();
+        Area a29 = new Area.AreaBuilder().setName("Flamande").setCountry(c2).createArea();
+        Area a30 = new Area.AreaBuilder().setName("Flandre Occidentale").setCountry(c2).createArea();
+        Area a31 = new Area.AreaBuilder().setName("Flandre Orientale").setCountry(c2).createArea();
+        Area a32 = new Area.AreaBuilder().setName("Hainaut").setCountry(c2).createArea();
+        Area a33 = new Area.AreaBuilder().setName("Liège").setCountry(c2).createArea();
+        Area a34 = new Area.AreaBuilder().setName("Limbourg").setCountry(c2).createArea();
+        Area a35 = new Area.AreaBuilder().setName("Luxembourg").setCountry(c2).createArea();
+        Area a36 = new Area.AreaBuilder().setName("Namur").setCountry(c2).createArea();
 
+        // regions luxembourgeoises
+        Area a37 = new Area.AreaBuilder().setName("Guttland").setCountry(c3).createArea();
+        Area a38 = new Area.AreaBuilder().setName("Oesling").setCountry(c3).createArea();
+
+        // regions suisses
+        Area a39 = new Area.AreaBuilder().setName("Appenzell").setCountry(c4).createArea();
+        Area a40 = new Area.AreaBuilder().setName("Argovie").setCountry(c4).createArea();
+        Area a41 = new Area.AreaBuilder().setName("Bâle").setCountry(c4).createArea();
+        Area a42 = new Area.AreaBuilder().setName("Berne").setCountry(c4).createArea();
+        Area a43 = new Area.AreaBuilder().setName("Fribourg").setCountry(c4).createArea();
+        Area a44 = new Area.AreaBuilder().setName("Genève").setCountry(c4).createArea();
+        Area a45 = new Area.AreaBuilder().setName("Glaris").setCountry(c4).createArea();
+        Area a46 = new Area.AreaBuilder().setName("Grison").setCountry(c4).createArea();
+        Area a47 = new Area.AreaBuilder().setName("Jura").setCountry(c4).createArea();
+        Area a48 = new Area.AreaBuilder().setName("Lucerne").setCountry(c4).createArea();
+        Area a49 = new Area.AreaBuilder().setName("Neufchâtel").setCountry(c4).createArea();
+        Area a50 = new Area.AreaBuilder().setName("Nidwald").setCountry(c4).createArea();
+        Area a51 = new Area.AreaBuilder().setName("Obwald").setCountry(c4).createArea();
+        Area a52 = new Area.AreaBuilder().setName("Saint-Gall").setCountry(c4).createArea();
+        Area a53 = new Area.AreaBuilder().setName("Schaffhouse").setCountry(c4).createArea();
+        Area a54 = new Area.AreaBuilder().setName("Schwytz").setCountry(c4).createArea();
+        Area a55 = new Area.AreaBuilder().setName("Soleure").setCountry(c4).createArea();
+        Area a56 = new Area.AreaBuilder().setName("Tessin").setCountry(c4).createArea();
+        Area a57 = new Area.AreaBuilder().setName("Thurgovie").setCountry(c4).createArea();
+        Area a58 = new Area.AreaBuilder().setName("Uri").setCountry(c4).createArea();
+        Area a59 = new Area.AreaBuilder().setName("Valais").setCountry(c4).createArea();
+        Area a60 = new Area.AreaBuilder().setName("Vaud").setCountry(c4).createArea();
+        Area a61 = new Area.AreaBuilder().setName("Zoug").setCountry(c4).createArea();
+        Area a62 = new Area.AreaBuilder().setName("Zurich").setCountry(c4).createArea();
+
+        List<Area> areas = Arrays.asList(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62);
+        areas.stream().forEach(areaRepository::save);
 
         UserType ut1 = new UserType.UserTypeBuilder().setId(MessengerUtils.DOMINA_ID).setLabel("Dominatrice").createUserType();
         UserType ut2 = new UserType.UserTypeBuilder().setId(MessengerUtils.SUBMISSIVE_ID).setLabel("Soumis").createUserType();
@@ -130,7 +183,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setIsBlocked(false)
                 .setDescription("je suis le membre 1")
                 .setFetishes(fetishes)
-                .setLocalization(l1)
+                .setArea(a1)
+                .setCountry(c1)
+                .setIsPremium(true)
                 .setType(ut2)
                 .setReportedAsFake(0L)
                 .setLastActivityDate(LocalDate.now())
@@ -147,7 +202,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setIsBlocked(false)
                 .setDescription("je suis le membre 2")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
-                .setLocalization(l2)
+                .setArea(a5)
+                .setCountry(c1)
+                .setIsPremium(false)
                 .setType(ut1)
                 .setReportedAsFake(10L)
                 .setLastActivityDate(LocalDate.now())
@@ -164,7 +221,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setIsBlocked(false)
                 .setDescription("je suis le membre 3")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
-                .setLocalization(l2)
+                .setArea(a60)
+                .setCountry(c4)
+                .setIsPremium(true)
                 .setType(ut1)
                 .setReportedAsFake(15L)
                 .setLastActivityDate(LocalDate.now())
@@ -182,7 +241,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setIsBlocked(false)
                 .setDescription("je suis le membre 4")
                 .setBirthDate(LocalDate.of(1988, 3, 29))
-                .setLocalization(l2)
+                .setArea(a1)
+                .setCountry(c1)
+                .setIsPremium(true)
                 .setType(ut1)
                 .setReportedAsFake(20L)
                 .setLastActivityDate(LocalDate.now())
@@ -219,7 +280,7 @@ public class MessengerCLR implements CommandLineRunner {
         Visit v3 = new Visit(LocalDate.now(), u2, u1, false);
         Stream.of(v1, v2, v3).forEach(v -> this.visitRepository.save(v));
 
-        Conversation c1 = new Conversation.ConversationBuilder()
+        Conversation conv1 = new Conversation.ConversationBuilder()
                 .setId(1L)
                 .setPreview("conversation 1")
                 .setLastModified(LocalDateTime.now())
@@ -230,9 +291,9 @@ public class MessengerCLR implements CommandLineRunner {
                 .setIsDeletedByUserOne(false)
                 .setIsDeletedByUserTwo(false)
                 .createConversation();
-        conversationRepository.save(c1);
+        conversationRepository.save(conv1);
 
-        Conversation c2 = new Conversation.ConversationBuilder()
+        Conversation conv2 = new Conversation.ConversationBuilder()
                 .setId(2L)
                 .setPreview("conversation 2")
                 .setLastModified(LocalDateTime.of(2000, Month.APRIL, 2, 9, 30))
@@ -243,7 +304,7 @@ public class MessengerCLR implements CommandLineRunner {
                 .setIsDeletedByUserOne(false)
                 .setIsDeletedByUserTwo(false)
                 .createConversation();
-        conversationRepository.save(c2);
+        conversationRepository.save(conv2);
 
         //memberRepository.flush();
 
@@ -251,10 +312,10 @@ public class MessengerCLR implements CommandLineRunner {
 
         //Conversation t1 = new Conversation(Arrays.asList(u1,u2), Arrays.asList(ms1, ms2, ms3, ms4));
 
-        Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(c1).setContent("Salut").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
-        Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(c1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
-        Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(c1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
-        Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(c1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
+        Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(conv1).setContent("Salut").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
+        Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(conv1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
+        Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(conv1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
+        Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(conv1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
         Stream.of(ms1, ms2, ms3, ms4).forEach(ms -> messageRepository.save(ms));
     }
 }

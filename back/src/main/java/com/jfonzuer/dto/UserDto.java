@@ -1,16 +1,11 @@
-package com.jfonzuer.security;
-
-import com.jfonzuer.dto.FetishDto;
-import com.jfonzuer.dto.ImageDto;
-import com.jfonzuer.dto.LocalizationDto;
-import com.jfonzuer.dto.UserTypeDto;
+package com.jfonzuer.dto;
 
 import java.util.List;
 
 /**
  * Created by jfonzuer on 20.03.16.
  */
-public class JwtUser {
+public class UserDto {
 
     private Long id;
     private String username;
@@ -18,7 +13,6 @@ public class JwtUser {
     private String description;
     private String birthDate;
     private List<FetishDto> fetishes;
-    private LocalizationDto localization;
     private List<String> authorities;
     private List<ImageDto> images;
     private UserTypeDto userType;
@@ -28,19 +22,21 @@ public class JwtUser {
     private Boolean notifyVisit;
     private Boolean enabled;
     private Boolean isBlocked;
-    private List<JwtUser> blockedUsers;
+    private List<UserDto> blockedUsers;
+    private CountryDto country;
+    private AreaDto area;
+    private Boolean isPremium;
 
-    public JwtUser() {
+    public UserDto() {
     }
 
-    public JwtUser(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, LocalizationDto localization, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<JwtUser> blockedUsers) {
+    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, CountryDto country, AreaDto area, Boolean isPremium) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.description = description;
         this.birthDate = birthDate;
         this.fetishes = fetishes;
-        this.localization = localization;
         this.authorities = authorities;
         this.images = images;
         this.userType = userType;
@@ -51,6 +47,9 @@ public class JwtUser {
         this.enabled = enabled;
         this.isBlocked = isBlocked;
         this.blockedUsers = blockedUsers;
+        this.country = country;
+        this.area = area;
+        this.isPremium = isPremium;
     }
 
     public Long getId() {
@@ -76,10 +75,6 @@ public class JwtUser {
 
     public List<FetishDto> getFetishes() {
         return fetishes;
-    }
-
-    public LocalizationDto getLocalization() {
-        return localization;
     }
 
     public List<ImageDto> getImages() {
@@ -118,33 +113,42 @@ public class JwtUser {
         return isBlocked;
     }
 
-    public List<JwtUser> getBlockedUsers() {
+    public List<UserDto> getBlockedUsers() {
         return blockedUsers;
+    }
+
+    public CountryDto getCountry() {
+        return country;
+    }
+
+    public AreaDto getArea() {
+        return area;
+    }
+
+    public Boolean getPremium() {
+        return isPremium;
     }
 
     @Override
     public String toString() {
-        return "JwtUser{" +
+        return "UserDto{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", description='" + description + '\'' +
                 ", birthDate='" + birthDate + '\'' +
                 ", fetishes=" + fetishes +
-                ", localization=" + localization +
                 ", authorities=" + authorities +
                 '}';
     }
 
-
-    public static class JwtUserBuilder {
+    public static class UserDtoBuilder {
         private Long id;
         private String username;
         private String email;
         private String description;
         private String birthDate;
         private List<FetishDto> fetishes;
-        private LocalizationDto localization;
         private List<String> authorities;
         private List<ImageDto> images;
         private UserTypeDto userType;
@@ -154,95 +158,108 @@ public class JwtUser {
         private Boolean notifyVisit;
         private Boolean enabled;
         private Boolean isBlocked;
-        private List<JwtUser> blockedUsers;
+        private List<UserDto> blockedUsers;
+        private CountryDto country;
+        private AreaDto area;
+        private Boolean isPremium;
 
-        public JwtUserBuilder setId(Long id) {
+        public UserDtoBuilder setId(Long id) {
             this.id = id;
             return this;
         }
 
-        public JwtUserBuilder setUsername(String username) {
+        public UserDtoBuilder setUsername(String username) {
             this.username = username;
             return this;
         }
 
-        public JwtUserBuilder setEmail(String email) {
+        public UserDtoBuilder setEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public JwtUserBuilder setDescription(String description) {
+        public UserDtoBuilder setDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public JwtUserBuilder setBirthDate(String birthDate) {
+        public UserDtoBuilder setBirthDate(String birthDate) {
             this.birthDate = birthDate;
             return this;
         }
 
-        public JwtUserBuilder setFetishes(List<FetishDto> fetishes) {
+        public UserDtoBuilder setFetishes(List<FetishDto> fetishes) {
             this.fetishes = fetishes;
             return this;
         }
 
-        public JwtUserBuilder setLocalization(LocalizationDto localization) {
-            this.localization = localization;
-            return this;
-        }
-
-        public JwtUserBuilder setAuthorities(List<String> authorities) {
+        public UserDtoBuilder setAuthorities(List<String> authorities) {
             this.authorities = authorities;
             return this;
         }
 
-        public JwtUserBuilder setImages(List<ImageDto> images) {
+        public UserDtoBuilder setImages(List<ImageDto> images) {
             this.images = images;
             return this;
         }
 
-        public JwtUserBuilder setUserType(UserTypeDto userType) {
+        public UserDtoBuilder setUserType(UserTypeDto userType) {
             this.userType = userType;
             return this;
         }
 
-        public JwtUserBuilder setLastActivityDate(String lastActivityDate) {
+        public UserDtoBuilder setLastActivityDate(String lastActivityDate) {
             this.lastActivityDate = lastActivityDate;
             return this;
         }
 
-        public JwtUserBuilder setReportedAsFake(Long reportedAsFake) {
+        public UserDtoBuilder setReportedAsFake(Long reportedAsFake) {
             this.reportedAsFake = reportedAsFake;
             return this;
         }
 
-        public JwtUserBuilder setNotifyMessage(Boolean notifyMessage) {
+        public UserDtoBuilder setNotifyMessage(Boolean notifyMessage) {
             this.notifyMessage = notifyMessage;
             return this;
         }
 
-        public JwtUserBuilder setNotifyVisit(Boolean notifyVisit) {
+        public UserDtoBuilder setNotifyVisit(Boolean notifyVisit) {
             this.notifyVisit = notifyVisit;
             return this;
         }
 
-        public JwtUserBuilder setEnabled(Boolean enabled) {
+        public UserDtoBuilder setEnabled(Boolean enabled) {
             this.enabled = enabled;
             return this;
         }
 
-        public JwtUserBuilder setIsBlocked(Boolean isBlocked) {
+        public UserDtoBuilder setIsBlocked(Boolean isBlocked) {
             this.isBlocked = isBlocked;
             return this;
         }
 
-        public JwtUserBuilder setBlockedUsers(List<JwtUser> blockedUsers) {
+        public UserDtoBuilder setBlockedUsers(List<UserDto> blockedUsers) {
             this.blockedUsers = blockedUsers;
             return this;
         }
 
-        public JwtUser createJwtUser() {
-            return new JwtUser(id, username, email, description, birthDate, fetishes, localization, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers);
+        public UserDtoBuilder setCountry(CountryDto country) {
+            this.country = country;
+            return this;
+        }
+
+        public UserDtoBuilder setArea(AreaDto area) {
+            this.area = area;
+            return this;
+        }
+
+        public UserDtoBuilder setIsPremium(Boolean isPremium) {
+            this.isPremium = isPremium;
+            return this;
+        }
+
+        public UserDto createJwtUser() {
+            return new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, country, area, isPremium);
         }
     }
 }

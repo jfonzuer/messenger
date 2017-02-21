@@ -1,9 +1,9 @@
 package com.jfonzuer.controllers;
 
+import com.jfonzuer.dto.UserDto;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.security.JwtUser;
 import com.jfonzuer.service.UserService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/reported")
-    public List<JwtUser> getReportedUser(HttpServletRequest request) {
+    public List<UserDto> getReportedUser(HttpServletRequest request) {
         return userRepository.findByReportedAsFakeGreaterThanOrderByReportedAsFakeDesc(0L).stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 

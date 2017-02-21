@@ -77,7 +77,6 @@ public class ConversationController {
         }
 
         Conversation conversation = conversationService.createConversationAndAddMessage(userOne, userTwo, messageDto);
-        // TODO : send created conversation or new conversation via 2 websocket channels
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
         this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
 

@@ -1,22 +1,20 @@
 package com.jfonzuer.dto;
 
-import com.jfonzuer.security.JwtUser;
-
 /**
  * Created by pgm on 22/10/16.
  */
 public class RegisterDto {
-    private JwtUser user;
+    private UserDto user;
     private PasswordDto passwordConfirmation;
 
     public RegisterDto() {
     }
 
-    public JwtUser getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(JwtUser user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 

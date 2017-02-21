@@ -2,8 +2,6 @@ package com.jfonzuer.dto.mapper;
 
 import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.entities.Message;
-import com.jfonzuer.entities.MessageType;
-import com.jfonzuer.security.JwtUser;
 
 /**
  * Created by pgm on 20/09/16.

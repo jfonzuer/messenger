@@ -1,7 +1,6 @@
 package com.jfonzuer.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jfonzuer.security.JwtUser;
 
 /**
  * Created by pgm on 20/09/16.
@@ -11,15 +10,15 @@ public class ConversationDto {
 
     private Long id;
     private String preview;
-    private JwtUser userOne;
-    private JwtUser userTwo;
+    private UserDto userOne;
+    private UserDto userTwo;
     private Boolean readByUserOne;
     private Boolean readByUserTwo;
 
     public ConversationDto() {
     }
 
-    public ConversationDto(Long id, String preview, JwtUser userOne, JwtUser userTwo, Boolean readByUserOne, Boolean readByUserTwo) {
+    public ConversationDto(Long id, String preview, UserDto userOne, UserDto userTwo, Boolean readByUserOne, Boolean readByUserTwo) {
         this.id = id;
         this.preview = preview;
         this.userOne = userOne;
@@ -44,19 +43,19 @@ public class ConversationDto {
         this.preview = preview;
     }
 
-    public JwtUser getUserOne() {
+    public UserDto getUserOne() {
         return userOne;
     }
 
-    public void setUserOne(JwtUser userOne) {
+    public void setUserOne(UserDto userOne) {
         this.userOne = userOne;
     }
 
-    public JwtUser getUserTwo() {
+    public UserDto getUserTwo() {
         return userTwo;
     }
 
-    public void setUserTwo(JwtUser userTwo) {
+    public void setUserTwo(UserDto userTwo) {
         this.userTwo = userTwo;
     }
 
@@ -92,8 +91,8 @@ public class ConversationDto {
     public static class ConversationDtoBuilder {
         private Long id;
         private String preview;
-        private JwtUser userOne;
-        private JwtUser userTwo;
+        private UserDto userOne;
+        private UserDto userTwo;
         private Boolean readByUserOne;
         private Boolean readByUserTwo;
 
@@ -107,12 +106,12 @@ public class ConversationDto {
             return this;
         }
 
-        public ConversationDtoBuilder setUserOne(JwtUser userOne) {
+        public ConversationDtoBuilder setUserOne(UserDto userOne) {
             this.userOne = userOne;
             return this;
         }
 
-        public ConversationDtoBuilder setUserTwo(JwtUser userTwo) {
+        public ConversationDtoBuilder setUserTwo(UserDto userTwo) {
             this.userTwo = userTwo;
             return this;
         }

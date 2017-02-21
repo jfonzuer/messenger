@@ -1,6 +1,7 @@
 package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.MessageDto;
+import com.jfonzuer.dto.mapper.ConversationMapper;
 import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.entities.*;
 import com.jfonzuer.repository.ConversationRepository;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,14 +53,15 @@ public class MessageController {
     private final ConversationService conversationService;
     private final MailService mailService;
     private final UserService userService;
-    private MediaValidator mediaValidator;
-    private StorageService storageService;
+    private final MediaValidator mediaValidator;
+    private final StorageService storageService;
+    private final SimpMessagingTemplate template;
 
     @Value("${upload.conversation.directory}")
     private String conversationLocation;
 
     @Autowired
-    public MessageController(MessageRepository messageRepository, MessageService messageService, UserRepository userRepository, ConversationService conversationService, MailService mailService, UserService userService, MediaValidator mediaValidator, StorageService storageService) {
+    public MessageController(MessageRepository messageRepository, MessageService messageService, UserRepository userRepository, ConversationService conversationService, MailService mailService, UserService userService, MediaValidator mediaValidator, StorageService storageService, SimpMessagingTemplate template) {
         this.messageRepository = messageRepository;
         this.messageService = messageService;
         this.userRepository = userRepository;
@@ -67,6 +70,7 @@ public class MessageController {
         this.userService = userService;
         this.mediaValidator = mediaValidator;
         this.storageService = storageService;
+        this.template = template;
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
@@ -95,6 +99,9 @@ public class MessageController {
 
         MessageDto dto = new MessageDto.MessageDtoBuilder().setContent("Image").createMessageDto();
         conversationService.updateConversation(conversation, sender, dto);
+
+        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
+        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
 
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.IMAGE);

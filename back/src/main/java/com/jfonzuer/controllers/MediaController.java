@@ -1,31 +1,23 @@
 package com.jfonzuer.controllers;
 
-import com.jfonzuer.dto.CustomErrorType;
 import com.jfonzuer.dto.ImageDto;
 import com.jfonzuer.dto.OrderNumberDto;
 import com.jfonzuer.dto.mapper.ImageMapper;
-import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.Image;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ImageRepository;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.security.JwtUser;
 import com.jfonzuer.service.UserService;
 import com.jfonzuer.storage.StorageService;
 import com.jfonzuer.validator.MediaValidator;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**

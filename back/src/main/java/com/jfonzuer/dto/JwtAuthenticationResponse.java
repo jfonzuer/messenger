@@ -1,7 +1,5 @@
 package com.jfonzuer.dto;
 
-import com.jfonzuer.security.JwtUser;
-
 import java.io.Serializable;
 
 /**
@@ -12,9 +10,9 @@ public class JwtAuthenticationResponse implements Serializable {
     private static final long serialVersionUID = 1250166508152483573L;
 
     private final String token;
-    private final JwtUser user;
+    private final UserDto user;
 
-    public JwtAuthenticationResponse(String token, JwtUser user) {
+    public JwtAuthenticationResponse(String token, UserDto user) {
         this.token = token;
         this.user = user;
     }
@@ -23,7 +21,7 @@ public class JwtAuthenticationResponse implements Serializable {
         return this.token;
     }
 
-    public JwtUser getUser() {
+    public UserDto getUser() {
         return user;
     }
 }

@@ -43,7 +43,10 @@ public class User implements UserDetails, Serializable {
     private Collection<Fetish> fetishes;
 
     @ManyToOne
-    private Localization localization;
+    private Country country;
+
+    @ManyToOne
+    private Area area;
 
     @OneToMany(mappedBy = "user")
     private Collection<Image> images;
@@ -84,10 +87,13 @@ public class User implements UserDetails, Serializable {
     @ManyToMany
     private Set<User> blockedUsers;
 
+    @Column(nullable = false)
+    private Boolean isPremium;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Localization localization, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers, Boolean isPremium) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -97,7 +103,8 @@ public class User implements UserDetails, Serializable {
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.birthDate = birthDate;
         this.fetishes = fetishes;
-        this.localization = localization;
+        this.country = country;
+        this.area = area;
         this.images = images;
         this.type = type;
         this.userRoles = userRoles;
@@ -111,6 +118,7 @@ public class User implements UserDetails, Serializable {
         this.lastVisitedBy = lastVisitedBy;
         this.lastMessageBy = lastMessageBy;
         this.blockedUsers = blockedUsers;
+        this.isPremium = isPremium;
     }
 
     @Override
@@ -204,12 +212,16 @@ public class User implements UserDetails, Serializable {
         this.fetishes = fetishes;
     }
 
-    public Localization getLocalization() {
-        return localization;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setLocalization(Localization localization) {
-        this.localization = localization;
+    public Area getArea() {
+        return area;
+    }
+
+    public Boolean getPremium() {
+        return isPremium;
     }
 
     public Set<UserRole> getUserRoles() {
@@ -316,6 +328,18 @@ public class User implements UserDetails, Serializable {
         this.blockedUsers = blockedUsers;
     }
 
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public void setPremium(Boolean premium) {
+        isPremium = premium;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -356,7 +380,8 @@ public class User implements UserDetails, Serializable {
         private Date lastPasswordResetDate;
         private LocalDate birthDate;
         private Collection<Fetish> fetishes;
-        private Localization localization;
+        private Country country;
+        private Area area;
         private Collection<Image> images;
         private UserType type;
         private Set<UserRole> userRoles;
@@ -370,9 +395,10 @@ public class User implements UserDetails, Serializable {
         private User lastVisitedBy;
         private User lastMessageBy;
         private Set<User> blockedUsers;
+        private Boolean isPremium;
 
         public UserBuilder setId(Long id) {
-            this.id = id;
+            this.id= id;
             return this;
         }
 
@@ -416,8 +442,13 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
-        public UserBuilder setLocalization(Localization localization) {
-            this.localization = localization;
+        public UserBuilder setCountry(Country country) {
+            this.country = country;
+            return this;
+        }
+
+        public UserBuilder setArea(Area area) {
+            this.area = area;
             return this;
         }
 
@@ -486,8 +517,13 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
+        public UserBuilder setIsPremium(Boolean isPremium) {
+            this.isPremium = isPremium;
+            return this;
+        }
+
         public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, localization, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked, lastVisitedBy, lastMessageBy, blockedUsers);
+            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, country, area, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked, lastVisitedBy, lastMessageBy, blockedUsers, isPremium);
         }
     }
 }

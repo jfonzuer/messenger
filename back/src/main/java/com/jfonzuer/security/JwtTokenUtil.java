@@ -1,12 +1,12 @@
 package com.jfonzuer.security;
 
+import com.jfonzuer.dto.UserDto;
 import com.jfonzuer.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -123,7 +123,7 @@ public class JwtTokenUtil implements Serializable {
         return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
     }
 
-    public String generateToken(JwtUser userDetails, Device device) {
+    public String generateToken(UserDto userDetails, Device device) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getEmail());
         claims.put(CLAIM_KEY_AUDIENCE, generateAudience(device));
