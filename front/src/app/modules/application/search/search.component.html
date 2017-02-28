@@ -20,7 +20,7 @@
       <div class="col-sm-5" *ngIf="constants">
         <select class="form-control" [(ngModel)]="country.id" name="country">
           <option [value]="0">Choisissez un pays</option>
-          <option *ngFor="let country of constants.countries" [value]="country.id">{{ country.name }} <span class="flag-icon flag-icon-{{ country.flag }}"></span></option>
+          <option *ngFor="let country of constants.countries" [value]="country.id">{{ country.name }}</option>
         </select>
       </div>
     </div>
