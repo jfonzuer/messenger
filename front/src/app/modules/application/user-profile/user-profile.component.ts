@@ -1,9 +1,8 @@
-import {Component, OnInit, Input, ViewContainerRef} from '@angular/core';
-import {Localization} from "../../../model/localization";
+import {Component, OnInit, ViewContainerRef} from "@angular/core";
 import {User} from "../../../model/user";
-import {Fetish} from "../../../model/fetish";
 import {ActivatedRoute} from "@angular/router";
 import {ToastsManager} from "ng2-toastr";
+import {Constant} from "../../../model/response/constants";
 
 @Component({
   selector: 'app-user-profile',
@@ -13,8 +12,7 @@ import {ToastsManager} from "ng2-toastr";
 export class UserProfileComponent implements OnInit {
 
   user:User;
-  localizations:Localization[];
-  fetishes: Fetish[];
+  constants:Constant;
 
   constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
@@ -24,8 +22,7 @@ export class UserProfileComponent implements OnInit {
     this.route.data.forEach((data:any) => {
       this.user = data.user;
       // si data n'est pas un array, il contient alors une erreur
-      data.localizations instanceof Array ? this.localizations = data.localizations : this.toastr.error(data.localizations);
-      data.fetishes instanceof Array ? this.fetishes = data.fetishes : this.toastr.error(data.fetishes);
+      data.constants instanceof Object ? this.constants = data.constants : this.toastr.error("Erreur de connexion");
     });
   }
 }

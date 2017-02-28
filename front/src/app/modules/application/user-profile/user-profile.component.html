@@ -1,8 +1,7 @@
 <div class="container">
   <legend class="pointer" (click)="show == 1 ? show = 0 : show = 1">Mon profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
-  <app-profile [user]="user" [fetishes]="fetishes" [localizations]="localizations" [show]="show == 1"></app-profile>
+  <app-profile [user]="user" [constants]="constants" [show]="show == 1"></app-profile>
 </div>
-
 <div class="container">
   <legend class="pointer" (click)="show == 2 ? show = 0 : show = 2">Mes informations <span class="glyphicon glyphicon-chevron-down"></span></legend>
   <app-information [user]="user" [show]="show == 2"></app-information>

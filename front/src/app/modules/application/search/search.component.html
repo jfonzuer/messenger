@@ -17,10 +17,33 @@
     </div>
 
     <div class="form-group">
-      <div class="col-sm-5" *ngIf="localizations">
-        <select class="form-control" name="localization" [(ngModel)]="localization.id" >
+      <div class="col-sm-5" *ngIf="constants">
+        <select class="form-control" [(ngModel)]="country.id" name="country">
+          <option [value]="0">Choisissez un pays</option>
+          <option *ngFor="let country of constants.countries" [value]="country.id">{{ country.name }} <span class="flag-icon flag-icon-{{ country.flag }}"></span></option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-5" *ngIf="constants">
+        <select class="form-control" [(ngModel)]="area.id" name="area" [ngSwitch]="country.id">
           <option [value]="0">Choisissez une région</option>
-          <option *ngFor="let localization of localizations" [value]="localization.id">{{ localization.name }}</option>
+          <ng-container *ngSwitchCase="1">
+            <option *ngFor="let area of constants.franceAreas" [value]="area.id">{{ area.name }}</option>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="2">
+            <option *ngFor="let area of constants.belgiumAreas" [value]="area.id">{{ area.name }}</option>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="3">
+            <option *ngFor="let area of constants.luxemburgAreas" [value]="area.id">{{ area.name }}</option>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="4">
+            <option *ngFor="let area of constants.swissAreas" [value]="area.id">{{ area.name }}</option>
+          </ng-container>
         </select>
       </div>
     </div>
@@ -55,7 +78,7 @@
     <a [routerLink]="['/app/profile', user.id ]">
       <img src="{{ uploadImageUrl }}{{ user.images[0].url }}" class="medium-image img-circle center-block">
       <h3 class="text-center text-primary">{{ user.username }}</h3>
-      <p class="text-center">Age: {{ user.age }} ans, {{ user.localization.name }}</p>
+      <p class="text-center">Age: {{ user.age }} ans, <strong>{{ user.area.name }}, {{ user.country.name}} <span class="flag-icon flag-icon-{{ user.country.flag }}"></span></strong></p>
       <p class="text-center" *ngIf="search.keyword && searched" [innerHTML]="user.description"></p>
     </a>
   </div>

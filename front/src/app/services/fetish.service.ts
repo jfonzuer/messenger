@@ -14,23 +14,6 @@ export class FetishService {
     this.baseUrl = environment.baseUrl;
   }
 
-  getAll() {
-    let headers = this.authenticationService.getHeaders();
-
-    return this.http.get(this.baseUrl + 'fetishes', {headers:headers})
-      .toPromise()
-      .then(response => {
-        this.rs.handleResponse(response);
-
-        // si reponse non vide
-        if (response.text()) {
-          return response.json();
-        }
-        return [];
-      })
-      .catch(this.rs.handleError);
-  }
-
   updateCheckedFetishes(fetish:Fetish, event:any, selectedFetishId:number[]) : number[] {
     event.target.checked ? selectedFetishId.push(fetish.id) : selectedFetishId.splice(selectedFetishId.indexOf(fetish.id), 1);
     selectedFetishId.sort();

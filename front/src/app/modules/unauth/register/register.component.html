@@ -28,13 +28,7 @@
 
       <div class="form-group">
         <div class="col-sm-5">
-          <input type="password" class="form-control" required placeholder="Mot de passe" name="password" [(ngModel)]="passwordRegister.password">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-5">
-          <input type="password" class="form-control" required placeholder="Confirmation" name="confirmation" [(ngModel)]="passwordRegister.confirmation">
+          <input type="password" class="form-control" required placeholder="Mot de passe" name="password" [(ngModel)]="password">
         </div>
       </div>
 
@@ -48,23 +42,46 @@
       </div>
 
       <div class="form-group">
-        <div class="col-sm-10" *ngIf="fetishes">
-          <label>Pratiques :</label>
-          <div class="radio">
-            <label *ngFor="let fetish of fetishes; let i = index">
-              <input type="checkbox" name="fetishes"  value="{{ option }}" [checked]="selectedFetishId.indexOf(fetish.id) >= 0" (change)="updateCheckedFetishes(fetish, $event)">
-              {{ fetish.name }}
-            </label>
-          </div>
+        <div class="col-sm-5" *ngIf="constants">
+          <label>Pays :</label>
+          <select class="form-control" [(ngModel)]="user.country.id" name="country" required>
+            <option *ngFor="let country of constants.countries" [value]="country.id">{{ country.name }}</option>
+          </select>
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5" *ngIf="localizations">
+        <div class="col-sm-5" *ngIf="constants">
           <label>Région :</label>
-          <select class="form-control" [(ngModel)]="user.localization.id" name="localization" required>
-            <option *ngFor="let localization of localizations" [value]="localization.id">{{ localization.name }}</option>
+          <select class="form-control" [(ngModel)]="user.area.id" name="area" required [ngSwitch]="user.country.id">
+            <ng-container *ngSwitchCase="1">
+              <option *ngFor="let area of constants.franceAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="2">
+              <option *ngFor="let area of constants.belgiumAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="3">
+              <option *ngFor="let area of constants.luxemburgAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="4">
+              <option *ngFor="let area of constants.swissAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
           </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-10" *ngIf="constants">
+          <label>Pratiques :</label>
+          <div class="radio">
+            <label *ngFor="let fetish of constants.fetishes; let i = index">
+              <input type="checkbox" name="fetishes"  value="{{ option }}" [checked]="selectedFetishId.indexOf(fetish.id) >= 0" (change)="fetishService.updateCheckedFetishes(fetish, $event, selectedFetishId)">
+              {{ fetish.name }}
+            </label>
+          </div>
         </div>
       </div>
 

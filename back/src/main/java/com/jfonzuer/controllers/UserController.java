@@ -37,107 +37,93 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasRole('USER')")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final UserService userService;
-    private final VisitRepository visitRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    private final MailService mailService;
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
-
-    @Value("${jwt.header}")
-    private String tokenHeader;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository, UserService userService, VisitRepository visitRepository, MailService mailService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.visitRepository = visitRepository;
-        this.mailService = mailService;
-    }
+    private UserService userService;
 
+    /**
+     * endpoint permettant de rechercher les derniers utilisateurs inscrits
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
-    public Page<UserDto> getAll(Pageable p, HttpServletRequest request) {
-        User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
-        System.out.println("user.getType() = " + user.getType());
-        UserType otherType = MessengerUtils.getOtherType(user);
-        System.out.println("otherType = " + otherType);
-        return  userRepository.findByIdNotAndTypeAndEnabledAndIsBlockedOrderByIdDesc(user.getId(), otherType, true, false, p).map(UserMapper::toLightDto);
+    public Page<UserDto> getLastRegisteredUsers( HttpServletRequest request, Pageable p) {
+        return userService.getLastRegisteredUsers(request, p);
     }
 
+    /**
+     * endpoint permettant la recherche d'utilisateurs
+     * @param searchDto
+     * @param p
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST)
     public Page<UserDto> searchUsers(@RequestBody SearchDto searchDto, Pageable p, HttpServletRequest request) {
-        User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
-        System.out.println("searchDto.getUserType() = " + searchDto.getUserType());
-
-        Search search = SearchMapper.fromDto(searchDto);
-
-        Page<User> users = userRepository.search(user.getId(), search.getUserType(), search.getCountry(), search.getArea(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
-        return users.map(UserMapper::toDto);
+        return userService.search(request, searchDto, p);
     }
 
+    /**
+     * endpoint pour renvoyer le profil demandé, mettre à jour les visites et envoyer un mail
+     * @param request
+     * @param visitedId
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public UserDto getById(HttpServletRequest request, @PathVariable Long id) {
-        User visitor = userService.getUserFromToken(request);
-        User visited = userRepository.findByIdAndEnabledAndIsBlocked(id, true, false);
-
-        if (!visited.equals(visitor) && !visitor.equals(visited.getLastVisitedBy())) {
-            visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
-            visited.setLastVisitedBy(visitor);
-            userRepository.save(visited);
-            mailService.sendAsync(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
-        }
-        return UserMapper.toDto(visited);
+    public UserDto getById(HttpServletRequest request, @PathVariable("id") Long visitedId) {
+        return userService.getUserAndUpdateVisit(request, visitedId);
     }
 
+    /**
+     * Méthode permettant à l'utilisateur de mettre à jour son profil
+     * @param request
+     * @param dto
+     * @return
+     */
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
-    public UserDto updateProfile(HttpServletRequest request, @RequestBody UserDto userDto) {
+    public UserDto updateProfile(HttpServletRequest request, @RequestBody UserDto dto) {
         User user = userService.getUserFromToken(request);
-        User updatedUser = UserMapper.fromDto(userDto);
-
-        //User user = userService.getUserFromToken(request);
-        // TODO : validation via annotation and exception handling
-
-        user.setDescription(updatedUser.getDescription());
-        user.setArea(updatedUser.getArea());
-        user.setCountry(updatedUser.getCountry());
-        user.setFetishes(updatedUser.getFetishes());
-
-        return UserMapper.toDto(userRepository.save(user));
+        return userService.updateProfile(user, dto);
     }
 
+    /**
+     * Méthode permettant à l'utilisateur de mettre à jour ses informations
+     * @param request
+     * @param userDto
+     * @return
+     */
     @RequestMapping(value = "/informations", method = RequestMethod.PUT)
     public UserDto updateInformation(HttpServletRequest request, @RequestBody UserDto userDto) {
-        User user = userService.getUserFromToken(request);
-        User updatedUser = UserMapper.fromDto(userDto);
-
         // TODO : validation via annotation and exception handling
-        user.setUsername(updatedUser.getUsername());
-        user.setEmail(updatedUser.getEmail());
-        user.setBirthDate(updatedUser.getBirthDate());
-
-        return UserMapper.toDto(userRepository.save(user));
-    }
-
-
-    @RequestMapping(value = "/password/reset", method = RequestMethod.PUT)
-    public void resetPassword(HttpServletRequest request, @RequestBody PasswordDto passwordDto) {
-
-        if (!passwordDto.getPassword().equals(passwordDto.getConfirmation())) {
-            throw new IllegalArgumentException();
-        }
-
         User user = userService.getUserFromToken(request);
-        user.setPassword(encoder.encode(passwordDto.getPassword()));
-        userRepository.save(user);
+        return userService.updateInformations(user, userDto);
     }
 
+
+    /**
+     * endpoint permettant à l'utilisateur connecté de mettre à jour son mdp.
+     * @param request
+     * @param passwordDto
+     */
+    @RequestMapping(value = "/password/reset", method = RequestMethod.PUT)
+    public void updatePassword(HttpServletRequest request, @RequestBody PasswordDto passwordDto) {
+        userService.updatePassword(request, passwordDto);
+    }
+
+
+    /**
+     * endpoint permettant de signaler un utilisateur
+     * @param request
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/report/{id}", method = RequestMethod.GET)
     public ResponseDto reportUser(HttpServletRequest request, @PathVariable Long id) {
         User user = userService.getUserFromToken(request);
@@ -159,6 +145,12 @@ public class UserController {
         return new ResponseDto("L utilisateur a été signalé");
     }
 
+    /**
+     * endpoint permettant à l'utilisateur de modifier les paramètres de ses alertes
+     * @param request
+     * @param alerts
+     * @return
+     */
     @RequestMapping(value = "/alerts", method = RequestMethod.PUT)
     public ResponseDto alerts(HttpServletRequest request, @RequestBody AlertsDto alerts) {
         User user = userService.getUserFromToken(request);
@@ -168,6 +160,12 @@ public class UserController {
         return new ResponseDto("Vos préférences ont été mises à jour");
     }
 
+    /**
+     * endpoint permettant à l'utilisateur de désactiver son compte
+     * @param request
+     * @param desactivate
+     * @return
+     */
     @RequestMapping(value = "/desactivate", method = RequestMethod.PUT)
     public ResponseDto desactivate(HttpServletRequest request, @RequestBody DesactivateDto desactivate) {
         User user = userService.getUserFromToken(request);
@@ -176,6 +174,12 @@ public class UserController {
         return new ResponseDto("Votre compte a été désactivé");
     }
 
+    /**
+     * Méthode permettant de bloquer un utilisateur
+     * @param request
+     * @param dto
+     * @return
+     */
     @RequestMapping(value = "/block", method = RequestMethod.POST)
     public List<UserDto> block(HttpServletRequest request, @RequestBody UserDto dto) {
         User user = userService.getUserFromToken(request);
@@ -183,6 +187,12 @@ public class UserController {
         return userService.blockUser(user, userToBlock).stream().map(UserMapper::toLightDto).collect(Collectors.toList());
     }
 
+    /**
+     * Méthode permmettant de débloquer un utilisateur
+     * @param request
+     * @param dto
+     * @return
+     */
     @RequestMapping(value = "/unblock", method = RequestMethod.POST)
     public List<UserDto> unblock(HttpServletRequest request, @RequestBody UserDto dto) {
         User user = userService.getUserFromToken(request);

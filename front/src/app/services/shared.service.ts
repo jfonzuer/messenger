@@ -61,6 +61,12 @@ export class SharedService {
     return user.authorities.find(a => a == "ROLE_ADMIN") != null;
   }
 
+  isPremium() {
+    let user:User = <User> this.getCurrentUser();
+    console.debug("isPremium ", user.authorities.find(a => a == "ROLE_PREMIUM") != null)
+    return user.authorities.find(a => a == "ROLE_PREMIUM") != null;
+  }
+
   getLocalizations() {
     return this.localStorageService.getObject('localizations');
   }

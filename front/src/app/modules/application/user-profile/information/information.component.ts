@@ -1,8 +1,5 @@
-import {Component, OnInit, Input, EventEmitter, Output, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, Input, ViewContainerRef} from "@angular/core";
 import {UserService} from "../../../../services/user.service";
-import {FetishService} from "../../../../services/fetish.service";
-import {Fetish} from "../../../../model/fetish";
-import {Localization} from "../../../../model/localization";
 import {User} from "../../../../model/user";
 import {SharedService} from "../../../../services/shared.service";
 import {DatetimeService} from "../../../../services/datetime.service";

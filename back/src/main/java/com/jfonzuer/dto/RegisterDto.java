@@ -5,7 +5,7 @@ package com.jfonzuer.dto;
  */
 public class RegisterDto {
     private UserDto user;
-    private PasswordDto passwordConfirmation;
+    private String password;
 
     public RegisterDto() {
     }
@@ -18,19 +18,18 @@ public class RegisterDto {
         this.user = user;
     }
 
-    public PasswordDto getPasswordConfirmation() {
-        return passwordConfirmation;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordConfirmation(PasswordDto passwordConfirmation) {
-        this.passwordConfirmation = passwordConfirmation;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public String toString() {
         return "RegisterDto{" +
                 "user=" + user +
-                ", passwordConfirmation=" + passwordConfirmation +
                 '}';
     }
 }

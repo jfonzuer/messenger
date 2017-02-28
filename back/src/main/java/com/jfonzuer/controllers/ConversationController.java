@@ -15,6 +15,7 @@ import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.service.ConversationService;
 import com.jfonzuer.service.MailService;
 import com.jfonzuer.service.UserService;
+import com.jfonzuer.service.WebSocketService;
 import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -35,8 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/conversations")
-@CrossOrigin(origins = "*", maxAge = 3600)
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class ConversationController {
 
     private final ConversationRepository conversationRepository;
@@ -44,29 +44,42 @@ public class ConversationController {
     private final UserService userService;
     private final MailService mailService;
     private final ConversationService conversationService;
-    private final SimpMessagingTemplate template;
+    private final WebSocketService webSocketService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConversationController.class);
 
     @Autowired
-    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, UserService userService, MailService mailService, ConversationService conversationService, SimpMessagingTemplate template) {
+    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, UserService userService, MailService mailService, ConversationService conversationService, WebSocketService webSocketService) {
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.conversationService = conversationService;
-        this.template = template;
+        this.webSocketService = webSocketService;
     }
 
+    /**
+     * Endpoint permettant de retourner la liste des conversations
+     * @param request
+     * @param p
+     * @return
+     */
+    @PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.GET)
     public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
         User user = userService.getUserFromToken(request);
         return conversationRepository.findAllByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(user, false, user, false, p).map(c -> ConversationMapper.toDto(c, user));
     }
 
+    /**
+     * Endpoint permettant de créer une nouvelle conversation
+     * @param request
+     * @param dto
+     * @return
+     */
+    @PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.POST)
     public ConversationDto add(HttpServletRequest request, @RequestBody UserMessageDto dto) {
-
         MessageDto messageDto = dto.getMessage();
         User userOne = userService.getUserFromToken(request);
         User userTwo = UserMapper.fromDto(dto.getUser());
@@ -75,15 +88,19 @@ public class ConversationController {
         if (userOne.equals(userTwo)) {
             throw new IllegalArgumentException();
         }
-
         Conversation conversation = conversationService.createConversationAndAddMessage(userOne, userTwo, messageDto);
-        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
-        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
-
+        webSocketService.sendToConversationsUsers(conversation);
         mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
         return ConversationMapper.toDto(conversation, userOne);
     }
 
+    /**
+     * Endpoint permettant de récupérer une conversation particulière
+     * @param request
+     * @param id
+     * @return
+     */
+    @PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ConversationDto getConversationBetweenCurrentUserAndSpecifiedUser(HttpServletRequest request, @PathVariable Long id) {
         LOGGER.info(" in getConversationBetweenCurrentUserAndSpecifiedUser ");
@@ -93,15 +110,25 @@ public class ConversationController {
         return ConversationMapper.toDto(conversation, currentUser);
     }
 
+    /**
+     * Endpoint permettant de supprimer une conversation
+     * @param request
+     * @param id
+     */
+    @PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteConversation(HttpServletRequest request, @PathVariable Long id) {
         User currentUser = userService.getUserFromToken(request);
         conversationService.deleteByIdAndUser(id, currentUser);
     }
 
+    /**
+     * Endpoint permettant de renvoyer le nombre de conversations non lues
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/unread", method = RequestMethod.GET)
     public Long getUnreadNumerConversations(HttpServletRequest request) {
-
         User user = userService.getUserFromToken(request);
         return this.conversationRepository.countByUserOneAndIsReadByUserOne(user, false) +  this.conversationRepository.countByUserTwoAndIsReadByUserTwo(user, false);
     }

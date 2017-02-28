@@ -6,6 +6,7 @@ package com.jfonzuer.dto;
 public class CountryDto {
     private Long id;
     private String name;
+    private String flag;
 
     public CountryDto() {
     }
@@ -23,23 +24,42 @@ public class CountryDto {
         return name;
     }
 
+    public String getFlag() {
+        return flag;
+    }
 
-    public static class CountryDtoBuilder {
+
+    public static final class Builder {
         private Long id;
         private String name;
+        private String flag;
 
-        public CountryDtoBuilder setId(Long id) {
+        private Builder() {
+        }
+
+        public static Builder country() {
+            return new Builder();
+        }
+
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public CountryDtoBuilder setName(String name) {
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public CountryDto createCountryDto() {
-            return new CountryDto(id, name);
+        public Builder withFlag(String flag) {
+            this.flag = flag;
+            return this;
+        }
+
+        public CountryDto build() {
+            CountryDto countryDto = new CountryDto(id, name);
+            countryDto.flag = this.flag;
+            return countryDto;
         }
     }
 }

@@ -1,8 +1,8 @@
 import {Fetish} from "./fetish";
-import {Localization} from "./localization";
 import {Image} from "./image";
 import {UserType} from "./userType";
-import {Authority} from "./authority";
+import {Country} from "./country";
+import {Area} from "./area";
 /**
  * Created by pgmatz on 28/09/16.
  */
@@ -14,10 +14,11 @@ export class User {
   description: string;
   birthDate: string;
   fetishes: Fetish[];
-  localization: Localization;
   enabled:boolean;
   blocked:boolean;
   age:number;
+  country:Country;
+  area:Area;
   reportedAsFake:number;
   images:Image[];
   userType:UserType;

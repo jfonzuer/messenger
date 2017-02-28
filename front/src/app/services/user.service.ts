@@ -30,7 +30,7 @@ export class UserService {
       queryParams = queryParams.concat('&p=' + pager.page);
     }
 
-    return this.http.get(this.baseUrl + 'users/' + queryParams,  {headers: headers})
+    return this.http.get(this.baseUrl + 'users' + queryParams,  {headers: headers})
       .toPromise()
       .then(response => {
         this.rs.handleResponse(response);

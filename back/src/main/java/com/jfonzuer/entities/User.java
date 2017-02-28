@@ -6,7 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by pgm on 18/09/16.
@@ -87,13 +90,10 @@ public class User implements UserDetails, Serializable {
     @ManyToMany
     private Set<User> blockedUsers;
 
-    @Column(nullable = false)
-    private Boolean isPremium;
-
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers, Boolean isPremium) {
+    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -118,7 +118,6 @@ public class User implements UserDetails, Serializable {
         this.lastVisitedBy = lastVisitedBy;
         this.lastMessageBy = lastMessageBy;
         this.blockedUsers = blockedUsers;
-        this.isPremium = isPremium;
     }
 
     @Override
@@ -218,10 +217,6 @@ public class User implements UserDetails, Serializable {
 
     public Area getArea() {
         return area;
-    }
-
-    public Boolean getPremium() {
-        return isPremium;
     }
 
     public Set<UserRole> getUserRoles() {
@@ -336,10 +331,6 @@ public class User implements UserDetails, Serializable {
         this.area = area;
     }
 
-    public void setPremium(Boolean premium) {
-        isPremium = premium;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -370,7 +361,8 @@ public class User implements UserDetails, Serializable {
         return false;
     }
 
-    public static class UserBuilder {
+
+    public static final class Builder {
         private Long id;
         private String username;
         private String password;
@@ -384,7 +376,7 @@ public class User implements UserDetails, Serializable {
         private Area area;
         private Collection<Image> images;
         private UserType type;
-        private Set<UserRole> userRoles;
+        private Set<UserRole> userRoles = new HashSet<>(0);
         private LocalDate lastActivityDate;
         private Long reportedAsFake;
         private LocalDate lastReportDate;
@@ -395,135 +387,161 @@ public class User implements UserDetails, Serializable {
         private User lastVisitedBy;
         private User lastMessageBy;
         private Set<User> blockedUsers;
-        private Boolean isPremium;
 
-        public UserBuilder setId(Long id) {
-            this.id= id;
+        private Builder() {
+        }
+
+        public static Builder anUser() {
+            return new Builder();
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
             return this;
         }
 
-        public UserBuilder setUsername(String username) {
+        public Builder withUsername(String username) {
             this.username = username;
             return this;
         }
 
-        public UserBuilder setPassword(String password) {
+        public Builder withPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public UserBuilder setEmail(String email) {
+        public Builder withEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public UserBuilder setDescription(String description) {
+        public Builder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public UserBuilder setEnabled(Boolean enabled) {
+        public Builder withEnabled(Boolean enabled) {
             this.enabled = enabled;
             return this;
         }
 
-        public UserBuilder setLastPasswordResetDate(Date lastPasswordResetDate) {
+        public Builder withLastPasswordResetDate(Date lastPasswordResetDate) {
             this.lastPasswordResetDate = lastPasswordResetDate;
             return this;
         }
 
-        public UserBuilder setBirthDate(LocalDate birthDate) {
+        public Builder withBirthDate(LocalDate birthDate) {
             this.birthDate = birthDate;
             return this;
         }
 
-        public UserBuilder setFetishes(Collection<Fetish> fetishes) {
+        public Builder withFetishes(Collection<Fetish> fetishes) {
             this.fetishes = fetishes;
             return this;
         }
 
-        public UserBuilder setCountry(Country country) {
+        public Builder withCountry(Country country) {
             this.country = country;
             return this;
         }
 
-        public UserBuilder setArea(Area area) {
+        public Builder withArea(Area area) {
             this.area = area;
             return this;
         }
 
-        public UserBuilder setImages(Collection<Image> images) {
+        public Builder withImages(Collection<Image> images) {
             this.images = images;
             return this;
         }
 
-        public UserBuilder setType(UserType type) {
+        public Builder withType(UserType type) {
             this.type = type;
             return this;
         }
 
-        public UserBuilder setUserRoles(Set<UserRole> userRoles) {
+        public Builder withUserRoles(Set<UserRole> userRoles) {
             this.userRoles = userRoles;
             return this;
         }
 
-        public UserBuilder setLastActivityDate(LocalDate lastActivityDate) {
+        public Builder withLastActivityDate(LocalDate lastActivityDate) {
             this.lastActivityDate = lastActivityDate;
             return this;
         }
 
-        public UserBuilder setReportedAsFake(Long reportedAsFake) {
+        public Builder withReportedAsFake(Long reportedAsFake) {
             this.reportedAsFake = reportedAsFake;
             return this;
         }
 
-        public UserBuilder setLastReportDate(LocalDate lastReportDate) {
+        public Builder withLastReportDate(LocalDate lastReportDate) {
             this.lastReportDate = lastReportDate;
             return this;
         }
 
-        public UserBuilder setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        public Builder withAuthorities(Collection<? extends GrantedAuthority> authorities) {
             this.authorities = authorities;
             return this;
         }
 
-        public UserBuilder setNotifyMessage(Boolean notifyMessage) {
+        public Builder withNotifyMessage(Boolean notifyMessage) {
             this.notifyMessage = notifyMessage;
             return this;
         }
 
-        public UserBuilder setNotifyVisit(Boolean notifyVisit) {
+        public Builder withNotifyVisit(Boolean notifyVisit) {
             this.notifyVisit = notifyVisit;
             return this;
         }
 
-        public UserBuilder setIsBlocked(Boolean isBlocked) {
+        public Builder withIsBlocked(Boolean isBlocked) {
             this.isBlocked = isBlocked;
             return this;
         }
 
-        public UserBuilder setLastVisitedBy(User lastVisitedBy) {
+        public Builder withLastVisitedBy(User lastVisitedBy) {
             this.lastVisitedBy = lastVisitedBy;
             return this;
         }
 
-        public UserBuilder setLastMessageBy(User lastMessageBy) {
+        public Builder withLastMessageBy(User lastMessageBy) {
             this.lastMessageBy = lastMessageBy;
             return this;
         }
 
-        public UserBuilder setBlockedUsers(Set<User> blockedUsers) {
+        public Builder withBlockedUsers(Set<User> blockedUsers) {
             this.blockedUsers = blockedUsers;
             return this;
         }
 
-        public UserBuilder setIsPremium(Boolean isPremium) {
-            this.isPremium = isPremium;
-            return this;
-        }
-
-        public User createUser() {
-            return new User(id, username, password, email, description, enabled, lastPasswordResetDate, birthDate, fetishes, country, area, images, type, userRoles, lastActivityDate, reportedAsFake, lastReportDate, authorities, notifyMessage, notifyVisit, isBlocked, lastVisitedBy, lastMessageBy, blockedUsers, isPremium);
+        public User build() {
+            User user = new User();
+            user.setId(id);
+            user.setBlocked(isBlocked);
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setEmail(email);
+            user.setDescription(description);
+            user.setEnabled(enabled);
+            user.setLastPasswordResetDate(lastPasswordResetDate);
+            user.setBirthDate(birthDate);
+            user.setFetishes(fetishes);
+            user.setCountry(country);
+            user.setArea(area);
+            user.setImages(images);
+            user.setType(type);
+            user.setUserRoles(userRoles);
+            user.setLastActivityDate(lastActivityDate);
+            user.setReportedAsFake(reportedAsFake);
+            user.setLastReportDate(lastReportDate);
+            user.setAuthorities(authorities);
+            user.setNotifyMessage(notifyMessage);
+            user.setNotifyVisit(notifyVisit);
+            user.setLastVisitedBy(lastVisitedBy);
+            user.setLastMessageBy(lastMessageBy);
+            user.setBlockedUsers(blockedUsers);
+            return user;
         }
     }
 }

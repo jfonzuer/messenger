@@ -34,7 +34,6 @@ public class MessengerCLR implements CommandLineRunner {
     private final MessageRepository messageRepository;
     private final UserRoleRepository userRoleRepository;
     private final FetishRepository fetishRepository;
-    private final LocalizationRepository localizationRepository;
     private final VisitRepository visitRepository;
     private final ImageRepository imageRepository;
     private final UserTypeRepository userTypeRepository;
@@ -52,13 +51,12 @@ public class MessengerCLR implements CommandLineRunner {
     private String imagesLocation;
 
     @Autowired
-    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, LocalizationRepository localizationRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository, StorageService storageService, CountryRepository countryRepository, AreaRepository areaRepository) {
+    public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository, StorageService storageService, CountryRepository countryRepository, AreaRepository areaRepository) {
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
         this.userRoleRepository = userRoleRepository;
         this.fetishRepository = fetishRepository;
-        this.localizationRepository = localizationRepository;
         this.visitRepository = visitRepository;
         this.imageRepository = imageRepository;
         this.userTypeRepository = userTypeRepository;
@@ -88,12 +86,12 @@ public class MessengerCLR implements CommandLineRunner {
 
         // on insére les fetishes dans la bdd
         fetishes.stream().forEach(f -> fetishRepository.save(f));
-        
-        Country c1 = new Country.CountryBuilder().setId(MessengerUtils.FRANCE_ID).setName("France").createCountry();
-        Country c2 = new Country.CountryBuilder().setId(MessengerUtils.BELGIUM_ID).setName("Belgique").createCountry();
-        Country c3 = new Country.CountryBuilder().setId(MessengerUtils.LUX_ID).setName("Luxembourg").createCountry();
-        Country c4 = new Country.CountryBuilder().setId(MessengerUtils.SWISS_ID).setName("Suisse").createCountry();
-        
+
+
+        Country c1 = Country.Builder.country().withId(MessengerUtils.FRANCE_ID).withFlag("fr").withName("France").build();
+        Country c2 = Country.Builder.country().withId(MessengerUtils.BELGIUM_ID).withFlag("be").withName("Belgique").build();
+        Country c3 = Country.Builder.country().withId(MessengerUtils.LUX_ID).withFlag("lu").withName("Luxembourg").build();
+        Country c4 = Country.Builder.country().withId(MessengerUtils.SWISS_ID).withFlag("ch").withName("Suisse").build();
         Arrays.asList(c1, c2, c3, c4).stream().forEach(countryRepository::save);
 
         // régions françaises
@@ -173,84 +171,80 @@ public class MessengerCLR implements CommandLineRunner {
         UserType ut2 = new UserType.UserTypeBuilder().setId(MessengerUtils.SUBMISSIVE_ID).setLabel("Soumis").createUserType();
         Stream.of(ut1, ut2).forEach(userTypeRepository::save);
 
-        User u1 = new User.UserBuilder()
-                .setEmail("pgiraultmatz@gmail.com")
-                .setBirthDate(LocalDate.of(1992, 3, 29))
-                .setUsername("pgm")
-                .setPassword(encoder.encode("test"))
-                .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .setEnabled(true)
-                .setIsBlocked(false)
-                .setDescription("je suis le membre 1")
-                .setFetishes(fetishes)
-                .setArea(a1)
-                .setCountry(c1)
-                .setIsPremium(true)
-                .setType(ut2)
-                .setReportedAsFake(0L)
-                .setLastActivityDate(LocalDate.now())
-                .setLastReportDate(LocalDate.now().minusDays(1L))
-                .setNotifyMessage(true)
-                .setNotifyVisit(true)
-                .createUser();
-        User u2 = new User.UserBuilder()
-                .setEmail("member13@gmail.com")
-                .setUsername("member2")
-                .setPassword(encoder.encode("password2"))
-                .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .setEnabled(true)
-                .setIsBlocked(false)
-                .setDescription("je suis le membre 2")
-                .setBirthDate(LocalDate.of(1988, 3, 29))
-                .setArea(a5)
-                .setCountry(c1)
-                .setIsPremium(false)
-                .setType(ut1)
-                .setReportedAsFake(10L)
-                .setLastActivityDate(LocalDate.now())
-                .setLastReportDate(LocalDate.now().minusDays(1L))
-                .setNotifyMessage(true)
-                .setNotifyVisit(true)
-                .createUser();
-        User u3 = new User.UserBuilder()
-                .setEmail("member3@gmail.com")
-                .setUsername("member3")
-                .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .setPassword(encoder.encode("password3"))
-                .setEnabled(true)
-                .setIsBlocked(false)
-                .setDescription("je suis le membre 3")
-                .setBirthDate(LocalDate.of(1988, 3, 29))
-                .setArea(a60)
-                .setCountry(c4)
-                .setIsPremium(true)
-                .setType(ut1)
-                .setReportedAsFake(15L)
-                .setLastActivityDate(LocalDate.now())
-                .setLastReportDate(LocalDate.now().minusDays(1L))
-                .setNotifyMessage(true)
-                .setNotifyVisit(true)
-                .createUser();
+        User u1 = User.Builder.anUser()
+                .withEmail("pgiraultmatz@gmail.com")
+                .withBirthDate(LocalDate.of(1992, 3, 29))
+                .withUsername("pgm")
+                .withPassword(encoder.encode("test"))
+                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
+                .withEnabled(true)
+                .withIsBlocked(false)
+                .withDescription("je suis le membre 1")
+                .withFetishes(fetishes)
+                .withArea(a1)
+                .withCountry(c1)
+                .withType(ut2)
+                .withReportedAsFake(0L)
+                .withLastActivityDate(LocalDate.now())
+                .withLastReportDate(LocalDate.now().minusDays(1L))
+                .withNotifyMessage(true)
+                .withNotifyVisit(true)
+                .build();
+        User u2 = User.Builder.anUser()
+                .withEmail("user2@gmail.com")
+                .withUsername("user2")
+                .withPassword(encoder.encode("password"))
+                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
+                .withEnabled(true)
+                .withIsBlocked(false)
+                .withDescription("je suis le membre 2")
+                .withBirthDate(LocalDate.of(1988, 3, 29))
+                .withArea(a5)
+                .withCountry(c1)
+                .withType(ut1)
+                .withReportedAsFake(10L)
+                .withLastActivityDate(LocalDate.now())
+                .withLastReportDate(LocalDate.now().minusDays(1L))
+                .withNotifyMessage(true)
+                .withNotifyVisit(true)
+                .build();
+        User u3 = User.Builder.anUser()
+                .withEmail("member3@gmail.com")
+                .withUsername("member3")
+                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
+                .withPassword(encoder.encode("password3"))
+                .withEnabled(true)
+                .withIsBlocked(false)
+                .withDescription("je suis le membre 3")
+                .withBirthDate(LocalDate.of(1988, 3, 29))
+                .withArea(a60)
+                .withCountry(c4)
+                .withType(ut1)
+                .withReportedAsFake(15L)
+                .withLastActivityDate(LocalDate.now())
+                .withLastReportDate(LocalDate.now().minusDays(1L))
+                .withNotifyMessage(true)
+                .withNotifyVisit(true)
+                .build();
 
-        User u4 = new User.UserBuilder()
-                .setEmail("member4@gmail.com")
-                .setUsername("member4")
-                .setLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .setPassword(encoder.encode("password4"))
-                .setEnabled(true)
-                .setIsBlocked(false)
-                .setDescription("je suis le membre 4")
-                .setBirthDate(LocalDate.of(1988, 3, 29))
-                .setArea(a1)
-                .setCountry(c1)
-                .setIsPremium(true)
-                .setType(ut1)
-                .setReportedAsFake(20L)
-                .setLastActivityDate(LocalDate.now())
-                .setLastReportDate(LocalDate.now().minusDays(1L))
-                .setNotifyMessage(true)
-                .setNotifyVisit(true)
-                .createUser();
+        User u4 = User.Builder.anUser()
+                .withEmail("member4@gmail.com")
+                .withUsername("member4")
+                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
+                .withPassword(encoder.encode("password4"))
+                .withEnabled(true)
+                .withIsBlocked(false)
+                .withDescription("je suis le membre 4")
+                .withBirthDate(LocalDate.of(1988, 3, 29))
+                .withArea(a1)
+                .withCountry(c1)
+                .withType(ut1)
+                .withReportedAsFake(20L)
+                .withLastActivityDate(LocalDate.now())
+                .withLastReportDate(LocalDate.now().minusDays(1L))
+                .withNotifyMessage(true)
+                .withNotifyVisit(true)
+                .build();
 
         Set<User> blockedUser = new HashSet<>();
         blockedUser.add(u1);
@@ -269,10 +263,10 @@ public class MessengerCLR implements CommandLineRunner {
 
         UserRole us1 = new UserRole(u1, "ROLE_USER");
         UserRole us2 = new UserRole(u1, "ROLE_ADMIN");
-        UserRole us3 = new UserRole(u2, "ROLE_USER");
+        UserRole us3 = new UserRole(u1, "ROLE_PREMIUM");
         UserRole us4 = new UserRole(u2, "ROLE_USER");
-
-        Stream.of(us1, us2, us3, us4).forEach(us -> userRoleRepository.save(us));
+        UserRole us5 = new UserRole(u2, "ROLE_USER");
+        Stream.of(us1, us2, us3, us4, us5).forEach(us -> userRoleRepository.save(us));
 
         // visits
         Visit v1 = new Visit(LocalDate.now(), u2, u1, false);

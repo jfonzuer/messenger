@@ -18,6 +18,9 @@ public class Country {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String flag;
+
     public Country() {
     }
 
@@ -42,22 +45,47 @@ public class Country {
         this.name = name;
     }
 
-    public static class CountryBuilder {
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public static final class Builder {
         private Long id;
         private String name;
+        private String flag;
 
-        public CountryBuilder setId(Long id) {
+        private Builder() {
+        }
+
+        public static Builder country() {
+            return new Builder();
+        }
+
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public CountryBuilder setName(String name) {
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public Country createCountry() {
-            return new Country(id, name);
+        public Builder withFlag(String flag) {
+            this.flag = flag;
+            return this;
+        }
+
+        public Country build() {
+            Country country = new Country();
+            country.setId(id);
+            country.setName(name);
+            country.setFlag(flag);
+            return country;
         }
     }
 }

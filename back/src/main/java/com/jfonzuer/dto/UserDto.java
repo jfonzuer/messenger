@@ -25,12 +25,11 @@ public class UserDto {
     private List<UserDto> blockedUsers;
     private CountryDto country;
     private AreaDto area;
-    private Boolean isPremium;
 
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, CountryDto country, AreaDto area, Boolean isPremium) {
+    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, CountryDto country, AreaDto area) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -49,7 +48,6 @@ public class UserDto {
         this.blockedUsers = blockedUsers;
         this.country = country;
         this.area = area;
-        this.isPremium = isPremium;
     }
 
     public Long getId() {
@@ -125,10 +123,6 @@ public class UserDto {
         return area;
     }
 
-    public Boolean getPremium() {
-        return isPremium;
-    }
-
     @Override
     public String toString() {
         return "UserDto{" +
@@ -142,7 +136,8 @@ public class UserDto {
                 '}';
     }
 
-    public static class UserDtoBuilder {
+
+    public static final class Builder {
         private Long id;
         private String username;
         private String email;
@@ -161,105 +156,107 @@ public class UserDto {
         private List<UserDto> blockedUsers;
         private CountryDto country;
         private AreaDto area;
-        private Boolean isPremium;
 
-        public UserDtoBuilder setId(Long id) {
+        private Builder() {
+        }
+
+        public static Builder anUserDto() {
+            return new Builder();
+        }
+
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public UserDtoBuilder setUsername(String username) {
+        public Builder withUsername(String username) {
             this.username = username;
             return this;
         }
 
-        public UserDtoBuilder setEmail(String email) {
+        public Builder withEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public UserDtoBuilder setDescription(String description) {
+        public Builder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public UserDtoBuilder setBirthDate(String birthDate) {
+        public Builder withBirthDate(String birthDate) {
             this.birthDate = birthDate;
             return this;
         }
 
-        public UserDtoBuilder setFetishes(List<FetishDto> fetishes) {
+        public Builder withFetishes(List<FetishDto> fetishes) {
             this.fetishes = fetishes;
             return this;
         }
 
-        public UserDtoBuilder setAuthorities(List<String> authorities) {
+        public Builder withAuthorities(List<String> authorities) {
             this.authorities = authorities;
             return this;
         }
 
-        public UserDtoBuilder setImages(List<ImageDto> images) {
+        public Builder withImages(List<ImageDto> images) {
             this.images = images;
             return this;
         }
 
-        public UserDtoBuilder setUserType(UserTypeDto userType) {
+        public Builder withUserType(UserTypeDto userType) {
             this.userType = userType;
             return this;
         }
 
-        public UserDtoBuilder setLastActivityDate(String lastActivityDate) {
+        public Builder withLastActivityDate(String lastActivityDate) {
             this.lastActivityDate = lastActivityDate;
             return this;
         }
 
-        public UserDtoBuilder setReportedAsFake(Long reportedAsFake) {
+        public Builder withReportedAsFake(Long reportedAsFake) {
             this.reportedAsFake = reportedAsFake;
             return this;
         }
 
-        public UserDtoBuilder setNotifyMessage(Boolean notifyMessage) {
+        public Builder withNotifyMessage(Boolean notifyMessage) {
             this.notifyMessage = notifyMessage;
             return this;
         }
 
-        public UserDtoBuilder setNotifyVisit(Boolean notifyVisit) {
+        public Builder withNotifyVisit(Boolean notifyVisit) {
             this.notifyVisit = notifyVisit;
             return this;
         }
 
-        public UserDtoBuilder setEnabled(Boolean enabled) {
+        public Builder withEnabled(Boolean enabled) {
             this.enabled = enabled;
             return this;
         }
 
-        public UserDtoBuilder setIsBlocked(Boolean isBlocked) {
+        public Builder withIsBlocked(Boolean isBlocked) {
             this.isBlocked = isBlocked;
             return this;
         }
 
-        public UserDtoBuilder setBlockedUsers(List<UserDto> blockedUsers) {
+        public Builder withBlockedUsers(List<UserDto> blockedUsers) {
             this.blockedUsers = blockedUsers;
             return this;
         }
 
-        public UserDtoBuilder setCountry(CountryDto country) {
+        public Builder withCountry(CountryDto country) {
             this.country = country;
             return this;
         }
 
-        public UserDtoBuilder setArea(AreaDto area) {
+        public Builder withArea(AreaDto area) {
             this.area = area;
             return this;
         }
 
-        public UserDtoBuilder setIsPremium(Boolean isPremium) {
-            this.isPremium = isPremium;
-            return this;
-        }
-
-        public UserDto createJwtUser() {
-            return new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, country, area, isPremium);
+        public UserDto build() {
+            UserDto userDto = new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, country, area);
+            return userDto;
         }
     }
 }

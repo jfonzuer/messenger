@@ -5,5 +5,5 @@ import {PasswordConfirmation} from "./passwordConfirmation";
  */
 
 export class Register {
-  constructor(public user:User, public passwordConfirmation:PasswordConfirmation) {}
+  constructor(public user:User, public password:string) {}
 }

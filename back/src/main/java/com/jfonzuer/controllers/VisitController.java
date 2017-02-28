@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -25,8 +26,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/visits")
-@CrossOrigin(origins = "*", maxAge = 3600)
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class VisitController {
 
     private final UserRepository userRepository;
@@ -41,11 +41,17 @@ public class VisitController {
         this.visitRepository = visitRepository;
     }
 
+    /**
+     * Endpoint permettant de renvoyer la liste des visites reçues par un utilisateur
+     * @param request
+     * @param p
+     * @return
+     */
+    @PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.GET)
     public Page<VisitDto> getAllVisitsByUser(HttpServletRequest request, Pageable p) {
 
         User visited = userService.getUserFromToken(request);
-
         Page<Visit> visits = this.visitRepository.findAllByVisited(visited, p);
 
         // on récupére les visits unseen et on les set à seen avant de les save
@@ -54,6 +60,11 @@ public class VisitController {
         return visits.map(VisitMapper::toDto);
     }
 
+    /**
+     * Endpoint permettant de renvoyer le nombre de visites reçues
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/number", method = RequestMethod.GET)
     public Long getUnseenVisits(HttpServletRequest request) {
         User visited = userService.getUserFromToken(request);

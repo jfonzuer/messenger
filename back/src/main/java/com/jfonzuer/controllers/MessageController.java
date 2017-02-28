@@ -7,10 +7,7 @@ import com.jfonzuer.entities.*;
 import com.jfonzuer.repository.ConversationRepository;
 import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.service.ConversationService;
-import com.jfonzuer.service.MailService;
-import com.jfonzuer.service.MessageService;
-import com.jfonzuer.service.UserService;
+import com.jfonzuer.service.*;
 import com.jfonzuer.storage.StorageService;
 import com.jfonzuer.utils.MessengerUtils;
 import com.jfonzuer.validator.MediaValidator;
@@ -41,8 +38,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/messages")
-//@PreAuthorize("hasRole('USER')")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@PreAuthorize("hasRole('PREMIUM')")
 public class MessageController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageController.class);
@@ -55,13 +51,13 @@ public class MessageController {
     private final UserService userService;
     private final MediaValidator mediaValidator;
     private final StorageService storageService;
-    private final SimpMessagingTemplate template;
+    private final WebSocketService webSocketService;
 
     @Value("${upload.conversation.directory}")
     private String conversationLocation;
 
     @Autowired
-    public MessageController(MessageRepository messageRepository, MessageService messageService, UserRepository userRepository, ConversationService conversationService, MailService mailService, UserService userService, MediaValidator mediaValidator, StorageService storageService, SimpMessagingTemplate template) {
+    public MessageController(MessageRepository messageRepository, MessageService messageService, UserRepository userRepository, ConversationService conversationService, MailService mailService, UserService userService, MediaValidator mediaValidator, StorageService storageService, WebSocketService webSocketService) {
         this.messageRepository = messageRepository;
         this.messageService = messageService;
         this.userRepository = userRepository;
@@ -70,7 +66,7 @@ public class MessageController {
         this.userService = userService;
         this.mediaValidator = mediaValidator;
         this.storageService = storageService;
-        this.template = template;
+        this.webSocketService = webSocketService;
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
@@ -99,9 +95,7 @@ public class MessageController {
 
         MessageDto dto = new MessageDto.MessageDtoBuilder().setContent("Image").createMessageDto();
         conversationService.updateConversation(conversation, sender, dto);
-
-        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
-        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
+        this.webSocketService.sendToConversationsUsers(conversation);
 
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.IMAGE);

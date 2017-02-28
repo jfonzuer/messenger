@@ -31,9 +31,10 @@ import {AlertsComponent} from "./user-profile/alerts/alerts.component";
 import {MessengerService} from "../../services/messenger.service";
 import {BlockUserComponent} from "./user-profile/block-user/block-user.component";
 import {AdminComponent} from "./admin/admin.component";
-import {AdminGuardService} from "../../services/admin-guard.service";
+import {AdminGuardService} from "../../services/guard/admin-guard.service";
 import {AdminService} from "../../services/admin.service";
-import {WebsocketComponent} from "./websocket/websocket.component";
+import {PremiumComponent} from "./premium/premium.component";
+import {PremiumGuardService} from "../../services/guard/premium-guard.service";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -66,7 +67,7 @@ import {WebsocketComponent} from "./websocket/websocket.component";
     DesactivateComponent,
     BlockUserComponent,
     AdminComponent,
-    WebsocketComponent
+    PremiumComponent
   ],
   providers: [
     ConversationService,
@@ -78,7 +79,8 @@ import {WebsocketComponent} from "./websocket/websocket.component";
     CurrentUserResolve,
     MessengerService,
     AdminGuardService,
-    AdminService
+    AdminService,
+    PremiumGuardService
   ],
 })
 export class ApplicationModule { }

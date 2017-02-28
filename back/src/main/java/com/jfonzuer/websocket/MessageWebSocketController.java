@@ -9,10 +9,7 @@ import com.jfonzuer.entities.Message;
 import com.jfonzuer.entities.MessageType;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.service.ConversationService;
-import com.jfonzuer.service.MailService;
-import com.jfonzuer.service.MessageService;
-import com.jfonzuer.service.UserService;
+import com.jfonzuer.service.*;
 import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,23 +34,24 @@ import java.util.Locale;
 @Controller
 public class MessageWebSocketController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final ConversationService conversationService;
+    private final UserRepository userRepository;
+    private final MessageService messageService;
+    private final MailService mailService;
+    private final WebSocketService webSocketService;
+    private final SimpMessagingTemplate template;
 
     @Autowired
-    private ConversationService conversationService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private MailService mailService;
-
-    @Autowired
-    private SimpMessagingTemplate template;
+    public MessageWebSocketController(UserService userService, ConversationService conversationService, UserRepository userRepository, MessageService messageService, MailService mailService, WebSocketService webSocketService, SimpMessagingTemplate template) {
+        this.userService = userService;
+        this.conversationService = conversationService;
+        this.userRepository = userRepository;
+        this.messageService = messageService;
+        this.mailService = mailService;
+        this.webSocketService = webSocketService;
+        this.template = template;
+    }
 
     @Transactional
     @MessageMapping("/ws-conversation-endpoint/{id}")
@@ -62,9 +60,9 @@ public class MessageWebSocketController {
         User sender = (User) headerAccessor.getSessionAttributes().get("connectedUser");
         Locale locale = (Locale) headerAccessor.getSessionAttributes().get("locale");
 
+        // TODO : refactor endpoint
         Conversation c = conversationService.returnConversationOrThrowException(dto.getConversation().getId());
         User target = MessengerUtils.getOtherUser(c, sender);
-
 
         // si user est bloqué on renvoit l'erreur à la session correspondante dans le channel queue/errors
         System.err.println("target.getBlockedUsers().contains(sender) = " + target.getBlockedUsers().contains(sender));
@@ -80,10 +78,7 @@ public class MessageWebSocketController {
         userRepository.save(target);
 
         Conversation conversation = conversationService.updateConversation(c, sender, dto);
-
-        // on renvoit la conversation aux deux utilisateurs qui ont souscrit à la websocket.
-        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
-        this.template.convertAndSend("/ws-user-broker/conversations/"+ conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
+        this.webSocketService.sendToConversationsUsers(conversation);
 
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.TEXT);

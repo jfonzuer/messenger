@@ -12,6 +12,7 @@ import com.jfonzuer.repository.TokenRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.UserRoleRepository;
 import com.jfonzuer.service.MailService;
+import com.jfonzuer.service.UserService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,13 +41,10 @@ import java.util.stream.Stream;
  */
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class RegisterController {
 
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
-
     @Autowired
-    private UserRoleRepository userRoleRepository;
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -54,42 +52,27 @@ public class RegisterController {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @Autowired
-    private ImageRepository imageRepository;
 
     @Autowired
     private MailService mailService;
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public void add(@RequestBody RegisterDto register) {
+
         // TODO : validation via annotation and exception handling
         System.out.println("register = " + register);
 
-        if (!register.getPasswordConfirmation().getPassword().equals(register.getPasswordConfirmation().getConfirmation())) {
-            throw new IllegalArgumentException();
-        }
         if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
             throw new IllegalArgumentException("L'adresse email est déjà utilisée");
         }
-
-        User user = UserMapper.fromDto(register.getUser());
-        user.setPassword(encoder.encode(register.getPasswordConfirmation().getPassword()));
-        user.setEnabled(true);
-        user.setBlocked(false);
-        user.setLastPasswordResetDate(new Date());
-        user.setReportedAsFake(0L);
-        user.setLastActivityDate(LocalDate.now());
-        user.setLastReportDate(LocalDate.now().minusDays(1));
-        user.setNotifyVisit(true);
-        user.setNotifyMessage(true);
-
-        user = userRepository.save(user);
-        userRoleRepository.save(new UserRole(user, "ROLE_USER"));
-
-        // creation d'une image par défaut
-        Stream.of(new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(user).createImage()).forEach(i -> imageRepository.save(i));
+        userService.createUser(register);
     }
 
+    /**
+     * endpoint permettant l'envoi d'un mail et la création d'un token afin que celui-ci puisse ensuite changer son mdp
+     * @param request
+     * @param email
+     */
     @RequestMapping(value = "password/reset/mail", method = RequestMethod.POST)
     public void resetPassword(HttpServletRequest request, @RequestBody String email) {
         User user = userRepository.findByEmail(email);
@@ -107,24 +90,12 @@ public class RegisterController {
         mailService.sendAsync(() -> mailService.sendResetTokenEmail(request.getLocale(), token, user));
     }
 
+    /**
+     * Méthode utilisée lors du reset de password lorsque l'utilisateur a oublié son mdp
+     * @param resetPasswordDto
+     */
     @RequestMapping(value = "/password/reset", method = RequestMethod.POST)
     public void resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
-
-        User user = userRepository.findOne(resetPasswordDto.getUserId());
-        System.out.println("userId = " + user.getId());
-        Token token = tokenRepository.getByTokenAndUser(resetPasswordDto.getToken(), user);
-
-        if (token == null) {
-            throw new IllegalArgumentException("Aucun token ne correspond aux paramètres");
-        }
-
-        if (!resetPasswordDto.getPasswordConfirmation().getPassword().equals(resetPasswordDto.getPasswordConfirmation().getConfirmation())) {
-            throw new IllegalArgumentException("Les mots de passes doivent être les mêmes.");
-        }
-        if (!token.getExpiryDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Le token a expiré");
-        }
-        user.setPassword(encoder.encode(resetPasswordDto.getPasswordConfirmation().getPassword()));
-        userRepository.save(user);
+        userService.resetPassword(resetPasswordDto);
     }
 }

@@ -1,11 +1,10 @@
-import {Component, OnInit, Input, EventEmitter, Output, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, Input, ViewContainerRef} from "@angular/core";
 import {User} from "../../../../model/user";
-import {Localization} from "../../../../model/localization";
-import {Fetish} from "../../../../model/fetish";
 import {UserService} from "../../../../services/user.service";
 import {FetishService} from "../../../../services/fetish.service";
 import {SharedService} from "../../../../services/shared.service";
 import {ToastsManager} from "ng2-toastr";
+import {Constant} from "../../../../model/response/constants";
 
 @Component({
   selector: 'app-profile',
@@ -15,8 +14,7 @@ import {ToastsManager} from "ng2-toastr";
 export class ProfileComponent implements OnInit {
 
   @Input() user:User;
-  @Input() localizations:Localization[];
-  @Input() fetishes: Fetish[];
+  @Input() constants:Constant;
   @Input() show:boolean = false;
 
   selectedFetishId:number[] = [];

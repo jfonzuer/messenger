@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthenticationController {
 
     @Value("${jwt.header}")

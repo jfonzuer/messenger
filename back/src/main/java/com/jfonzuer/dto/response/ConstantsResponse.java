@@ -4,8 +4,6 @@ import com.jfonzuer.dto.AreaDto;
 import com.jfonzuer.dto.CountryDto;
 import com.jfonzuer.dto.FetishDto;
 import com.jfonzuer.dto.UserTypeDto;
-import com.jfonzuer.entities.Area;
-import com.jfonzuer.entities.Fetish;
 
 import java.util.List;
 
@@ -15,10 +13,10 @@ import java.util.List;
 public class ConstantsResponse {
     private List<FetishDto> fetishes;
     private List<UserTypeDto> userTypes;
-    private List<CountryDto> countryDtos;
+    private List<CountryDto> countries;
     private List<AreaDto> franceAreas;
     private List<AreaDto> belgiumAreas;
-    private List<AreaDto> luxembourgAreas;
+    private List<AreaDto> luxemburgAreas;
     private List<AreaDto> swissAreas;
 
     public ConstantsResponse() {
@@ -40,12 +38,12 @@ public class ConstantsResponse {
         this.userTypes = userTypes;
     }
 
-    public List<CountryDto> getCountryDtos() {
-        return countryDtos;
+    public List<CountryDto> getCountries() {
+        return countries;
     }
 
-    public void setCountryDtos(List<CountryDto> countryDtos) {
-        this.countryDtos = countryDtos;
+    public void setCountries(List<CountryDto> countries) {
+        this.countries = countries;
     }
 
     public List<AreaDto> getFranceAreas() {
@@ -64,12 +62,12 @@ public class ConstantsResponse {
         this.belgiumAreas = belgiumAreas;
     }
 
-    public List<AreaDto> getLuxembourgAreas() {
-        return luxembourgAreas;
+    public List<AreaDto> getLuxemburgAreas() {
+        return luxemburgAreas;
     }
 
-    public void setLuxembourgAreas(List<AreaDto> luxembourgAreas) {
-        this.luxembourgAreas = luxembourgAreas;
+    public void setLuxemburgAreas(List<AreaDto> luxemburgAreas) {
+        this.luxemburgAreas = luxemburgAreas;
     }
 
     public List<AreaDto> getSwissAreas() {
