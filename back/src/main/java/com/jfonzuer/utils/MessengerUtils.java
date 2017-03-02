@@ -58,7 +58,7 @@ public class MessengerUtils {
     }
 
     public static UserType getOtherType(User user) {
-        return user.getType().getName().equals(DOMINA) ? new UserType.UserTypeBuilder().setId(SUBMISSIVE_ID).createUserType() : new UserType.UserTypeBuilder().setId(DOMINA_ID).createUserType();
+        return user.getType().getName().equals(DOMINA) ? UserType.Builder.anUserType().withId(SUBMISSIVE_ID).build() : UserType.Builder.anUserType().withId(DOMINA_ID).build();
     }
 
     public static void setConversationUnread(Conversation c, User u) {

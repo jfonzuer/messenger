@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^2.4.4",
     "@angular/router": "^3.4.4",
     "angular2-cool-storage": "^1.2.2",
+    "angular2-modal": "^2.0.3",
     "core-js": "^2.4.1",
     "flag-icon-css": "^2.8.0",
     "moment": "^2.15.2",

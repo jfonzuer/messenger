@@ -11,9 +11,25 @@ export class DatetimeService {
 
   constructor() {}
 
-  formatLastActivtyDate(user:User) {
-    console.log(user.lastActivityDate);
-   user.lastActivityDate = moment(user.lastActivityDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
+  formatLastActivty(user:User) {
+    let now = moment();
+    console.log(user);
+    console.log(user.lastActivityDatetime);
+    let lastActivityDatetime = moment(user.lastActivityDatetime);
+    var duration = moment.duration(now.diff(lastActivityDatetime));
+    var days = duration.asDays();
+    var hours = duration.asHours();
+    var mins = duration.asMinutes();
+    console.log("days", days);
+    console.log("hours", hours);
+    console.log("mins", mins);
+
+    if (mins < 30 ) {
+      user.lastActivity = "online"
+    } else {
+      user.lastActivity = moment(user.lastActivityDatetime).fromNow();
+    }
+    //user.lastActivityDate = moment(user.lastActivityDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
   }
 
   formatAge(user:User) {
@@ -51,7 +67,7 @@ export class DatetimeService {
   }
 
   formatMessage(message:Message) {
-      message.sendSince = moment(message.sendDate).fromNow();
+    message.sendSince = moment(message.sendDate).fromNow();
   }
 
   formatBirthDate(user:User) {

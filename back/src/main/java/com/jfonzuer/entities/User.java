@@ -5,7 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -61,7 +63,7 @@ public class User implements UserDetails, Serializable {
     private Set<UserRole> userRoles = new HashSet<>(0);
 
     @Column(nullable = false)
-    private LocalDate lastActivityDate;
+    private LocalDateTime lastActivityDatetime;
 
     @Column(nullable = false)
     private Long reportedAsFake;
@@ -81,6 +83,9 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private Boolean isBlocked;
 
+    @Column(nullable = false)
+    private Boolean activated;
+
     @ManyToOne
     private User lastVisitedBy;
 
@@ -90,11 +95,16 @@ public class User implements UserDetails, Serializable {
     @ManyToMany
     private Set<User> blockedUsers;
 
+    @Column
+    private String subscriptionId;
+
+    @Column
+    private Timestamp lastSubscriptionCheck;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDate lastActivityDate, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers) {
-        this.id = id;
+    public User(String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDateTime lastActivityDatetime, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, Boolean activated, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers, String subscriptionId, Timestamp lastSubscriptionCheck) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -108,16 +118,19 @@ public class User implements UserDetails, Serializable {
         this.images = images;
         this.type = type;
         this.userRoles = userRoles;
-        this.lastActivityDate = lastActivityDate;
+        this.lastActivityDatetime = lastActivityDatetime;
         this.reportedAsFake = reportedAsFake;
         this.lastReportDate = lastReportDate;
         this.authorities = authorities;
         this.notifyMessage = notifyMessage;
         this.notifyVisit = notifyVisit;
         this.isBlocked = isBlocked;
+        this.activated = activated;
         this.lastVisitedBy = lastVisitedBy;
         this.lastMessageBy = lastMessageBy;
         this.blockedUsers = blockedUsers;
+        this.subscriptionId = subscriptionId;
+        this.lastSubscriptionCheck = lastSubscriptionCheck;
     }
 
     @Override
@@ -243,12 +256,12 @@ public class User implements UserDetails, Serializable {
         this.type = type;
     }
 
-    public LocalDate getLastActivityDate() {
-        return lastActivityDate;
+    public LocalDateTime getLastActivityDatetime() {
+        return lastActivityDatetime;
     }
 
-    public void setLastActivityDate(LocalDate lastActivityDate) {
-        this.lastActivityDate = lastActivityDate;
+    public void setLastActivityDatetime(LocalDateTime lastActivityDatetime) {
+        this.lastActivityDatetime = lastActivityDatetime;
     }
 
     public Long getReportedAsFake() {
@@ -331,6 +344,30 @@ public class User implements UserDetails, Serializable {
         this.area = area;
     }
 
+    public Boolean getActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
+
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
+
+    public Timestamp getLastSubscriptionCheck() {
+        return lastSubscriptionCheck;
+    }
+
+    public void setLastSubscriptionCheck(Timestamp lastSubscriptionCheck) {
+        this.lastSubscriptionCheck = lastSubscriptionCheck;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -351,12 +388,6 @@ public class User implements UserDetails, Serializable {
         if (obj == this) return true;
         if (!(obj instanceof User)) return false;
         User user = (User) obj;
-        /*
-        System.out.println("EQUALS user = " + user);
-        System.out.println("EQUALS user.getId() = " + user.getId());
-        System.out.println("EQUALS this.getId() = " + this.getId());
-        System.out.println(user.getId() == this.getId());
-        */
         if (user.getId() == this.getId()) return true;
         return false;
     }
@@ -377,16 +408,19 @@ public class User implements UserDetails, Serializable {
         private Collection<Image> images;
         private UserType type;
         private Set<UserRole> userRoles = new HashSet<>(0);
-        private LocalDate lastActivityDate;
+        private LocalDateTime lastActivityDatetime;
         private Long reportedAsFake;
         private LocalDate lastReportDate;
         private Collection<? extends GrantedAuthority> authorities;
         private Boolean notifyMessage;
         private Boolean notifyVisit;
         private Boolean isBlocked;
+        private Boolean activated;
         private User lastVisitedBy;
         private User lastMessageBy;
         private Set<User> blockedUsers;
+        private String subscriptionId;
+        private Timestamp lastSubscriptionCheck;
 
         private Builder() {
         }
@@ -465,8 +499,8 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
-        public Builder withLastActivityDate(LocalDate lastActivityDate) {
-            this.lastActivityDate = lastActivityDate;
+        public Builder withLastActivityDatetime(LocalDateTime lastActivityDatetime) {
+            this.lastActivityDatetime = lastActivityDatetime;
             return this;
         }
 
@@ -500,6 +534,11 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
+        public Builder withActivated(Boolean activated) {
+            this.activated = activated;
+            return this;
+        }
+
         public Builder withLastVisitedBy(User lastVisitedBy) {
             this.lastVisitedBy = lastVisitedBy;
             return this;
@@ -512,6 +551,16 @@ public class User implements UserDetails, Serializable {
 
         public Builder withBlockedUsers(Set<User> blockedUsers) {
             this.blockedUsers = blockedUsers;
+            return this;
+        }
+
+        public Builder withSubscriptionId(String subscriptionId) {
+            this.subscriptionId = subscriptionId;
+            return this;
+        }
+
+        public Builder withLastSubscriptionCheck(Timestamp lastSubscriptionCheck) {
+            this.lastSubscriptionCheck = lastSubscriptionCheck;
             return this;
         }
 
@@ -532,15 +581,18 @@ public class User implements UserDetails, Serializable {
             user.setImages(images);
             user.setType(type);
             user.setUserRoles(userRoles);
-            user.setLastActivityDate(lastActivityDate);
+            user.setLastActivityDatetime(lastActivityDatetime);
             user.setReportedAsFake(reportedAsFake);
             user.setLastReportDate(lastReportDate);
             user.setAuthorities(authorities);
             user.setNotifyMessage(notifyMessage);
             user.setNotifyVisit(notifyVisit);
+            user.setActivated(activated);
             user.setLastVisitedBy(lastVisitedBy);
             user.setLastMessageBy(lastMessageBy);
             user.setBlockedUsers(blockedUsers);
+            user.setSubscriptionId(subscriptionId);
+            user.setLastSubscriptionCheck(lastSubscriptionCheck);
             return user;
         }
     }

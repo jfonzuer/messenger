@@ -6,7 +6,9 @@ import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.Visit;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.VisitRepository;
+import com.jfonzuer.service.SubscriptionService;
 import com.jfonzuer.service.UserService;
+import com.jfonzuer.service.VisitService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,17 +31,19 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasRole('USER')")
 public class VisitController {
 
-    private final UserRepository userRepository;
-    private final UserService userService;
-    private final VisitRepository visitRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(VisitController.class);
 
     @Autowired
-    public VisitController(UserRepository userRepository, UserService userService, VisitRepository visitRepository) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.visitRepository = visitRepository;
-    }
+    private UserService userService;
+
+    @Autowired
+    private VisitRepository visitRepository;
+
+    @Autowired
+    private VisitService visitService;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     /**
      * Endpoint permettant de renvoyer la liste des visites reçues par un utilisateur
@@ -50,14 +54,9 @@ public class VisitController {
     @PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.GET)
     public Page<VisitDto> getAllVisitsByUser(HttpServletRequest request, Pageable p) {
-
         User visited = userService.getUserFromToken(request);
-        Page<Visit> visits = this.visitRepository.findAllByVisited(visited, p);
-
-        // on récupére les visits unseen et on les set à seen avant de les save
-        List<Visit> unseenVisits = this.visitRepository.findAllByVisitedAndIsSeenByVisitedOrderByIdDesc(visited, false);
-        unseenVisits.stream().forEach(v -> { v.setSeenByVisited(true); this.visitRepository.save(v); });
-        return visits.map(VisitMapper::toDto);
+        subscriptionService.checkSubscriptionAsync(visited);
+        return visitService.getAll(visited, p);
     }
 
     /**

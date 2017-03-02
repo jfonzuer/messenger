@@ -9,6 +9,9 @@ import {NgModule} from "@angular/core";
 import {UnauthFooterComponent} from "./unauth-footer/unauth-footer.component";
 import {DesactivateComponent} from "./desactivate/desactivate.component";
 import {ConstantsResolve} from "../../services/resolve/constants-resolve.service";
+import {UnauthHomeComponent} from "./unauth-home/unauth-home.component";
+import {SendActivationMailComponent} from "./send-activation-mail/send-activation-mail.component";
+import {HomeComponent} from "../application/home/home.component";
 /**
  * Created by pgmatz on 29/10/16.
  */
@@ -18,12 +21,14 @@ import {ConstantsResolve} from "../../services/resolve/constants-resolve.service
   imports: [RouterModule.forChild([
     {
       path: 'unauth', children: [
-      { path: '', redirectTo: 'register', pathMatch: 'full'},
-      { path: 'login', component: LoginComponent },
+      { path: '', redirectTo: 'home', pathMatch: 'full'},
+      { path: 'home', component: UnauthHomeComponent },
+      { path: 'home/:token', component: UnauthHomeComponent },
       { path: 'register', component: RegisterComponent, resolve: { constants:ConstantsResolve }},
       { path: 'password/forgotten', component: PasswordForgotComponent },
       { path: 'password/reset/:id/:token', component: PasswordResetComponent },
       { path: 'desactivate', component: DesactivateComponent },
+      { path: 'activate', component: SendActivationMailComponent },
       { path: '', component: UnauthNavbarComponent, outlet: 'header'},
       { path: '', component: UnauthHeadingComponent, outlet: 'banner'},
       { path: '', component: UnauthFooterComponent, outlet: 'footer'}

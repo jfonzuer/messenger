@@ -49,22 +49,33 @@ public class UserType {
                 '}';
     }
 
-    public static class UserTypeBuilder {
-        private Long id;
-        private String label;
 
-        public UserTypeBuilder setId(Long id) {
+    public static final class Builder {
+        private Long id;
+        private String name;
+
+        private Builder() {
+        }
+
+        public static Builder anUserType() {
+            return new Builder();
+        }
+
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public UserTypeBuilder setLabel(String label) {
-            this.label = label;
+        public Builder withName(String name) {
+            this.name = name;
             return this;
         }
 
-        public UserType createUserType() {
-            return new UserType(id, label);
+        public UserType build() {
+            UserType userType = new UserType();
+            userType.setId(id);
+            userType.setName(name);
+            return userType;
         }
     }
 }

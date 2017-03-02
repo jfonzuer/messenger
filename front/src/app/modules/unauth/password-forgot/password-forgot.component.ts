@@ -24,11 +24,9 @@ export class PasswordForgotComponent implements OnInit {
       this.toastr.success("Envoi du mail ...")
       this.authenticationService.resetPasswordByEmail(this.email).then(() => {
         this.toastr.success("Un email vous a été envoyé pour réinitialiser le mot de passe, vous allez être redirigé vers le login")
-        setTimeout(this.router.navigate(['/unauth/login']), 2000);
+        setTimeout(this.router.navigate(['/unauth/home']), 2000);
       })
         .catch(error => this.toastr.error(error));
     }
   }
-
-
 }

@@ -41,9 +41,10 @@ public class MessageWebSocketController {
     private final MailService mailService;
     private final WebSocketService webSocketService;
     private final SimpMessagingTemplate template;
+    private final AsyncService asyncService;
 
     @Autowired
-    public MessageWebSocketController(UserService userService, ConversationService conversationService, UserRepository userRepository, MessageService messageService, MailService mailService, WebSocketService webSocketService, SimpMessagingTemplate template) {
+    public MessageWebSocketController(UserService userService, ConversationService conversationService, UserRepository userRepository, MessageService messageService, MailService mailService, WebSocketService webSocketService, SimpMessagingTemplate template, AsyncService asyncService) {
         this.userService = userService;
         this.conversationService = conversationService;
         this.userRepository = userRepository;
@@ -51,6 +52,7 @@ public class MessageWebSocketController {
         this.mailService = mailService;
         this.webSocketService = webSocketService;
         this.template = template;
+        this.asyncService = asyncService;
     }
 
     @Transactional
@@ -86,7 +88,7 @@ public class MessageWebSocketController {
 
         // send email if sender is not last sender
         if (!target.getLastMessageBy().equals(sender)) {
-            mailService.sendAsync(() -> mailService.sendMessageNotification(locale, MessengerUtils.getOtherUser(c, sender), sender));
+            asyncService.executeAsync(() -> mailService.sendMessageNotification(locale, MessengerUtils.getOtherUser(c, sender), sender));
         }
         System.out.println("message = " + message);
         this.template.convertAndSend("/ws-conversation-broker/conversation/" + id, MessageMapper.toDto(message));

@@ -18,17 +18,37 @@ export class AuthenticationService {
   }
 
   post(authentication:Authentication) {
-
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-
     return this.http.post(this.baseUrl + 'login', authentication, headers)
       .toPromise()
       .then(response => {
-        this.rs.handleResponse(response);
         return response.json();
       })
-      .catch(this.rs.handleError);
+  }
+
+  sendActivationEmail(email:string) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.baseUrl + 'resend/activation/email', email, headers)
+      .toPromise()
+      .then(response => {
+        console.log(response);
+        return response;
+      })
+  }
+
+  sendActivationToken(token:string) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.baseUrl + 'validate/account', token, headers)
+      .toPromise()
+      .then(response => {
+        this.rs.handleResponse(response);
+        return response;
+      })
   }
 
   getAuthenticatedUser() {

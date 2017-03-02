@@ -11,6 +11,13 @@ import {SharedModule} from "../shared/shared.module";
 import {UnauthRoutingModule} from "./unauth-routing.module";
 import {UnauthFooterComponent} from "./unauth-footer/unauth-footer.component";
 import {DesactivateComponent} from "./desactivate/desactivate.component";
+import {BootstrapModalModule} from "angular2-modal/plugins/bootstrap";
+import {ModalModule} from "angular2-modal";
+import {TermsComponent} from "./terms/terms.component";
+import {UnauthHomeComponent} from "./unauth-home/unauth-home.component";
+import {UnauthUserService} from "../../services/unauth-user.service";
+import {SendActivationMailComponent} from "./send-activation-mail/send-activation-mail.component";
+
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -19,6 +26,8 @@ import {DesactivateComponent} from "./desactivate/desactivate.component";
   imports: [
     SharedModule,
     UnauthRoutingModule,
+    ModalModule.forRoot(),
+    BootstrapModalModule
   ],
   declarations: [
     LoginComponent,
@@ -28,8 +37,14 @@ import {DesactivateComponent} from "./desactivate/desactivate.component";
     UnauthHeadingComponent,
     UnauthNavbarComponent,
     UnauthFooterComponent,
-    DesactivateComponent
+    DesactivateComponent,
+    TermsComponent,
+    UnauthHomeComponent,
+    SendActivationMailComponent
   ],
+  providers: [
+    UnauthUserService
+  ]
 })
 export class UnauthModule { }
 

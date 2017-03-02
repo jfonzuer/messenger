@@ -3,11 +3,14 @@ package com.jfonzuer.controllers;
 import com.jfonzuer.dto.AuthenticationRequestDto;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
+import com.jfonzuer.exception.AccountNotActivatedException;
 import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.dto.UserDto;
 import com.jfonzuer.dto.JwtAuthenticationResponse;
+import com.jfonzuer.service.AsyncService;
+import com.jfonzuer.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 public class AuthenticationController {
@@ -38,6 +42,9 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SubscriptionService subscriptionService;
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequest, Device device) throws AuthenticationException {
 
@@ -48,19 +55,25 @@ public class AuthenticationController {
                         authenticationRequest.getPassword()
                 )
         );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         User user = userRepository.findByEmail(authenticationRequest.getEmail());
+
+        // update last activity date
+        user.setLastActivityDatetime(LocalDateTime.now());
+        // set active
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        //subscriptionService.checkSubscription(user);
+        subscriptionService.checkSubscriptionAsync(user);
 
         if (user.getBlocked()) {
             throw new UnauthorizedException("Votre compte a été suspendu, contactez l'administration de l'application : contact@dominapp.com");
         }
-
-        // update last activity date
-        user.setLastActivityDate(LocalDate.now());
-        // set active
-        user.setEnabled(true);
-        userRepository.save(user);
+        if (!user.getActivated()) {
+            throw new AccountNotActivatedException("Vous n'avez pas encore activé votre compte");
+        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Reload password post-security so we can generate token
         UserDto userDto = UserMapper.toDto(user);

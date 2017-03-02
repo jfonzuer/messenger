@@ -1,0 +1,8 @@
+<h2 *ngIf="dominas && dominas.length > 0">Les dernières Dominatrices inscrites :</h2>
+<hr>
+<div class="row" *ngIf="dominas && dominas.length > 0">
+  <div class="col-sm-3" *ngFor="let user of dominas">
+    <img src="{{ uploadImageUrl }}{{ user.images[0].url }}" class="small-image img-circle center-block">
+    <h3 class="text-center">{{ user.username }}</h3>
+  </div>
+</div>

@@ -16,7 +16,7 @@ public class UserDto {
     private List<String> authorities;
     private List<ImageDto> images;
     private UserTypeDto userType;
-    private String lastActivityDate;
+    private String lastActivityDatetime;
     private Long reportedAsFake;
     private Boolean notifyMessage;
     private Boolean notifyVisit;
@@ -29,7 +29,7 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDate, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, CountryDto country, AreaDto area) {
+    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDatetime, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, CountryDto country, AreaDto area) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -39,7 +39,7 @@ public class UserDto {
         this.authorities = authorities;
         this.images = images;
         this.userType = userType;
-        this.lastActivityDate = lastActivityDate;
+        this.lastActivityDatetime = lastActivityDatetime;
         this.reportedAsFake = reportedAsFake;
         this.notifyMessage = notifyMessage;
         this.notifyVisit = notifyVisit;
@@ -83,8 +83,8 @@ public class UserDto {
         return userType;
     }
 
-    public String getLastActivityDate() {
-        return lastActivityDate;
+    public String getLastActivityDatetime() {
+        return lastActivityDatetime;
     }
 
     public Long getReportedAsFake() {
@@ -147,7 +147,7 @@ public class UserDto {
         private List<String> authorities;
         private List<ImageDto> images;
         private UserTypeDto userType;
-        private String lastActivityDate;
+        private String lastActivityDatetime;
         private Long reportedAsFake;
         private Boolean notifyMessage;
         private Boolean notifyVisit;
@@ -209,8 +209,8 @@ public class UserDto {
             return this;
         }
 
-        public Builder withLastActivityDate(String lastActivityDate) {
-            this.lastActivityDate = lastActivityDate;
+        public Builder withLastActivityDatetime(String lastActivityDatetime) {
+            this.lastActivityDatetime = lastActivityDatetime;
             return this;
         }
 
@@ -255,7 +255,7 @@ public class UserDto {
         }
 
         public UserDto build() {
-            UserDto userDto = new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDate, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, country, area);
+            UserDto userDto = new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDatetime, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, country, area);
             return userDto;
         }
     }

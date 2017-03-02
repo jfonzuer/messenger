@@ -15,9 +15,9 @@ public class UserTypeMapper {
     }
 
     public static UserType fromDto(UserTypeDto dto) {
-        return dto != null ? new UserType.UserTypeBuilder()
-                .setId(dto.getId())
-                .setLabel(dto.getName())
-                .createUserType() : null;
+        return dto != null ? UserType.Builder.anUserType()
+                .withId(dto.getId())
+                .withName(dto.getName())
+                .build() : null;
     }
 }

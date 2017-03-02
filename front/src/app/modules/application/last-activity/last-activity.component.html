@@ -1,0 +1,8 @@
+<span [ngSwitch]="lastActivity">
+  <ng-container *ngSwitchCase="'online'">
+    <strong>En ligne <span class="glyphicon glyphicon-fire"></span></strong>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <strong>Dernière connexion : <span>{{ lastActivity }}</span></strong>
+  </ng-container>
+</span>

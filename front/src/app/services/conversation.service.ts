@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {Router} from "@angular/router";
-import {Http, Response} from "@angular/http";
+import {Http} from "@angular/http";
 import {UserMessage} from "../model/userMessage";
 import {Conversation} from "../model/conversation";
 import {RequestService} from "./request.service";

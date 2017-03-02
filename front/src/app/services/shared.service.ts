@@ -37,7 +37,7 @@ export class SharedService {
   redirectLogin() {
     if (!this.isConnected()) {
       //this.router.navigateByUrl('unauth');
-      this.router.navigate(['/unauth/login']);
+      this.router.navigate(['/unauth/home']);
     }
   }
 
@@ -65,6 +65,12 @@ export class SharedService {
     let user:User = <User> this.getCurrentUser();
     console.debug("isPremium ", user.authorities.find(a => a == "ROLE_PREMIUM") != null)
     return user.authorities.find(a => a == "ROLE_PREMIUM") != null;
+  }
+
+  isUser() {
+    let user:User = <User> this.getCurrentUser();
+    console.debug("isUser ", user.authorities.find(a => a == "ROLE_USER") != null)
+    return user.authorities.find(a => a == "ROLE_USER") != null;
   }
 
   getLocalizations() {

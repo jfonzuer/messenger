@@ -57,15 +57,21 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
+    public Message saveImage(MessageDto dto, Conversation conversation, User user) {
+        Message message = MessageMapper.fromDto(dto);
+        message.setType(MessageType.IMAGE);
+        message.setConversation(conversation);
+        message.setSource(user);
+        return saveMessage(message, conversation.getUserOne(), conversation.getUserTwo());
+    }
+
     private void deleteOrUpdate(Message message) {
         if (MessengerUtils.isMessageDeletedByBothUsers(message)) {
             messageRepository.delete(message);
             if (message.getType().equals(MessageType.IMAGE)) {
                 storageService.delete(message.getUrl());
             }
-
-        }
-        else {
+        } else {
             messageRepository.save(message);
         }
     }

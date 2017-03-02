@@ -13,4 +13,5 @@ import java.util.List;
 @RepositoryRestResource
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     public List<String> findRoleByUser(User user);
+    public List<UserRole> deleteByRoleAndUser(String role, User user);
 }

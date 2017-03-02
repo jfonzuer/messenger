@@ -6,25 +6,19 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" [routerLink]="['/app/home']">App</a>
+      <a class="unauth-navbar-brand navbar-brand" [routerLink]="['/app/home']"><h3 style="font-weight: bold">Dominapp    </h3></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a [routerLink]="['/app/conversation']">Accueil</a></li>
-        <li><a [routerLink]="['/app/admin']"><span class="glyphicon glyphicon-cog"></span> Administration</a></li>
-        <li><a [routerLink]="['/app/conversation']" routerLinkActive="active"><span class="glyphicon glyphicon-envelope"></span> Messagerie  <span class="badge" *ngIf="unreadConversations != 0">{{ unreadConversations }}</span></a></li>
-        <li><a [routerLink]="['/app/visits']" routerLinkActive="active"> <span class="glyphicon glyphicon-eye-open"></span> Visites  <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
-        <li><a [routerLink]="['/app/search']" routerLinkActive="active"> <span class="glyphicon glyphicon-search"></span> Rechercher</a></li>
+        <li><a class="navbar-links" [routerLink]="['/app/admin']" *ngIf="isUserAdmin"><span class="glyphicon glyphicon-cog"></span> Administration</a></li>
+        <li><a class="navbar-links" [routerLink]="['/app/conversation']" routerLinkActive="active"><span class="glyphicon glyphicon-envelope"></span> Messagerie  <span class="badge" *ngIf="unreadConversations != 0">{{ unreadConversations }}</span></a></li>
+        <li><a class="navbar-links" [routerLink]="['/app/visits']" routerLinkActive="active"> <span class="glyphicon glyphicon-eye-open"></span> Visites  <span class="badge" *ngIf="unseenVisits != 0">{{ unseenVisits }}</span></a></li>
+        <li><a class="navbar-links" [routerLink]="['/app/search']" routerLinkActive="active"> <span class="glyphicon glyphicon-search"></span> Rechercher</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a [routerLink]="['/app/profile']"><img class="header-image" src="{{ uploadImageUrl }}{{ user.images[0].url }}"></a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" style="cursor: pointer" data-toggle="dropdown">{{ user.username }} <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a [routerLink]="['/app/profile']" routerLinkActive="active"><span class="glyphicon glyphicon-user"></span>   Mon profil</a></li>
-          </ul>
-        </li>
-        <li><a class="pointer" (click)="logout()"><span class="glyphicon glyphicon-off"></span> </a></li>
+        <li><a class="navbar-links" [routerLink]="['/app/profile']" routerLinkActive="active"><span class="glyphicon glyphicon-user"></span> &nbsp; {{ user.username }}</a></li>
+        <li><a class="pointer navbar-links" (click)="logout()"><span class="glyphicon glyphicon-off"></span> </a></li>
       </ul>
     </div>
   </div>

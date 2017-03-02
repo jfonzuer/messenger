@@ -12,10 +12,7 @@ import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ConversationRepository;
 import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.service.ConversationService;
-import com.jfonzuer.service.MailService;
-import com.jfonzuer.service.UserService;
-import com.jfonzuer.service.WebSocketService;
+import com.jfonzuer.service.*;
 import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -39,24 +36,31 @@ import java.util.List;
 @PreAuthorize("hasRole('USER')")
 public class ConversationController {
 
-    private final ConversationRepository conversationRepository;
-    private final UserRepository userRepository;
-    private final UserService userService;
-    private final MailService mailService;
-    private final ConversationService conversationService;
-    private final WebSocketService webSocketService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ConversationController.class);
 
     @Autowired
-    public ConversationController(ConversationRepository conversationRepository, UserRepository userRepository, UserService userService, MailService mailService, ConversationService conversationService, WebSocketService webSocketService) {
-        this.conversationRepository = conversationRepository;
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.mailService = mailService;
-        this.conversationService = conversationService;
-        this.webSocketService = webSocketService;
-    }
+    private ConversationRepository conversationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private ConversationService conversationService;
+
+    @Autowired
+    private WebSocketService webSocketService;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
+
+    @Autowired
+    private AsyncService asyncService;
 
     /**
      * Endpoint permettant de retourner la liste des conversations
@@ -68,6 +72,7 @@ public class ConversationController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
         User user = userService.getUserFromToken(request);
+        subscriptionService.checkSubscriptionAsync(user);
         return conversationRepository.findAllByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(user, false, user, false, p).map(c -> ConversationMapper.toDto(c, user));
     }
 
@@ -80,8 +85,10 @@ public class ConversationController {
     @PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.POST)
     public ConversationDto add(HttpServletRequest request, @RequestBody UserMessageDto dto) {
-        MessageDto messageDto = dto.getMessage();
         User userOne = userService.getUserFromToken(request);
+        subscriptionService.checkSubscriptionAsync(userOne);
+
+        MessageDto messageDto = dto.getMessage();
         User userTwo = UserMapper.fromDto(dto.getUser());
         userService.throwExceptionIfBlocked(userOne, userTwo);
 
@@ -90,7 +97,7 @@ public class ConversationController {
         }
         Conversation conversation = conversationService.createConversationAndAddMessage(userOne, userTwo, messageDto);
         webSocketService.sendToConversationsUsers(conversation);
-        mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
+        asyncService.executeAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
         return ConversationMapper.toDto(conversation, userOne);
     }
 
@@ -105,6 +112,7 @@ public class ConversationController {
     public ConversationDto getConversationBetweenCurrentUserAndSpecifiedUser(HttpServletRequest request, @PathVariable Long id) {
         LOGGER.info(" in getConversationBetweenCurrentUserAndSpecifiedUser ");
         User currentUser = userService.getUserFromToken(request);
+        subscriptionService.checkSubscriptionAsync(currentUser);
         User specifiedUser = userRepository.findOne(id);
         Conversation conversation = conversationService.getConversationOrCreateOne(currentUser, specifiedUser);
         return ConversationMapper.toDto(conversation, currentUser);
@@ -119,6 +127,7 @@ public class ConversationController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteConversation(HttpServletRequest request, @PathVariable Long id) {
         User currentUser = userService.getUserFromToken(request);
+        subscriptionService.checkSubscriptionAsync(currentUser);
         conversationService.deleteByIdAndUser(id, currentUser);
     }
 

@@ -43,36 +43,45 @@ public class MessageController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageController.class);
 
-    private final MessageRepository messageRepository;
-    private final MessageService messageService;
-    private final UserRepository userRepository;
-    private final ConversationService conversationService;
-    private final MailService mailService;
-    private final UserService userService;
-    private final MediaValidator mediaValidator;
-    private final StorageService storageService;
-    private final WebSocketService webSocketService;
-
-    @Value("${upload.conversation.directory}")
-    private String conversationLocation;
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Autowired
-    public MessageController(MessageRepository messageRepository, MessageService messageService, UserRepository userRepository, ConversationService conversationService, MailService mailService, UserService userService, MediaValidator mediaValidator, StorageService storageService, WebSocketService webSocketService) {
-        this.messageRepository = messageRepository;
-        this.messageService = messageService;
-        this.userRepository = userRepository;
-        this.conversationService = conversationService;
-        this.mailService = mailService;
-        this.userService = userService;
-        this.mediaValidator = mediaValidator;
-        this.storageService = storageService;
-        this.webSocketService = webSocketService;
-    }
+    private MessageService messageService;
 
+    @Autowired
+    private ConversationService conversationService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private WebSocketService webSocketService;
+
+    @Autowired
+    private AsyncService asyncService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
+
+    /**
+     * endpoint de récupérer les messages par id de conversation
+     * @param request
+     * @param id
+     * @param p
+     * @return
+     */
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public Page<MessageDto> getByConversation(HttpServletRequest request, @PathVariable Long id, Pageable p) {
 
         User currentUser = userService.getUserFromToken(request);
+        subscriptionService.checkSubscriptionAsync(currentUser);
 
         // check if conversation exists and if user is part of this
         Conversation conversation = conversationService.getConversationByIdAndUser(id, currentUser);
@@ -84,36 +93,41 @@ public class MessageController {
         return conversation == null ? null : messageService.getByConversationAndUser(conversation, currentUser, p);
     }
 
+    /**
+     * endpoint permettant de post un message de type image dans une conversation
+     * @param request
+     * @param file
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/image", method = RequestMethod.POST)
     public MessageDto addImage(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file, @RequestParam(value = "id") Long id) {
 
         User sender = userService.getUserFromToken(request);
+        subscriptionService.checkSubscriptionAsync(sender);
+
         Conversation conversation = conversationService.returnConversationOrThrowException(id);
+
         User target = MessengerUtils.getOtherUser(conversation, sender);
-        target.setLastMessageBy(sender);
-        userRepository.save(target);
 
         MessageDto dto = new MessageDto.MessageDtoBuilder().setContent("Image").createMessageDto();
         conversationService.updateConversation(conversation, sender, dto);
-        this.webSocketService.sendToConversationsUsers(conversation);
+        webSocketService.sendToConversationsUsers(conversation);
 
-        Message message = MessageMapper.fromDto(dto);
-        message.setType(MessageType.IMAGE);
-        message.setConversation(conversation);
-        message.setSource(sender);
-        message = messageService.saveMessage(message, conversation.getUserOne(), conversation.getUserTwo());
+        Message message = messageService.saveImage(dto, conversation, sender);
 
-        String filename = conversation.getId() + "_" + message.getId() + mediaValidator.getExtension(file.getContentType());
-        String location = conversationLocation + conversation.getId() + "/";
-        String url = location + filename;
+        String url = imageService.saveImageInConversation(conversation, message, file);
+
         message.setUrl(url);
         messageRepository.save(message);
-        storageService.createDirectoriesAndStore(file, location, filename);
+
 
         // send email if sender is not last sender
         if (!target.getLastMessageBy().equals(sender)) {
-            mailService.sendAsync(() -> mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender));
+            asyncService.executeAsync(() -> mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender));
         }
+
+        userService.updateLastMessageBy(target, sender);
         return  MessageMapper.toDto(message);
     }
 

@@ -47,7 +47,7 @@ public class UserMapper {
                 .withCountry(CountryMapper.toDto(user.getCountry()))
                 .withImages(user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
                 .withUserType(UserTypeMapper.toDto(user.getType()))
-                .withLastActivityDate(user.getLastActivityDate().toString())
+                .withLastActivityDatetime(user.getLastActivityDatetime().toString())
                 .withAuthorities(mapAuthorities(user.getUserRoles()))
                 .withEnabled(user.getEnabled())
                 .withIsBlocked(user.getBlocked())

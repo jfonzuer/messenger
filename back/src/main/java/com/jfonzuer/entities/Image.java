@@ -74,28 +74,47 @@ public class Image implements Serializable {
                 '}';
     }
 
-    public static class ImageBuilder {
+
+    public static final class Builder {
+        private Long id;
         private Integer orderNumber;
         private String url;
         private User user;
 
-        public ImageBuilder setOrderNumber(Integer orderNumber) {
+        private Builder() {
+        }
+
+        public static Builder anImage() {
+            return new Builder();
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withOrderNumber(Integer orderNumber) {
             this.orderNumber = orderNumber;
             return this;
         }
 
-        public ImageBuilder setUrl(String url) {
+        public Builder withUrl(String url) {
             this.url = url;
             return this;
         }
 
-        public ImageBuilder setUser(User user) {
+        public Builder withUser(User user) {
             this.user = user;
             return this;
         }
 
-        public Image createImage() {
-            return new Image(orderNumber, url, user);
+        public Image build() {
+            Image image = new Image();
+            image.setId(id);
+            image.setOrderNumber(orderNumber);
+            image.setUrl(url);
+            image.setUser(user);
+            return image;
         }
     }
 }

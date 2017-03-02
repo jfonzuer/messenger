@@ -127,11 +127,8 @@ public class UserController {
     @RequestMapping(value = "/report/{id}", method = RequestMethod.GET)
     public ResponseDto reportUser(HttpServletRequest request, @PathVariable Long id) {
         User user = userService.getUserFromToken(request);
-        User reportedUser = userRepository.findOne(id);
+        User reportedUser = userService.findByIdOrThrowException(id);
 
-        if (reportedUser == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
         // if user has reported another user in the last 24 hours
         if (!user.getLastReportDate().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Vous avez déjà signalé un utilisateur lors des 24 dernières heures");

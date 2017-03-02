@@ -1,6 +1,8 @@
 package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.CustomErrorType;
+import com.jfonzuer.dto.response.ExceptionDto;
+import com.jfonzuer.exception.AccountNotActivatedException;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.slf4j.Logger;
@@ -26,27 +28,19 @@ public class ExceptionHandlingController extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {IllegalStateException.class, ResourceNotFoundException.class })
     public ResponseEntity<Object> authenticationError(RuntimeException ex, WebRequest request) {
-
         ex.printStackTrace();
-
         String message = ex.getMessage();
-        System.out.println(ex.getMessage());
-
         return handleExceptionInternal(ex, message, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
-    /*
-    @ExceptionHandler(value = { FileUploadBase.FileSizeLimitExceededException.class })
+
+    @ExceptionHandler(value = { AccountNotActivatedException.class })
     public ResponseEntity<Object> uploadError(RuntimeException ex, WebRequest request) {
-
+        // TODO use logger
         ex.printStackTrace();
-
         String message = ex.getMessage();
-        System.out.println("Exception message : " + ex.getMessage());
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
-        return handleExceptionInternal(ex, message, headers, HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, new ExceptionDto(message), headers, HttpStatus.LOCKED, request);
     }
-    */
 
     @ExceptionHandler(value = { FileUploadBase.FileSizeLimitExceededException.class })
     ResponseEntity<?> uploadError(HttpServletRequest request, Throwable ex) {

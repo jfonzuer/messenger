@@ -23,14 +23,8 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    private final UserRepository userRepository;
-    private final UserService userService;
-
     @Autowired
-    public AdminController(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
+    private UserRepository userRepository;
 
     @RequestMapping(value = "/reported")
     public List<UserDto> getReportedUser(HttpServletRequest request) {

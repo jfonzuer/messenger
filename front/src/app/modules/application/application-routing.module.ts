@@ -29,6 +29,7 @@ import {PremiumGuardService} from "../../services/guard/premium-guard.service";
       { path: '', redirectTo: 'home', pathMatch: 'full'},
       { path: 'admin', component: AdminComponent, canActivate: [AdminGuardService]},
       { path: 'premium', component: PremiumComponent },
+      { path: 'premium/:state', component: PremiumComponent },
       { path: 'home', component: HomeComponent },
       { path: 'profile/:id', component: UserViewComponent, resolve: { user: UserResolve } },
       { path: 'profile', component: UserProfileComponent,  resolve: { constants:ConstantsResolve, user: CurrentUserResolve} },

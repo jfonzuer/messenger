@@ -3,38 +3,22 @@ package com.jfonzuer.controllers;
 import com.jfonzuer.dto.RegisterDto;
 import com.jfonzuer.dto.ResetPasswordDto;
 import com.jfonzuer.dto.mapper.UserMapper;
-import com.jfonzuer.entities.Image;
 import com.jfonzuer.entities.Token;
 import com.jfonzuer.entities.User;
-import com.jfonzuer.entities.UserRole;
-import com.jfonzuer.repository.ImageRepository;
 import com.jfonzuer.repository.TokenRepository;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.repository.UserRoleRepository;
+import com.jfonzuer.service.AsyncService;
 import com.jfonzuer.service.MailService;
+import com.jfonzuer.service.TokenService;
 import com.jfonzuer.service.UserService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.stream.Stream;
 
 /**
  * Created by pgm on 23/10/16.
@@ -52,20 +36,30 @@ public class RegisterController {
     @Autowired
     private TokenRepository tokenRepository;
 
-
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private AsyncService asyncService;
+
+    @Autowired
+    private TokenService tokenService;
+
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public void add(@RequestBody RegisterDto register) {
+    public void add(@RequestBody RegisterDto register, HttpServletRequest request) {
 
         // TODO : validation via annotation and exception handling
+
         System.out.println("register = " + register);
+        User user = UserMapper.fromDto(register.getUser());
 
         if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
             throw new IllegalArgumentException("L'adresse email est déjà utilisée");
         }
-        userService.createUser(register);
+        userService.createUser(user, register.getPassword());
+        String token = UUID.randomUUID().toString();
+        tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));
+        mailService.sendRegisterNotification(request.getLocale(), user, token);
     }
 
     /**
@@ -78,16 +72,34 @@ public class RegisterController {
         User user = userRepository.findByEmail(email);
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("L'utilisateur n'a pas pu être trouvé");
         }
         String token = UUID.randomUUID().toString();
-        //Token t = new Token(token, user, LocalDate.now().plusDays(1L));
+        tokenService.save(user, token);
+        asyncService.executeAsync(() -> mailService.sendResetTokenEmail(request.getLocale(), token, user));
+    }
 
-        // on supprime les tokens déjà créés pour cet utilisateur
-        tokenRepository.getAllByUser(user).stream().forEach(t -> tokenRepository.delete(t));
+    @PostMapping(value = "resend/activation/email")
+    public void sendActivationMail(HttpServletRequest request, @RequestBody String email) {
+        User user = userService.findByEmailOrThrowException(email);
+        if (user.getActivated()) {
+            throw new IllegalArgumentException("Votre compte est déjà activé, veuillez contacter dominapp@gmail.com");
+        }
+        String token = UUID.randomUUID().toString();
+        tokenService.save(user, token);
+        mailService.sendActivationMail(request.getLocale(), token, user);
+    }
 
-        tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));
-        mailService.sendAsync(() -> mailService.sendResetTokenEmail(request.getLocale(), token, user));
+
+    @RequestMapping(value = "validate/account", method = RequestMethod.POST)
+    public void activateAccount(@RequestBody String token) {
+        Token t = tokenRepository.getByToken(token);
+        if (t == null) {
+            throw new ResourceAccessException("Le token n'existe pas.");
+        }
+        User user = t.getUser();
+        user.setActivated(true);
+        userRepository.save(user);
     }
 
     /**

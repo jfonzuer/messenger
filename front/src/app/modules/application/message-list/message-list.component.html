@@ -5,9 +5,15 @@
 </div>
 
 <div class="col-sm-12" *ngIf="selectedConversation">
-  <h5 class="pull-left"><strong>{{ selectedConversation.userTwo.username}}</strong></h5>
-  <div class="pull-right">
-    <div class="dropdown">
+  <div class="col-sm-4">
+    <h5><strong>{{ selectedConversation.userTwo.username}}</strong></h5>
+  </div>
+  <div class="col-sm-4">
+    <app-last-activity [lastActivityDatetime]="selectedConversation.userTwo.lastActivityDatetime"></app-last-activity>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="dropdown pull-right">
       <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         Paramètres
         <span class="glyphicon glyphicon-cog"></span>

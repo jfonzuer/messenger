@@ -28,7 +28,7 @@ export class PasswordResetComponent implements OnInit {
         this.token = params['token'];
       }
       else {
-        this.router.navigateByUrl('login');
+        this.router.navigateByUrl('home');
       }
     });
   }
@@ -40,7 +40,7 @@ export class PasswordResetComponent implements OnInit {
         console.log(new ResetPassword(this.passwordConfirmation, this.token, this.userId));
         //this.userService.resetPassword(this.passwordConfirmation)
         this.userService.resetPassword(new ResetPassword(this.passwordConfirmation, this.token, this.userId))
-          .then(() => { this.toastr.success("Le mot de passe a été modifié, vous allez être redirigé vers la page de login"); setTimeout(this.router.navigate(['/unauth/login']), 2000) })
+          .then(() => { this.toastr.success("Le mot de passe a été modifié, vous allez être redirigé vers la page de login"); setTimeout(this.router.navigate(['/unauth/home']), 2000) })
           .catch(error => this.toastr.error(error));
       }
       else {

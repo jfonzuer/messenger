@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +33,9 @@ public class UserService {
     @Value("${jwt.header}")
     private String tokenHeader;
 
+    @Value("${image.default.name}")
+    private String defaultImage;
+
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
@@ -38,9 +44,10 @@ public class UserService {
     private final TokenRepository tokenRepository;
     private final MailService mailService;
     private final VisitRepository visitRepository;
+    private final AsyncService asyncService;
 
     @Autowired
-    public UserService(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, UserRoleRepository userRoleRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, TokenRepository tokenRepository, MailService mailService, VisitRepository visitRepository) {
+    public UserService(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, UserRoleRepository userRoleRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, TokenRepository tokenRepository, MailService mailService, VisitRepository visitRepository, AsyncService asyncService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
@@ -49,6 +56,15 @@ public class UserService {
         this.tokenRepository = tokenRepository;
         this.mailService = mailService;
         this.visitRepository = visitRepository;
+        this.asyncService = asyncService;
+    }
+
+    public void updateLastActivityDate(User user) {
+        // si la derinère action de l'utilisateur remonte à plus de 30min on met à sa last activity date
+        if (ChronoUnit.MINUTES.between(LocalDateTime.now(), user.getLastActivityDatetime()) > 30) {
+            user.setLastActivityDatetime(LocalDateTime.now());
+            userRepository.save(user);
+        }
     }
 
     /**
@@ -73,7 +89,9 @@ public class UserService {
     public User getUserFromToken(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        return this.userRepository.findByEmail(username);
+        User user = findByEmailOrThrowException(username);
+        updateLastActivityDate(user);
+        return user;
     }
 
     /**
@@ -131,24 +149,31 @@ public class UserService {
 
     /**
      * Méthode permettant de créer un utilisateur et de set les champs par défaults
-     * @param register
+     * @param user
      */
-    public void createUser(RegisterDto register) {
-        User user = UserMapper.fromDto(register.getUser());
-        user.setPassword(passwordEncoder.encode(register.getPassword()));
+    public void createUser(User user, String password) {
+        throwExceptionIfUnderaged(user.getBirthDate());
+
+        user.setPassword(passwordEncoder.encode(password));
         user.setEnabled(true);
         user.setBlocked(false);
         user.setLastPasswordResetDate(new Date());
         user.setReportedAsFake(0L);
-        user.setLastActivityDate(LocalDate.now());
+        user.setLastActivityDatetime(LocalDateTime.now());
         user.setLastReportDate(LocalDate.now().minusDays(1));
         user.setNotifyVisit(true);
         user.setNotifyMessage(true);
         user = userRepository.save(user);
+
+        // if user is domina
+        if (!MessengerUtils.isDomina(user)) {
+            userRoleRepository.save(new UserRole(user, "ROLE_PREMIUM"));
+        }
+
         userRoleRepository.save(new UserRole(user, "ROLE_USER"));
 
         // creation d'une image par défaut
-        Stream.of(new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(user).createImage()).forEach(i -> imageRepository.save(i));
+        imageRepository.save(Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(user).build());
     }
 
     /**
@@ -165,7 +190,7 @@ public class UserService {
             visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
             visited.setLastVisitedBy(visitor);
             userRepository.save(visited);
-            mailService.sendAsync(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
+            asyncService.executeAsync(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
         }
         return UserMapper.toDto(visited);
     }
@@ -195,6 +220,7 @@ public class UserService {
         User updatedUser = UserMapper.fromDto(dto);
         user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());
+        throwExceptionIfUnderaged(user.getBirthDate());
         user.setBirthDate(updatedUser.getBirthDate());
         return UserMapper.toDto(userRepository.save(user));
     }
@@ -223,6 +249,17 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void updateLastMessageBy(User target, User sender) {
+        target.setLastMessageBy(sender);
+        userRepository.save(target);
+    }
+
+
+    private void throwExceptionIfUnderaged(LocalDate birthdate) {
+        if (ChronoUnit.YEARS.between(LocalDate.now(), birthdate) < 18) {
+            throw new IllegalArgumentException("Vous devez avoir plus de 18 ans pour vous inscrire sur ce site");
+        }
+    }
 
     public void throwExceptionIfBlocked(User sender, User target) {
 
@@ -233,5 +270,23 @@ public class UserService {
                 throw new IllegalArgumentException("Vous ne pouvez pas envoyer de message à cet utilisateur");
             }
         }
+    }
+
+    public void throwExceptionIfNull(User user) {
+        if (user == null) {
+            throw new UsernameNotFoundException("L'utilisateur n'a pas pu être trouvé");
+        }
+    }
+
+    public User findByEmailOrThrowException(String email) {
+        User user = userRepository.findByEmail(email);
+        this.throwExceptionIfNull(user);
+        return user;
+    }
+
+    public User findByIdOrThrowException(Long id) {
+        User user = userRepository.findOne(id);
+        this.throwExceptionIfNull(user);
+        return user;
     }
 }

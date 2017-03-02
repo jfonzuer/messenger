@@ -22,7 +22,8 @@ export class User {
   reportedAsFake:number;
   images:Image[];
   userType:UserType;
-  lastActivityDate: string;
+  lastActivityDatetime: string;
+  lastActivity: string;
   authorities:string[];
   notifyVisit:boolean;
   notifyMessage:boolean;

@@ -4,6 +4,8 @@
 
 import {Injectable} from "@angular/core";
 import {Response} from "@angular/http";
+import {Router} from "@angular/router";
+import {SharedService} from "./shared.service";
 
 @Injectable()
 export class RequestService {
@@ -12,7 +14,10 @@ export class RequestService {
     let message:string;
     if (error.status == 0) {
       message = 'Connexion au serveur impossible';
-    } else if (error._body) {
+    } else if (error.status == 403) {
+      message = "Vous n'avez pas les droits d'accès, ou votre abonnement premium a expiré, dans ce cas veuillez vous reconnecter.";
+    }
+    else if (error._body) {
       let body = JSON.parse(error._body);
       if (body.message) {
         message = body.message;

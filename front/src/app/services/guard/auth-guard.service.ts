@@ -10,7 +10,7 @@ export class AuthGuardService implements CanActivate {
   canActivate() {
     let isAuth = this.sharedService.isAuthenticated();
     if (!isAuth) {
-      this.router.navigate(['/unauth/login']);
+      this.router.navigate(['/unauth/home']);
     }
     return isAuth;
   }

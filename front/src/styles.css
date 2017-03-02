@@ -1,5 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
+.unauth-navbar-right {
+  padding-top: 20px;
+}
+
+.unauth-navbar-brand {
+  font-weight: bold;
+  padding-top: 5px;
+}
+
 .alert-messages {
   padding: 0px 12px;
 }
@@ -17,14 +26,20 @@
   height: 100px;
 }
 
+.xsmall-image {
+  width:60px;
+  height: 60px;
+}
+
 .medium-image {
   width: 150px;
   height: 150px;
 }
 
 .header-image {
-  width: 20px;
-  height: 20px;
+  margin-top: 5px;
+  width: 35px;
+  height: 35px;
 }
 
 .conversation-image {

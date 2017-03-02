@@ -77,7 +77,7 @@ export class UserService {
         // format different dates
         this.datetimeService.formatAge(user);
         this.datetimeService.formatBirthDate(user);
-        this.datetimeService.formatLastActivtyDate(user);
+        //this.datetimeService.formatLastActivty(user);
 
         return user;
       })

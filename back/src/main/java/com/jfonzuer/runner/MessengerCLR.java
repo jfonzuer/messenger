@@ -12,11 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.io.File;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -49,6 +48,9 @@ public class MessengerCLR implements CommandLineRunner {
 
     @Value("${upload.images.directory}")
     private String imagesLocation;
+
+    @Value("${image.default.name}")
+    private String defaultImage;
 
     @Autowired
     public MessengerCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository, StorageService storageService, CountryRepository countryRepository, AreaRepository areaRepository) {
@@ -167,8 +169,8 @@ public class MessengerCLR implements CommandLineRunner {
         List<Area> areas = Arrays.asList(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62);
         areas.stream().forEach(areaRepository::save);
 
-        UserType ut1 = new UserType.UserTypeBuilder().setId(MessengerUtils.DOMINA_ID).setLabel("Dominatrice").createUserType();
-        UserType ut2 = new UserType.UserTypeBuilder().setId(MessengerUtils.SUBMISSIVE_ID).setLabel("Soumis").createUserType();
+        UserType ut1 = UserType.Builder.anUserType().withId(MessengerUtils.DOMINA_ID).withName("Dominatrice").build();
+        UserType ut2 = UserType.Builder.anUserType().withId(MessengerUtils.SUBMISSIVE_ID).withName("Soumis").build();
         Stream.of(ut1, ut2).forEach(userTypeRepository::save);
 
         User u1 = User.Builder.anUser()
@@ -185,15 +187,16 @@ public class MessengerCLR implements CommandLineRunner {
                 .withCountry(c1)
                 .withType(ut2)
                 .withReportedAsFake(0L)
-                .withLastActivityDate(LocalDate.now())
+                .withLastActivityDatetime(LocalDateTime.now())
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
+                .withActivated(true)
                 .build();
         User u2 = User.Builder.anUser()
-                .withEmail("user2@gmail.com")
+                .withEmail("u1@gmail.com")
                 .withUsername("user2")
-                .withPassword(encoder.encode("password"))
+                .withPassword(encoder.encode("test"))
                 .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .withEnabled(true)
                 .withIsBlocked(false)
@@ -203,16 +206,17 @@ public class MessengerCLR implements CommandLineRunner {
                 .withCountry(c1)
                 .withType(ut1)
                 .withReportedAsFake(10L)
-                .withLastActivityDate(LocalDate.now())
+                .withLastActivityDatetime(LocalDateTime.now())
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
+                .withActivated(true)
                 .build();
         User u3 = User.Builder.anUser()
-                .withEmail("member3@gmail.com")
+                .withEmail("u2@gmail.com")
                 .withUsername("member3")
                 .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .withPassword(encoder.encode("password3"))
+                .withPassword(encoder.encode("test"))
                 .withEnabled(true)
                 .withIsBlocked(false)
                 .withDescription("je suis le membre 3")
@@ -221,29 +225,34 @@ public class MessengerCLR implements CommandLineRunner {
                 .withCountry(c4)
                 .withType(ut1)
                 .withReportedAsFake(15L)
-                .withLastActivityDate(LocalDate.now())
+                .withLastActivityDatetime(LocalDateTime.now())
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
+                .withActivated(true)
                 .build();
 
         User u4 = User.Builder.anUser()
-                .withEmail("member4@gmail.com")
+                .withEmail("u3@gmail.com")
                 .withUsername("member4")
                 .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .withPassword(encoder.encode("password4"))
+                .withPassword(encoder.encode("test"))
                 .withEnabled(true)
                 .withIsBlocked(false)
                 .withDescription("je suis le membre 4")
                 .withBirthDate(LocalDate.of(1988, 3, 29))
                 .withArea(a1)
                 .withCountry(c1)
-                .withType(ut1)
+                .withType(ut2)
                 .withReportedAsFake(20L)
-                .withLastActivityDate(LocalDate.now())
+                .withLastActivityDatetime(LocalDateTime.now())
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
+                .withActivated(true)
+                // last subscription 1 day ago
+                .withLastSubscriptionCheck(Timestamp.from(Instant.now().minusSeconds(24*3600)))
+                .withSubscriptionId("HtZEwIZQDboJSbSHM")
                 .build();
 
         Set<User> blockedUser = new HashSet<>();
@@ -253,20 +262,21 @@ public class MessengerCLR implements CommandLineRunner {
         // save users
         Stream.of(u1, u2, u3, u4).forEach( m -> userRepository.save(m));
 
-        Image u1i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u1).createImage();
-
-        Image u2i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u2).createImage();
-
-        Image u3i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u3).createImage();
-        Image u4i1 = new Image.ImageBuilder().setOrderNumber(1).setUrl("profile.png").setUser(u4).createImage();
+        Image u1i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u1).build();
+        Image u2i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u2).build();
+        Image u3i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u3).build();
+        Image u4i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u4).build();
         Stream.of(u1i1, u2i1, u3i1, u4i1).forEach( i -> imageRepository.save(i));
 
         UserRole us1 = new UserRole(u1, "ROLE_USER");
         UserRole us2 = new UserRole(u1, "ROLE_ADMIN");
         UserRole us3 = new UserRole(u1, "ROLE_PREMIUM");
         UserRole us4 = new UserRole(u2, "ROLE_USER");
-        UserRole us5 = new UserRole(u2, "ROLE_USER");
-        Stream.of(us1, us2, us3, us4, us5).forEach(us -> userRoleRepository.save(us));
+        UserRole us5 = new UserRole(u3, "ROLE_USER");
+        UserRole us6 = new UserRole(u4, "ROLE_USER");
+        UserRole us7 = new UserRole(u4, "ROLE_PREMIUM");
+
+        Stream.of(us1, us2, us3, us4, us5, us6, us7).forEach(us -> userRoleRepository.save(us));
 
         // visits
         Visit v1 = new Visit(LocalDate.now(), u2, u1, false);

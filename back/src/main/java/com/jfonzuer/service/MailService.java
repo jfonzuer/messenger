@@ -24,9 +24,6 @@ import java.util.concurrent.RunnableFuture;
 public class MailService {
 
     @Autowired
-    private MailSender mailSender;
-
-    @Autowired
     private JavaMailSender javaMailSender;
 
     @Value("${send.from.email}")
@@ -47,7 +44,7 @@ public class MailService {
             //helper.setTo(visited.getEmail());
             helper.setSubject(visitor.getUsername() + " a visité votre profil");
             helper.setText("Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a>", true);
-            //javaMailSender.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -70,9 +67,28 @@ public class MailService {
         }
     }
 
+    public void sendRegisterNotification(Locale locale, User user, String token) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        String validationUrl = appUrl + "unauth/home/" + token;
+        try {
+            mimeMessage.setContent("" +
+                    "Merci de vous être inscris sur Dominapp. <br> " +
+                    "Validez votre compte en cliquant sur ce lien : <a href=" + validationUrl + ">Je valide mon compte</a> <br> " +
+                    "L'équipe Dominapp", "text/html; charset=utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom(this.fromEmail);
+            //helper.setTo(user.getEmail());
+            helper.setTo("pgiraultmatz@gmail.com");
+            helper.setSubject("Bienvenue sur Dominapp " + user.getUsername());
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendResetTokenEmail(Locale locale, String token, User user) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String resetLink = appUrl + "/password/reset/" + user.getId() + "/" +token;
+        String resetLink = appUrl + "password/reset/" + user.getId() + "/" +token;
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
@@ -80,21 +96,27 @@ public class MailService {
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("Réinitialiser le mot de passe");
             helper.setText("Cliquer sur le lien suivant pour réinitialiser le mot de passe : <a href=" + resetLink + ">Réinitialiser</a>", true);
-            //javaMailSender.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
-
-    public void sendAsync(Runnable r) {
-
-        ExecutorService service = null;
+    public void sendActivationMail(Locale locale, String token, User user) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        String activationLink = appUrl + "unauth/home/"  + token;
         try {
-            service = Executors.newSingleThreadExecutor();
-            service.submit(r);
-        } finally {
-            if (service != null) service.shutdown();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom(this.fromEmail);
+            //helper.setTo(user.getEmail());
+            helper.setTo("pgiraultmatz@gmail.com");
+            helper.setSubject("[Dominapp] Activez votre compte");
+            helper.setText(
+                    "Bonjour " + user.getUsername() + ",<br><br>" +
+                    "Cliquez sur le lien suivant pour activer votre compte : <a href=" + activationLink + ">Activer</a> <br><br>" +
+                    "L'équipe Dominapp.", true);
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
-
 }

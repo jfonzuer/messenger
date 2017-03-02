@@ -26,23 +26,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/constants")
 public class ConstantsController {
 
-    private final FetishRepository fetishRepository;
-    private final UserTypeRepository userTypeRepository;
-    private final CountryRepository countryRepository;
-    private final AreaRepository areaRepository;
+    @Autowired
+    private FetishRepository fetishRepository;
+
+    @Autowired
+    private UserTypeRepository userTypeRepository;
+
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
+    private AreaRepository areaRepository;
 
     private Country france = Country.Builder.country().withId(MessengerUtils.FRANCE_ID).build();
     private Country belgium = Country.Builder.country().withId(MessengerUtils.BELGIUM_ID).build();
     private Country lux = Country.Builder.country().withId(MessengerUtils.LUX_ID).build();
     private Country swiss = Country.Builder.country().withId(MessengerUtils.SWISS_ID).build();
-
-    @Autowired
-    public ConstantsController(FetishRepository fetishRepository, UserTypeRepository userTypeRepository, CountryRepository countryRepository, AreaRepository areaRepository) {
-        this.fetishRepository = fetishRepository;
-        this.userTypeRepository = userTypeRepository;
-        this.countryRepository = countryRepository;
-        this.areaRepository = areaRepository;
-    }
 
     @GetMapping
     public ConstantsResponse getConstants() {

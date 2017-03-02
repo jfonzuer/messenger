@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {User} from "../../../model/user";
 import {UserService} from "../../../services/user.service";
 import {SharedService} from "../../../services/shared.service";
 import {environment} from "../../../../environments/environment";
+import {ToastsManager} from "ng2-toastr";
+import {ActivatedRoute, Params} from "@angular/router";
+import {AuthenticationService} from "../../../services/authentication.service";
 
 @Component({
   selector: 'app-home',
@@ -13,9 +16,11 @@ export class HomeComponent implements OnInit {
 
   users:User[];
   title:string;
+  token:string;
   uploadImageUrl:string;
 
-  constructor(private userService: UserService, private sharedService: SharedService) {
+  constructor(private userService: UserService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
     this.uploadImageUrl = environment.uploadImageUrl;
   }
 

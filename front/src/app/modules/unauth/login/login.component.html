@@ -1,24 +1,16 @@
-<div class="container">
-  <div class="card card-container">
-    <img id="profile-img" class="profile-img-card" src="/public/uploads/profile.png" />
-    <p id="profile-name" class="profile-name-card"></p>
-    <form class="form-signin" (ngSubmit)="login(loginForm)" #loginForm="ngForm">
-      <span id="reauth-email" class="reauth-email"></span>
-
-      <input type="email" name="email" class="form-control" placeholder="Email" required autofocus [(ngModel)]="authentication.email">
-      <br>
-      <input type="password" name="password" class="form-control" placeholder="Mot de passe" required [(ngModel)]="authentication.password">
-
-      <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Connexion</button>
-    </form>
-    <a [routerLink]="['/unauth/password/forgotten']" class="forgot-password">
-      Mot de passe oublié ?
-    </a>
-  </div>
-
-</div>
-<div class="col-xs-5 col-xs-offset-5">
-  <a [routerLink]="['/unauth/register']" class="forgot-password">
-    Créer un compte
-  </a>
-</div>
+<style>
+  .navbar-nav>li>a {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+</style>
+<ul class="nav navbar-nav navbar-right unauth-navbar-right">
+  <li><input type="email" name="email" class="form-control" (keyup.enter)="send()" placeholder="Email" [(ngModel)]="authentication.email" required autofocus></li>
+  <li>&nbsp; &nbsp;</li>
+  <li>
+    <input type="password" name="password" (keyup.enter)="send()" [(ngModel)]="authentication.password" class="form-control" placeholder="Mot de passe" required>
+    <a [routerLink]="['/unauth/password/forgotten']" class="unauth-li-a forgot-password">Mot de passe oublié ?</a>
+  </li>
+  <li>&nbsp; &nbsp;</li>
+  <li><button class="btn btn-primary btn-block btn-signin" (click)="send()" type="submit">OK</button></li>
+</ul>

@@ -15,34 +15,37 @@ import {ToastsManager} from "ng2-toastr";
 })
 export class LoginComponent implements OnInit {
 
-  private baseUrl:string;
-  private authentication: Authentication = new Authentication();
+  private authentication: Authentication;
 
-  constructor(private http:Http, private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
-    this.baseUrl = environment.baseUrl;
-    this.toastr.setRootViewContainerRef(vRef)
+  constructor(private http:Http, private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
+    this.authentication = new Authentication();
   }
 
   ngOnInit() {
     //this.sharedService.redirectHome();
-    this.authentication.email = "pgiraultmatz@gmail.com";
+    this.authentication.email = "u3@gmail.com";
     this.authentication.password = "test";
 
     //TODO raffraichissement du token ?
   }
 
-  login(form: any) {
-    if (form.valid) {
+  send() {
+    if (this.authentication.email != "" && this.authentication.password != "") {
       this.authenticationService.post(this.authentication).then(response => {
-
         this.localStorageService.setObject("token", response.token);
         this.localStorageService.setObject("user", response.user);
-        console.log(response.user);
         this.router.navigate(['/app/home']);
 
       })
         .catch(error => {
-          this.toastr.error(error);
+          this.toastr.error(error.json().message);
+          if (error.status === 423) {
+            // this.toastr.warning("Vous allez être redirigé vers la page d'activation");
+            //this.router.navigate(['/unauth/activate']);
+            setTimeout(() => this.router.navigate(['/unauth/activate']), 1000);
+            //setTimeout(this.router.navigate(['/unauth/activate']), 500);
+            }
         })
     }
   }

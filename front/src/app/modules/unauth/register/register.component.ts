@@ -13,6 +13,9 @@ import {ToastsManager} from "ng2-toastr";
 import {Constant} from "../../../model/response/constants";
 import {Country} from "../../../model/country";
 import {Area} from "../../../model/area";
+import { overlayConfigFactory} from "angular2-modal";
+import { Overlay } from 'angular2-modal';
+import {Modal, BSModalContext} from 'angular2-modal/plugins/bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -24,18 +27,20 @@ export class RegisterComponent implements OnInit {
   user:User = new User();
   password:string;
   birthDate:string = '29/03/1992';
-  fetishes: Fetish[];
   selectedFetishId:number[] = [];
   types: UserType[];
+  terms:boolean;
 
   constants:Constant;
 
   constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: CoolLocalStorage,
-              private router:Router, private fetishService:FetishService, private typeService:UserTypeService, private toastr: ToastsManager, vRef: ViewContainerRef) {
-    this.toastr.setRootViewContainerRef(vRef);
+              private router:Router, private fetishService:FetishService, private typeService:UserTypeService, private toastr: ToastsManager, vcRef: ViewContainerRef, public overlay: Overlay, public modal: Modal) {
+    this.toastr.setRootViewContainerRef(vcRef);
+
   }
 
   ngOnInit() {
+
     this.user.country = new Country(1);
     this.user.area = new Area(1);
     this.user.userType = new UserType(0);
@@ -63,8 +68,10 @@ export class RegisterComponent implements OnInit {
         this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
 
         this.userService.post(new Register(this.user, this.password))
-          .then(response => { this.toastr.success("Inscription effectuée, vous allez être redirigé vers le login"); setTimeout(() => this.router.navigate(['/unauth/login']), 3000); })
+          .then(response => { this.toastr.success("Inscription effectuée, vous allez être redirigé vers le login"); setTimeout(() => this.router.navigate(['/unauth/home']), 3000); })
           .catch(error => this.toastr.error(error))
     }
   }
+
+  onChange() { }
 }
