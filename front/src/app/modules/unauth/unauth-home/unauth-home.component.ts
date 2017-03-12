@@ -11,7 +11,7 @@ import {AuthenticationService} from "../../../services/authentication.service";
   templateUrl: 'unauth-home.component.html',
   styleUrls: ['unauth-home.component.css']
 })
-export class UnauthHomeComponent implements OnInit, OnDestroy {
+export class UnauthHomeComponent implements OnInit {
 
   dominas:User[];
   private uploadImageUrl;
@@ -47,9 +47,5 @@ export class UnauthHomeComponent implements OnInit, OnDestroy {
         console.log(dominas);
         this.dominas = dominas as User[];
       })
-  }
-
-  ngOnDestroy(): void {
-    this.toastr.dispose();
   }
 }

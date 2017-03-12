@@ -14,7 +14,7 @@ export class ConstantsResolve implements Resolve<Constant> {
 
   constructor(private constantService:ConstantService, private rs:RequestService, private localStorageS: CoolLocalStorage)  {}
 
-  resolve(): Promise<Constant> {
+  resolve(): any {
 
     return this.localStorageS.getObject('constants') != null ?
       this.localStorageS.getObject('constants') :
