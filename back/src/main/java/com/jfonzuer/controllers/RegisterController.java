@@ -83,7 +83,7 @@ public class RegisterController {
     public void sendActivationMail(HttpServletRequest request, @RequestBody String email) {
         User user = userService.findByEmailOrThrowException(email);
         if (user.getActivated()) {
-            throw new IllegalArgumentException("Votre compte est déjà activé, veuillez contacter dominapp@gmail.com");
+            throw new IllegalArgumentException("Votre compte est déjà activé, veuillez contacter dominapp.contact@gmail.com");
         }
         String token = UUID.randomUUID().toString();
         tokenService.save(user, token);

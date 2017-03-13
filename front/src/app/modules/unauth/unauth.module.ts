@@ -17,6 +17,7 @@ import {TermsComponent} from "./terms/terms.component";
 import {UnauthHomeComponent} from "./unauth-home/unauth-home.component";
 import {UnauthUserService} from "../../services/unauth-user.service";
 import {SendActivationMailComponent} from "./send-activation-mail/send-activation-mail.component";
+import {ReCaptchaModule} from "angular2-recaptcha";
 
 /**
  * Created by pgmatz on 28/10/16.
@@ -27,7 +28,8 @@ import {SendActivationMailComponent} from "./send-activation-mail/send-activatio
     SharedModule,
     UnauthRoutingModule,
     ModalModule.forRoot(),
-    BootstrapModalModule
+    BootstrapModalModule,
+    ReCaptchaModule
   ],
   declarations: [
     LoginComponent,

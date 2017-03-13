@@ -31,15 +31,6 @@ export class UnauthHomeComponent implements OnInit {
             this.toastr.success("Votre compte a bien été activé")
           );
         }
-      //     let token = params['token'];
-      //     this.authenticationS.sendActivationToken(token).
-      //       then(() => this.toastr.success("Votre compte a bien été activé"))
-      //       // .catch(error => {
-      //       //   console.log(error);
-      //       //   //this.toastr.error(error.json().message);
-      //       // })
-      //   }
-      // });
     })
 
     this.unauthUserS.getLastRegisteredDominas()

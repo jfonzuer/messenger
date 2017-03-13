@@ -15,5 +15,4 @@ export class SubscriptionComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

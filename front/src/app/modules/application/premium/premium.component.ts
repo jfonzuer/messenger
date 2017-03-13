@@ -37,7 +37,7 @@ export class PremiumComponent implements OnInit {
             })
             .catch(error => this.toastr.error(error));
         } else if (state == 'error') {
-          this.toastr.error("Erreur de lors de l'attribution de votre abonnement, veuillez nous contacter à dominapp@gmail.com");
+          this.toastr.error("Erreur de lors de l'attribution de votre abonnement, veuillez nous contacter à dominapp.contact@gmail.com");
         }
       }
     });

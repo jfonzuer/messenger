@@ -16,6 +16,7 @@ import {Area} from "../../../model/area";
 import { overlayConfigFactory} from "angular2-modal";
 import { Overlay } from 'angular2-modal';
 import {Modal, BSModalContext} from 'angular2-modal/plugins/bootstrap';
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-register',
@@ -30,13 +31,16 @@ export class RegisterComponent implements OnInit {
   selectedFetishId:number[] = [];
   types: UserType[];
   terms:boolean;
+  // Captcha
+  googleKey:string;
+  isBot:boolean = true;
 
   constants:Constant;
 
   constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: CoolLocalStorage,
               private router:Router, private fetishService:FetishService, private typeService:UserTypeService, private toastr: ToastsManager, vcRef: ViewContainerRef, public overlay: Overlay, public modal: Modal) {
     this.toastr.setRootViewContainerRef(vcRef);
-
+    this.googleKey = environment.googleKey;
   }
 
   ngOnInit() {
@@ -61,7 +65,7 @@ export class RegisterComponent implements OnInit {
   }
 
   send(valid:boolean) {
-    if (valid) {
+    if (valid && !this.isBot) {
         // on set la valeur birthdate avc le format standard
         this.user.birthDate = this.datetimeService.toStandardFormat(this.birthDate);
         // on met à jour la liste des fetishes
@@ -71,6 +75,10 @@ export class RegisterComponent implements OnInit {
           .then(response => { this.toastr.success("Inscription effectuée, vous allez être redirigé vers le login"); setTimeout(() => this.router.navigate(['/unauth/home']), 3000); })
           .catch(error => this.toastr.error(error))
     }
+  }
+
+  captchaEvent($event) {
+    this.isBot = false;
   }
 
   onChange() { }

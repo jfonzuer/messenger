@@ -112,7 +112,7 @@ export class TermsComponent implements OnInit {
       <h1>ARTICLE 4 : DURÉE ET RENOUVELLEMENT DES ABONNEMENTS</h1>
       4.1 Droit de rétractation
       
-      Conformément à l'article L. 121-21 du Code de la consommation, toute souscription à un Abonnement pourra être remboursée sans pénalité sur simple demande non motivée dans un délai de 14 jours à compter de ladite souscription par l'envoi d'un courriel adressé à dominapp@agmail.com avec, en pièce jointe, la facture d’achat reçue du service Paypal. Il ne sera procédé qu'à un seul remboursement par RIB et par Compte d’Utilisateur.
+      Conformément à l'article L. 121-21 du Code de la consommation, toute souscription à un Abonnement pourra être remboursée sans pénalité sur simple demande non motivée dans un délai de 14 jours à compter de ladite souscription par l'envoi d'un courriel adressé à dominapp.contact@gmail.com avec, en pièce jointe, la facture d’achat reçue du service Paypal. Il ne sera procédé qu'à un seul remboursement par RIB et par Compte d’Utilisateur.
       
       A réception de l'ensemble de ces documents, l'Utilisateur sera remboursé de l'intégralité des sommes versées au Site dans un délai de 10 jours à compter de la réception d'un courriel. Il est rappelé qu’en application des dispositions de l'article Article L121-21-8 du Code de la Consommation, l'Utilisateur ne pourra plus exercer son droit de rétractation après utilisation des Services (payants et/ou gratuits).
       

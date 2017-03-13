@@ -22,6 +22,7 @@
     "@angular/router": "^3.4.9",
     "angular2-cool-storage": "^3.0.1",
     "angular2-modal": "^2.0.3",
+    "angular2-recaptcha": "^0.3.7",
     "core-js": "^2.4.1",
     "flag-icon-css": "^2.8.0",
     "moment": "^2.15.2",

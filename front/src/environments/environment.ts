@@ -9,4 +9,5 @@ export const environment = {
   uploadImageUrl: '/public/uploads/images/',
   uploadUrl: '/public/uploads/',
   sizeLimit: 2048*1000,
+  googleKey: '6LfH0RgUAAAAABvJZsrsGTeeMajb44qKxG4qmwWe'
 };
