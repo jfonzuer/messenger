@@ -3,6 +3,7 @@
  */
 
 export class PasswordConfirmation {
+  current:string;
   password:string;
   confirmation:string;
 }

@@ -73,10 +73,15 @@ public class UserService {
      * @param dto
      */
     public void updatePassword(HttpServletRequest request, PasswordDto dto) {
-        if (!dto.getPassword().equals(dto.getConfirmation())) {
-            throw new IllegalArgumentException();
-        }
         User user = getUserFromToken(request);
+
+        if (!passwordEncoder.encode(dto.getCurrent()).equals(user.getPassword())) {
+            throw new IllegalArgumentException("Votre mot de passe actuel est incorrect");
+        }
+
+        if (!dto.getPassword().equals(dto.getConfirmation())) {
+            throw new IllegalArgumentException("Les mots de passe ne correspondent pas.");
+        }
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         userRepository.save(user);
     }
