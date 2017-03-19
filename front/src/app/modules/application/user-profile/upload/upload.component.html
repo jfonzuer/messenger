@@ -2,7 +2,7 @@
   <fieldset>
     <div class="form-group">
       <div class="col-sm-2" *ngFor="let image of user.images; let i = index">
-        <img class="small-image center-block" src="{{ uploadImageUrl }}{{ image.url }}">
+        <img class="small-image center-block" src="{{ uploadImageUrl }}{{ image.url }}/image">
         <br>
         <div class="col-sm-6" *ngIf="image.url != 'profile.png' && i != 0">
           <button class="btn btn-default btn-sm center-block" (click)="setAsProfile(image.orderNumber)"><span class="glyphicon glyphicon-user"></span></button>

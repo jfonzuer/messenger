@@ -7,7 +7,7 @@
 
   <div class="media conversation" style="padding: 5px;" *ngFor="let conversation of conversations | conversationListFilter:name" [class.active-conversation]="conversation.id == selectedConversation.id">
     <a class="pull-left">
-      <img class="media-object" style="width: 50px; height: 50px;" src="{{ uploadImageUrl }}{{ conversation.userTwo.images[0].url }}">
+      <img class="media-object" style="width: 50px; height: 50px;" src="{{ uploadImageUrl }}{{ conversation.userTwo.images[0].url }}/image">
     </a>
     <div class="media-body" style="cursor: pointer" (click)="onSelect(conversation)">
 

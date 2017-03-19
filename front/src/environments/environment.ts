@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:8080/',
-  uploadImageUrl: '/public/uploads/images/',
+  uploadImageUrl: 'http://localhost:5984/images/',
   uploadUrl: '/public/uploads/',
   sizeLimit: 2048*1000,
   googleKey: '6LfH0RgUAAAAABvJZsrsGTeeMajb44qKxG4qmwWe'

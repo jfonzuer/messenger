@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +41,9 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final StorageService storageService;
     private final MediaValidator mediaValidator;
+
+    @Autowired
+    private CouchDbImageService couchDbImageService;
 
     @Autowired
     public ImageService(ImageRepository imageRepository, StorageService storageService, MediaValidator mediaValidator) {
@@ -69,17 +73,15 @@ public class ImageService {
             */
         }
         String filename = order + "_" + user.getUsername() + mediaValidator.getExtension(file.getContentType());
-        Image image = Image.Builder.anImage().withUrl(filename).withUser(user).withOrderNumber(order).build();
-        imageRepository.save(image);
-        storageService.store(file, imagesLocation, filename);
+        String uuid = UUID.randomUUID().toString();
+        Image image = Image.Builder.anImage().withUrl(uuid).withUser(user).withOrderNumber(order).build();
+        couchDbImageService.store(file, uuid);
         return ImageMapper.toDto(image);
     }
 
 
     public List<ImageDto> delete(Integer order, User user) {
         System.out.println("delete order = " + order);
-        // TODO pouvoir supprimer la photo numéro 1 => remettre image par défaut
-        // on peut uniquement supprimer les photos secondaires
 
         List<Image> images = new ArrayList<>(user.getImages());
         System.out.println("images = " + images);
@@ -113,40 +115,20 @@ public class ImageService {
         }
 
         List<Image> images = new ArrayList<>(user.getImages());
-
         Image profile = images.get(0);
         Image otherImage = images.get(order - 1);
-        String prefix = "tmp_";
-
-        // deplacement profile vers un fichier temporaire
-        storageService.rename(profile.getUrl(), prefix + profile.getUrl());
-
-        // deplacement other image en tant que photo de profil
-        String newProfileName = 1 + otherImage.getUrl().substring(1, otherImage.getUrl().length());
-        storageService.rename(otherImage.getUrl(), newProfileName);
-
-        // deplacement de tmp vers son nouveau nom
-        String newOtherImageName = order + profile.getUrl().substring(1, profile.getUrl().length());
-        storageService.rename(prefix + profile.getUrl(), newOtherImageName);
-
         // on intervertit les deux liens au niveau de la db
-        profile.setUrl(newProfileName);
-        otherImage.setUrl(newOtherImageName);
+        String newProfileUrl = otherImage.getUrl();
+        otherImage.setUrl(profile.getUrl());
+        profile.setUrl(newProfileUrl);
         imageRepository.save(profile);
         imageRepository.save(otherImage);
-
-        // on met à jour la liste
-        images.set(0, profile);
-        images.set(order - 1, otherImage);
         return images.stream().map(ImageMapper::toDto).collect(Collectors.toList());
     }
 
-    public String saveImageInConversation(Conversation conversation, Message message, MultipartFile file) {
-        String filename = conversation.getId() + "_" + message.getId() + mediaValidator.getExtension(file.getContentType());
-        String location = conversationLocation + conversation.getId() + "/";
-        String url = location + filename;
-        storageService.createDirectoriesAndStore(file, location, filename);
-        return url;
+    public void saveImageInConversation(MultipartFile file, String uuid) {
+        mediaValidator.validate(file);
+        couchDbImageService.store(file, uuid);
     }
 
     /**
@@ -159,10 +141,7 @@ public class ImageService {
         int index = 2;
         for (Image i : secondaryImages) {
             // on définit le nouveau fichier avec le nouveau nom
-            String newFilename = index + i.getUrl().substring(1, i.getUrl().length());
-            storageService.rename(i.getUrl(), newFilename);
-            i.setUrl(newFilename);
-            i.setOrderNumber(2);
+            i.setOrderNumber(index);
             imageRepository.save(i);
             images.set(index - 1, i);
             index++;
@@ -173,7 +152,7 @@ public class ImageService {
         Image image = images.get(order - 1);
         images.remove(order - 1);
         imageRepository.delete(image);
-        storageService.delete(image.getUrl());
+        couchDbImageService.delete(image.getUrl());
     }
 
     private void validateOrder(Integer order) {

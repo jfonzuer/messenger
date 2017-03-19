@@ -1,19 +1,24 @@
 package com.jfonzuer.runner;
 
+import com.jfonzuer.dto.ImageDocument;
 import com.jfonzuer.entities.*;
 import com.jfonzuer.repository.*;
 import com.jfonzuer.storage.StorageService;
 import com.jfonzuer.utils.MessengerUtils;
+import org.ektorp.AttachmentInputStream;
+import org.ektorp.CouchDbConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -28,6 +33,8 @@ import java.util.stream.Stream;
 @Component
 public class MessengerCLR implements CommandLineRunner {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessengerCLR.class);
+
     private final UserRepository userRepository;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
@@ -39,6 +46,9 @@ public class MessengerCLR implements CommandLineRunner {
     private final StorageService storageService;
     private final CountryRepository countryRepository;
     private final AreaRepository areaRepository;
+    
+    @Autowired
+    private CouchDbConnector couchDbImageConnector;
 
     @Value("${upload.directory}")
     private String rootLocation;
@@ -71,12 +81,16 @@ public class MessengerCLR implements CommandLineRunner {
     @Transactional
     public void run(String... strings) throws Exception {
 
-        storageService.recursiveDelete(conversationLocation);
-        storageService.recursiveDelete(imagesLocation);
+        // si l'image par défaut n'existe pas déjà on la crée
+        if (couchDbImageConnector.find(ImageDocument.class, "profile.png") == null) {
+            InputStream resource = new ClassPathResource("profile.png").getInputStream();
+            String contentType = "image/png";
+            AttachmentInputStream attachment = new AttachmentInputStream("image", resource, "image/png");
+            couchDbImageConnector.createAttachment(defaultImage, attachment);
+        }
 
-        Files.createDirectories(Paths.get(rootLocation + imagesLocation));
-        Files.createDirectories(Paths.get(rootLocation + conversationLocation));
-        Files.copy(Paths.get(rootLocation + "profile.png"), Paths.get(rootLocation + imagesLocation + "profile.png"));
+//        Object ob = db.get(Object.class, "f0141ceb-d63f-42b3-98b4-8360557c6155");
+//        db.delete(ob);
 
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         Fetish f1 = new Fetish.FetishBuilder().setId(1L).setName("fetish1").createFetish();

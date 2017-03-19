@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -116,9 +117,9 @@ public class MessageController {
 
         Message message = messageService.saveImage(dto, conversation, sender);
 
-        String url = imageService.saveImageInConversation(conversation, message, file);
-
-        message.setUrl(url);
+        String uuid = UUID.randomUUID().toString();
+        imageService.saveImageInConversation(file, uuid);
+        message.setUrl(uuid);
         messageRepository.save(message);
 
 
@@ -130,6 +131,4 @@ public class MessageController {
         userService.updateLastMessageBy(target, sender);
         return  MessageMapper.toDto(message);
     }
-
-
 }
