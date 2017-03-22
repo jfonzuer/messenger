@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 import {SharedService} from "../../../services/shared.service";
@@ -8,6 +8,8 @@ import {VisitService} from "../../../services/visit.service";
 import {ConversationService} from "../../../services/conversation.service";
 import {User} from "../../../model/user";
 import {CoolLocalStorage} from "angular2-cool-storage";
+import {MessengerService} from "../../../services/messenger.service";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-navbar',
@@ -31,20 +33,25 @@ export class NavbarComponent implements OnInit {
   unreadConversationsTimer:Observable<number>;
   unseenVisitsTimer:Observable<number>;
 
+  receiveMessageSubscription:any;
+  conversationLoadedSubscription:any;
+
 
   constructor(private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService,
               private sharedService: SharedService, private conversationService: ConversationService,
-              private  router: Router, private visitService: VisitService) {
+              private  router: Router, private visitService: VisitService, private messengerService:MessengerService, private titleService: Title) {
     this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {
 
-    this.conversationRefreshSubscription = this.sharedService.unreadNumberConversationsRefresh.subscribe(refresh => { this.getUnreadConversations(); });
+    this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(() => this.updateUnreadConversations());
+    //this.conversationLoadedSubscription = this.messengerService.conversationLoadedObservable.subscribe(() => this.updateUnreadConversations());
+
     this.visitsRefreshSubscription = this.sharedService.unseenNumberVisitsRefresh.subscribe(refresh => { this.getUnseenVisits(); });
     this.userRefreshSubscription = this.sharedService.userRefresh.subscribe(user => { this.user = user; });
 
-    this.getUnreadConversations();
+    this.updateUnreadConversations();
     this.getUnseenVisits();
 
     // TODO A ACTIVER
@@ -58,8 +65,20 @@ export class NavbarComponent implements OnInit {
     this.isUserAdmin = this.sharedService.isAdmin(this.user);
   }
 
-  getUnreadConversations() {
-    this.conversationService.getUnreadNumberConversations().then(unreadConversations => { this.unreadConversations = unreadConversations });
+  updateUnreadConversations() {
+    console.error("UPDATE unreadconversations");
+    this.conversationService.getUnreadNumberConversations().then(unreadConversations => {
+      this.unreadConversations = unreadConversations;
+      console.error(this.unreadConversations);
+      this.updateTitle();
+    });
+  }
+
+  updateTitle() {
+    let title = environment.appTitle;
+    if (this.unreadConversations != 0) {
+      this.titleService.setTitle(title + " (" + this.unreadConversations + ")");
+    }
   }
 
   getUnseenVisits() {

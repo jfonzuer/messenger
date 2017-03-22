@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from "@angular/core";
+import {Component, OnInit, ViewContainerRef, OnDestroy} from "@angular/core";
 import "moment/locale/fr";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Conversation} from "../../../model/conversation";
@@ -17,14 +17,16 @@ var Stomp = require('stompjs');
   templateUrl: 'messenger.component.html',
   styleUrls: ['messenger.component.css']
 })
-export class MessengerComponent implements OnInit {
+export class MessengerComponent implements OnInit, OnDestroy {
   user:User;
   baseUrl:string;
   stompClient:any;
 
+  // subscriptions
   addMessageSubscription:any;
   changeConversationSubscription: any;
   addConversationSubscription:any;
+
   selectedConversation:Conversation;
 
   constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef, private conversationService: ConversationService, private messengerService:MessengerService, private localStorageService:CoolLocalStorage) {
@@ -32,8 +34,8 @@ export class MessengerComponent implements OnInit {
     this.toastr.setRootViewContainerRef(vRef);
     // si on ajoute un message et que la conversation existe, on send le message via websocket sinon on l'envoit via une requête.
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.selectedConversation.id ? this.send(message) : null );
-    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
-    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
+    //this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
+    //this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
   }
 
   ngOnInit() {
@@ -47,6 +49,7 @@ export class MessengerComponent implements OnInit {
         let userId = +params['id'];// (+) converts string 'id' to a number
         this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => {
           //console.log("conversation : ", conversation);
+
           this.messengerService.changeConversation(conversation)
         });
       }
@@ -65,6 +68,8 @@ export class MessengerComponent implements OnInit {
     var socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
+    console.error("CHANGE CONVERSATION");
+    /*
     this.stompClient.connect({}, function (frame) {
       //console.log('Connected: ' + frame);
       if (conversationId) {
@@ -86,5 +91,12 @@ export class MessengerComponent implements OnInit {
     }, function (err) {
       that.toastr.error("Erreur lors de la connexion", null, {toastLife: 5000});
     });
+    */
+  }
+
+  public ngOnDestroy(): void {
+    //this.changeConversationSubscription.unsubscribe();
+    this.addMessageSubscription.unsubscribe();
+    //this.addConversationSubscription.unsubscribe();
   }
 }

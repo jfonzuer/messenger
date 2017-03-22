@@ -33,6 +33,9 @@ export class MessengerService {
   blockUserObservable: Observable<boolean>;
   private blockUserObserver: Observer<boolean>;
 
+  conversationLoadedObservable: Observable<boolean>;
+  private conversationLoadedObserver: Observer<boolean>;
+
 
   constructor() {
     this.changeConversationObservable = new Observable<Conversation>(observer => this.changeConversationObserver = observer).share();
@@ -43,6 +46,7 @@ export class MessengerService {
     this.isConversationReadObservable = new Observable<boolean>(observer => this.isConversationReadObserver = observer).share();
     this.addConversationObservable = new Observable<Conversation>(observer => this.addConversationObserver = observer).share();
     this.blockUserObservable = new Observable<boolean>(observer => this.blockUserObserver = observer).share();
+    this.conversationLoadedObservable = new Observable<boolean>(observer => this.conversationLoadedObserver = observer).share();
   }
 
   receiveMessage(message:Message) {
@@ -54,7 +58,15 @@ export class MessengerService {
   }
 
   changeConversation(conversation:Conversation) {
+    console.error("change conversation event");
     this.changeConversationObserver.next(conversation);
+  }
+
+  /**
+   * Is triggered after getting all messages from conversation
+   */
+  conversationLoaded() {
+    this.conversationLoadedObserver.next(true);
   }
 
   changeConversationRead(read:boolean) {

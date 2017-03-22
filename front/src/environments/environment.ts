@@ -9,5 +9,6 @@ export const environment = {
   uploadImageUrl: 'http://localhost:5984/images/',
   uploadUrl: '/public/uploads/',
   sizeLimit: 2048*1000,
-  googleKey: '6LfH0RgUAAAAABvJZsrsGTeeMajb44qKxG4qmwWe'
+  googleKey: '6LfH0RgUAAAAABvJZsrsGTeeMajb44qKxG4qmwWe',
+  appTitle: 'Dominapp'
 };

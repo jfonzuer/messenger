@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewContainerRef, OnDestroy} from '@angular/core';
 import {MessageService} from "../../../services/message.service";
 import {ConversationService} from "../../../services/conversation.service";
 import {User} from "../../../model/user";
@@ -15,10 +15,12 @@ import {ToastsManager} from "ng2-toastr";
   templateUrl: 'message-send.component.html',
   styleUrls: ['message-send.component.css']
 })
-export class MessageSendComponent implements OnInit {
+export class MessageSendComponent implements OnInit, OnDestroy {
 
   @Input() user: User;
   selectedConversation: Conversation;
+
+  // subscriptions
   changeConversationSubscription: any;
   blockUserSubscription:any;
 
@@ -35,7 +37,6 @@ export class MessageSendComponent implements OnInit {
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation =>  {
       this.selectedConversation = conversation;
       this.isUserBlocked = this.sharedService.isUserBlocked(this.selectedConversation.userTwo);
-      console.log("isUserBlocked", this.isUserBlocked);
     });
     this.blockUserSubscription = this.messengerService.blockUserObservable.subscribe(block => this.isUserBlocked = block);
     this.sizeLimit = environment.sizeLimit;
@@ -94,13 +95,6 @@ export class MessageSendComponent implements OnInit {
     this.message.conversation = this.selectedConversation;
     this.messengerService.addMessage(this.message);
     this.message.content = '';
-    /*
-    this.messageService.post(this.message).then(response => {
-      this.messengerService.addMessage(response); this.message.content = '';
-    }).catch(error => {
-      this.errorEmitter.emit(error); }
-    );
-    */
   }
 
   private createConversation() {
@@ -113,4 +107,8 @@ export class MessageSendComponent implements OnInit {
   }
 
 
+  public ngOnDestroy(): void {
+    this.changeConversationSubscription.unsubscribe();
+    this.blockUserSubscription.unsubscribe();
+  }
 }

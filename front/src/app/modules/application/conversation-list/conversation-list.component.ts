@@ -1,4 +1,4 @@
-import {Component, OnInit, EventEmitter, Output, Input, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, Input, ViewContainerRef, OnDestroy} from '@angular/core';
 import {Observable} from "rxjs";
 import {ConversationService} from "../../../services/conversation.service";
 import {SharedService} from "../../../services/shared.service";
@@ -12,7 +12,7 @@ import {ToastsManager} from "ng2-toastr";
   templateUrl: 'conversation-list.component.html',
   styleUrls: ['conversation-list.component.css']
 })
-export class ConversationListComponent implements OnInit {
+export class ConversationListComponent implements OnInit, OnDestroy {
 
   conversations: Conversation[] = [];
   selectedConversation:Conversation;
@@ -22,9 +22,7 @@ export class ConversationListComponent implements OnInit {
   uploadImageUrl:string;
 
   // subscriptions
-  addMessageSubscription:any;
   deleteConversationSubscription:any;
-  addConversationSubscription:any;
   changeConversationSubscription:any;
   updateConversationSubscription:any;
 
@@ -32,9 +30,7 @@ export class ConversationListComponent implements OnInit {
     this.uploadImageUrl = environment.uploadImageUrl;
     this.toastr.setRootViewContainerRef(vRef);
 
-    //this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.getConversations());
     this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.conversations = this.conversations.filter(c => c.id != conversation.id));
-    //this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => this.addConversation(conversation));
     this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.selectedConversation = conversation);
     this.updateConversationSubscription = this.messengerService.updateConversationObservable.subscribe(conversation => this.updateConversation(conversation));
   }
@@ -46,9 +42,12 @@ export class ConversationListComponent implements OnInit {
   }
 
   onSelect(conversation : Conversation) {
-    conversation.readByUserOne = true;
-    this.selectedConversation = conversation;
-    this.messengerService.changeConversation(conversation);
+
+    if (conversation.id != this.selectedConversation.id) {
+      conversation.readByUserOne = true;
+      this.selectedConversation = conversation;
+      this.messengerService.changeConversation(conversation);
+    }
   }
 
   private updateConversation(conversation:Conversation) {
@@ -66,11 +65,9 @@ export class ConversationListComponent implements OnInit {
     }).catch(error => this.toastr.error(error));
   }
 
-  /*
-  private addConversation(conversation:Conversation) {
-    console.log(this.selectedConversation.userTwo);
-    this.selectedConversation = conversation;
-    this.getConversations();
+  public ngOnDestroy(): void {
+    this.changeConversationSubscription.unsubscribe();
+    this.deleteConversationSubscription.unsubscribe();
+    this.updateConversationSubscription.unsubscribe();
   }
-  */
 }

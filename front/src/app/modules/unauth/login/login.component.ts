@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     //this.sharedService.redirectHome();
-    this.authentication.email = "u3@gmail.com";
+    this.authentication.email = "pgiraultmatz@gmail.com";
     this.authentication.password = "test";
 
     //TODO raffraichissement du token ?
@@ -39,12 +39,12 @@ export class LoginComponent implements OnInit {
 
       })
         .catch(error => {
-          this.toastr.error(error.json().message);
+          let message = error.json().message;
+          this.toastr.error(message ? message : "Connexion au serveur impossible");
           if (error.status === 423) {
             // this.toastr.warning("Vous allez être redirigé vers la page d'activation");
             //this.router.navigate(['/unauth/activate']);
             setTimeout(() => this.router.navigate(['/unauth/activate']), 1000);
-            //setTimeout(this.router.navigate(['/unauth/activate']), 500);
             }
         })
     }

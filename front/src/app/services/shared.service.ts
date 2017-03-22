@@ -10,19 +10,13 @@ export class SharedService {
   unreadNumberConversationsRefresh: Observable<boolean>;
   unseenNumberVisitsRefresh: Observable<boolean>;
   userRefresh: Observable<User>;
-  private unreadNumberConversationsObserver: Observer<boolean>;
   private unseenVisitsObserver: Observer<boolean>;
   private userObserver: Observer<User>;
 
 
   constructor (private localStorageService: CoolLocalStorage, private router: Router) {
-    this.unreadNumberConversationsRefresh = new Observable<boolean>(observer => this.unreadNumberConversationsObserver = observer).share();
     this.unseenNumberVisitsRefresh = new Observable<boolean>(observer => this.unseenVisitsObserver = observer).share();
     this.userRefresh = new Observable<User>(observer => this.userObserver = observer).share();
-  }
-
-  refreshUnreadNumberConversations() {
-    this.unreadNumberConversationsObserver.next(true);
   }
 
   refreshUser(user:User) {
@@ -91,10 +85,11 @@ export class SharedService {
 
   isUserBlocked(user:User) : boolean {
     let currentUser = this.getCurrentUser();
-    console.log("user blocked ", currentUser.blockedUsers);
+    // console.log("user blocked ", currentUser.blockedUsers);
+
     // return true if blocked
-    console.log("ternaire", currentUser.blockedUsers != null ? currentUser.blockedUsers.find(u => u.id == user.id) != null : false);
-    console.log("currentUser.blockedUsers.find(u => u.id == user.id) ", currentUser.blockedUsers.find(u => u.id == user.id));
+    // console.log("ternaire", currentUser.blockedUsers != null ? currentUser.blockedUsers.find(u => u.id == user.id) != null : false);
+    //console.log("currentUser.blockedUsers.find(u => u.id == user.id) ", currentUser.blockedUsers.find(u => u.id == user.id));
 
     return currentUser.blockedUsers != null ? currentUser.blockedUsers.find(u => u.id == user.id) != null : false;
   }

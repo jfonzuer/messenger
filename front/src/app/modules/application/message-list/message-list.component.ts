@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewContainerRef, OnDestroy} from '@angular/core';
 import {Conversation} from "../../../model/conversation";
 import {Message} from "../../../model/message";
 import {MessageService} from "../../../services/message.service";
@@ -20,7 +20,7 @@ import {ToastsManager} from "ng2-toastr";
   templateUrl: 'message-list.component.html',
   styleUrls: ['message-list.component.css']
 })
-export class MessageListComponent implements OnInit {
+export class MessageListComponent implements OnInit, OnDestroy {
 
   selectedConversation:Conversation;
   selectedImage:Message;
@@ -42,14 +42,16 @@ export class MessageListComponent implements OnInit {
   constructor(private messageService: MessageService, private messengerService:MessengerService, private datetimeService:DatetimeService, private conversationService:ConversationService, private us: UserService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadUrl = environment.uploadUrl;
     this.toastr.setRootViewContainerRef(vRef);
-    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.changeConversation(conversation));
-    this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
-    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.pager = null; this.selectedConversation = conversation; this.getMessages(this.selectedConversation.userTwo.id)});
-    this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(message => this.addMessage(message));
+
   }
 
   ngOnInit() {
     moment().locale('fr');
+
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.changeConversation(conversation));
+    this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
+    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.pager = null; this.selectedConversation = conversation; this.getMessages(this.selectedConversation.userTwo.id)});
+    this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(message => this.addMessage(message));
   }
 
   block() {
@@ -107,7 +109,9 @@ export class MessageListComponent implements OnInit {
     this.getMessages(this.selectedConversation.userTwo.id);
     this.isRead = this.selectedConversation.readByUserTwo;
     this.defineTimers(this.selectedConversation.id);
+
     this.isUserBlocked = this.sharedService.isUserBlocked(conversation.userTwo);
+
     console.debug("is user blocked", this.isUserBlocked);
   }
 
@@ -116,6 +120,9 @@ export class MessageListComponent implements OnInit {
       console.debug("messages", response);
       this.concatMessage(response);
       this.pager = new Pager(response.number, response.last, response.size);
+
+      // trigger conversation loaded event
+      this.messengerService.conversationLoaded();
     })
       .catch(e => error => this.toastr.error(e));
   }
@@ -131,5 +138,13 @@ export class MessageListComponent implements OnInit {
   private defineTimers(userId: number) : void {
       this.formatMessageTimer = Observable.timer(0, 60000);
       this.formatMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
+  }
+
+
+  public ngOnDestroy(): void {
+    this.changeConversationSubscription.unsubscribe();
+    this.isReadConversationSubscription.unsubscribe();
+    this.addConversationSubscription.unsubscribe();
+    this.receiveMessageSubscription.unsubscribe();
   }
 }
