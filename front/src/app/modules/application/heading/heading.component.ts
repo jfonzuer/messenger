@@ -14,7 +14,7 @@ export class HeadingComponent implements OnInit {
 
   ngOnInit() {
     let user = this.sharedService.getCurrentUser();
-    user.userType.name == 'Soumis' ? this.title = 'Rencontrez une femme Dominatrice' : this.title = 'Rencontrez un homme soumis';
+    user.userType.name == 'Soumis' ? this.title = 'Rencontrez une femme Dominatrice...' : this.title = 'Rencontrez un homme soumis...';
   }
 
 }
