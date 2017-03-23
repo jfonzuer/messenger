@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from "@angular/core";
+import {SharedService} from "../../../services/shared.service";
 
 @Component({
   selector: 'app-heading',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeadingComponent implements OnInit {
 
-  constructor() { }
+  title:string;
+
+  constructor(private sharedService: SharedService) { }
 
   ngOnInit() {
+    let user = this.sharedService.getCurrentUser();
+    user.userType.name == 'Soumis' ? this.title = 'Rencontrez une femme Dominatrice' : this.title = 'Rencontrez un homme soumis';
   }
 
 }

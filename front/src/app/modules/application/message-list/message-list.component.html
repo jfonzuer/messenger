@@ -1,7 +1,7 @@
 <!-- The Modal -->
 <div id="myModal" [ngClass]="{display: selectedImage != null }" style="/*display: block*/" class="modal">
   <span class="close" (click)="selectedImage = null">&times;</span>
-  <img *ngIf="selectedImage" class="modal-content" src="{{ uploadUrl }}{{ selectedImage.url }}">
+  <img *ngIf="selectedImage" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}">
 </div>
 
 <div class="col-sm-12" *ngIf="selectedConversation">
@@ -42,7 +42,7 @@
         {{ message.content }}
       </small>
       <small class="col-sm-10" *ngIf="message.type == 'IMAGE'">
-        <a (click)="selectedImage = message"><img src="{{ uploadUrl }}{{ message.url }}" class="image medium-image center-block"></a>
+        <a (click)="selectedImage = message"><img src="{{ uploadImageUrl }}{{ message.url }}" class="image medium-image center-block"></a>
       </small>
     </div>
   </div>

@@ -1,7 +1,7 @@
 
 <div class="send-wrap" *ngIf="sendImage && !isUserBlocked">
   <input style="margin-top: 10px;" name="file" type="file" (change)="fileChangeEvent($event)" required autofocus>
-  <h3 *ngIf="file"><i class="glyphicon glyphicon-picture"></i> {{ file.name }} <button class="btn btn-primary" (click)="uploadImage()"><i class="glyphicon glyphicon-ok"></i></button></h3>
+  <h3 *ngIf="file"><i class="glyphicon glyphicon-picture"></i> {{ file.name }} <button class="btn btn-danger" (click)="uploadImage()"><i class="glyphicon glyphicon-ok"></i></button></h3>
   <br>
   <a class="pointer" (click)="cancelSendImage()">Annuler</a>
 </div>

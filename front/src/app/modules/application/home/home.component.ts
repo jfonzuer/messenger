@@ -1,11 +1,9 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from "@angular/core";
 import {User} from "../../../model/user";
 import {UserService} from "../../../services/user.service";
 import {SharedService} from "../../../services/shared.service";
 import {environment} from "../../../../environments/environment";
 import {ToastsManager} from "ng2-toastr";
-import {ActivatedRoute, Params} from "@angular/router";
-import {AuthenticationService} from "../../../services/authentication.service";
 
 @Component({
   selector: 'app-home',

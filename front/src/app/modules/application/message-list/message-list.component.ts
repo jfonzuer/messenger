@@ -37,10 +37,10 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   isRead:boolean;
   isUserBlocked:boolean;
-  uploadUrl:string;
+  uploadImageUrl:string;
 
   constructor(private messageService: MessageService, private messengerService:MessengerService, private datetimeService:DatetimeService, private conversationService:ConversationService, private us: UserService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
-    this.uploadUrl = environment.uploadUrl;
+    this.uploadImageUrl = environment.uploadImageUrl;
     this.toastr.setRootViewContainerRef(vRef);
 
   }

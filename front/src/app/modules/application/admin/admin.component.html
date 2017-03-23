@@ -19,7 +19,7 @@
     </td>
     <td>
       <button *ngIf="!user.blocked" (click)="block(user)" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-ban-circle"></i></button>
-      <button *ngIf="user.blocked" (click)="unblock(user)" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-ok"></i></button>
+      <button *ngIf="user.blocked" (click)="unblock(user)" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-ok"></i></button>
     </td>
   </tr>
   </tbody>
