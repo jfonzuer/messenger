@@ -32,6 +32,7 @@ public class UserMapper {
                 .withEnabled(user.getEnabled())
                 .withIsBlocked(user.getBlocked())
                 .withReportedAsFake(user.getReportedAsFake())
+                .withLastActivityDatetime(user.getLastActivityDatetime().toString())
                 .build();
     }
 

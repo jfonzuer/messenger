@@ -105,6 +105,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   private changeConversation(conversation:Conversation) {
     this.selectedConversation = conversation;
+    console.log(this.selectedConversation);
     this.pager = null;
     this.getMessages(this.selectedConversation.userTwo.id);
     this.isRead = this.selectedConversation.readByUserTwo;

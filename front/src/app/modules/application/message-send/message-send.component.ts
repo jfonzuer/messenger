@@ -15,7 +15,8 @@ import {ToastsManager} from "ng2-toastr";
   templateUrl: 'message-send.component.html',
   styleUrls: ['message-send.component.css']
 })
-export class MessageSendComponent implements OnInit, OnDestroy {
+export class
+MessageSendComponent implements OnInit, OnDestroy {
 
   @Input() user: User;
   selectedConversation: Conversation;

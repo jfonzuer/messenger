@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, OnDestroy} from "@angular/core";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 import {SharedService} from "../../../services/shared.service";
@@ -16,7 +16,7 @@ import {Title} from "@angular/platform-browser";
   templateUrl: 'navbar.component.html',
   styleUrls: ['navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 
   uploadImageUrl:string;
   user:User;
@@ -29,6 +29,7 @@ export class NavbarComponent implements OnInit {
   conversationRefreshSubscription: any;
   visitsRefreshSubscription:any;
   userRefreshSubscription:any;
+
   // timers
   unreadConversationsTimer:Observable<number>;
   unseenVisitsTimer:Observable<number>;
@@ -37,16 +38,16 @@ export class NavbarComponent implements OnInit {
   conversationLoadedSubscription:any;
 
 
-  constructor(private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService,
-              private sharedService: SharedService, private conversationService: ConversationService,
-              private  router: Router, private visitService: VisitService, private messengerService:MessengerService, private titleService: Title) {
+  constructor(private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private sharedService: SharedService,
+              private conversationService: ConversationService, private  router: Router, private visitService: VisitService, private messengerService:MessengerService,
+              private titleService: Title) {
     this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {
 
     this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(() => this.updateUnreadConversations());
-    //this.conversationLoadedSubscription = this.messengerService.conversationLoadedObservable.subscribe(() => this.updateUnreadConversations());
+    this.conversationLoadedSubscription = this.messengerService.conversationLoadedObservable.subscribe(() => this.updateUnreadConversations());
 
     this.visitsRefreshSubscription = this.sharedService.unseenNumberVisitsRefresh.subscribe(refresh => { this.getUnseenVisits(); });
     this.userRefreshSubscription = this.sharedService.userRefresh.subscribe(user => { this.user = user; });
@@ -89,5 +90,12 @@ export class NavbarComponent implements OnInit {
     this.localStorageService.removeItem('token');
     this.localStorageService.removeItem('user');
     this.router.navigate(['/unauth/home']);
+  }
+
+  ngOnDestroy(): void {
+    this.conversationLoadedSubscription.unsubscribe();
+    this.receiveMessageSubscription.unsubscribe();
+    this.visitsRefreshSubscription.unsubscribe();
+    this.userRefreshSubscription.unsubscribe();
   }
 }

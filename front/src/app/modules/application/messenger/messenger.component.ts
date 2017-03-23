@@ -63,6 +63,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
   }
 
   connect(conversationId) {
+    /*
     var that = this;
     let url:string = this.baseUrl + 'ws-conversation-endpoint?token=' + this.localStorageService.getObject('token');
     var socket = new SockJS(url);
