@@ -1,7 +1,5 @@
 <div class="spinner">
-  <cool-loading-indicator [indicatorDelay]="500">
-    <div class="bounce1"></div>
-    <div class="bounce2"></div>
-    <div class="bounce3"></div>
-  </cool-loading-indicator>
+    <div class="bounce1" *ngIf="loading"></div>
+    <div class="bounce2" *ngIf="loading"></div>
+    <div class="bounce3" *ngIf="loading"></div>
 </div>

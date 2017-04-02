@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewContainerRef} from "@angular/core";
 import {Router} from "@angular/router";
-import {CoolHttp} from "angular2-cool-http";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {Authentication} from "../../../model/authentication";
 import {CoolLocalStorage} from "angular2-cool-storage";
@@ -16,7 +15,7 @@ export class LoginComponent implements OnInit {
   private authentication: Authentication;
   loading:boolean = false;
 
-  constructor(private coolHttp:CoolHttp, private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private toastr: ToastsManager, vRef: ViewContainerRef) {
+  constructor(private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
     this.authentication = new Authentication();
   }
@@ -31,6 +30,9 @@ export class LoginComponent implements OnInit {
 
   send() {
     if (this.authentication.email != "" && this.authentication.password != "") {
+
+      this.loading = true;
+
       this.authenticationService.post(this.authentication).then(response => {
         this.localStorageService.setObject("token", response.token);
         this.localStorageService.setObject("user", response.user);
@@ -38,6 +40,7 @@ export class LoginComponent implements OnInit {
 
       })
         .catch(error => {
+          this.loading = false;
           let message = error.json().message;
           this.toastr.error(message ? message : "Connexion au serveur impossible");
           if (error.status === 423) {
