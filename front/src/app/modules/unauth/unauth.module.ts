@@ -18,6 +18,7 @@ import {UnauthHomeComponent} from "./unauth-home/unauth-home.component";
 import {UnauthUserService} from "../../services/unauth-user.service";
 import {SendActivationMailComponent} from "./send-activation-mail/send-activation-mail.component";
 import {ReCaptchaModule} from "angular2-recaptcha";
+import {CoolLoadingIndicatorModule} from "angular2-cool-loading-indicator";
 
 /**
  * Created by pgmatz on 28/10/16.

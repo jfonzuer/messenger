@@ -15,6 +15,7 @@ import {RequestService} from "./services/request.service";
 import {UserTypesResolve} from "./services/resolve/user-types-resolve";
 import {ToastModule} from "ng2-toastr";
 import {CoolStorageModule} from "angular2-cool-storage";
+import { SpinnerComponent } from './modules/shared/spinner/spinner.component';
 
 @NgModule({
   declarations: [

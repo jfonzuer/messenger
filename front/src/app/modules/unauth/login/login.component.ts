@@ -1,8 +1,6 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
-import {Http} from "@angular/http";
+import {Component, OnInit, ViewContainerRef} from "@angular/core";
 import {Router} from "@angular/router";
-import {environment} from "../../../../environments/environment";
-import {SharedService} from "../../../services/shared.service";
+import {CoolHttp} from "angular2-cool-http";
 import {AuthenticationService} from "../../../services/authentication.service";
 import {Authentication} from "../../../model/authentication";
 import {CoolLocalStorage} from "angular2-cool-storage";
@@ -16,8 +14,9 @@ import {ToastsManager} from "ng2-toastr";
 export class LoginComponent implements OnInit {
 
   private authentication: Authentication;
+  loading:boolean = false;
 
-  constructor(private http:Http, private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private toastr: ToastsManager, vRef: ViewContainerRef) {
+  constructor(private coolHttp:CoolHttp, private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private router: Router, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
     this.authentication = new Authentication();
   }
