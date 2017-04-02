@@ -9,11 +9,12 @@
   <div class="send-wrap" *ngIf="!sendImage && !isUserBlocked">
     <textarea #sendTextArea (keyup.enter)="sendEnter()" name="content" required class="form-control send-message" rows="3" placeholder="Envoyer un message ..." [(ngModel)]="message.content"></textarea>
   </div>
+
   <div class="btn-panel">
-    <a *ngIf="!sendImage && !isUserBlocked" class=" col-sm-3 btn send-message-btn " role="button" (click)="sendImage = true"><i class="fa fa-cloud-upload"></i> Envoyer une Image</a>
+    <a *ngIf="!sendImage && !isUserBlocked" class=" col-sm-3 btn" role="button" (click)="sendImage = true"><i class="fa fa-cloud-upload"></i> Envoyer une Image</a>
 
     <div class="checkbox col-sm-3 col-sm-offset-2" *ngIf="!sendImage && !isUserBlocked">
-      <label style="color:#337ab7;">
+      <label>
         <input type="checkbox" name="enter" [(ngModel)]="enter"> Entrer = Envoyer
       </label>
     </div>
@@ -24,7 +25,3 @@
 <div class="send-wrap" *ngIf="isUserBlocked">
   <p>Cet utilisateur est bloqué</p>
 </div>
-
-
-<hr>
-

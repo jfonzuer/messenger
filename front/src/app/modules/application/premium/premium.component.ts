@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, ViewContainerRef, Input} from '@angular/core';
 import {AuthenticationService} from "../../../services/authentication.service";
 import {User} from "../../../model/user";
 import {CoolLocalStorage} from "angular2-cool-storage";
@@ -15,6 +15,7 @@ export class PremiumComponent implements OnInit {
 
   user:User;
   isPremium:boolean;
+  @Input() show:boolean;
 
   constructor(private localStorageService: CoolLocalStorage,private route: ActivatedRoute, private authenticationS:AuthenticationService, private toastr: ToastsManager, vRef: ViewContainerRef, private sharedService: SharedService) {
     this.toastr.setRootViewContainerRef(vRef)
@@ -41,6 +42,8 @@ export class PremiumComponent implements OnInit {
         }
       }
     });
+
+    this.show == null ? this.show = true : null;
 
     this.isPremium = this.sharedService.isPremium();
     this.user = this.sharedService.getCurrentUser();

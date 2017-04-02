@@ -19,12 +19,15 @@ export class VisitComponent implements OnInit {
   constructor(private visitService: VisitService, private datetimeService:DatetimeService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadImageUrl = environment.uploadImageUrl;
     this.toastr.setRootViewContainerRef(vRef);
-
   }
 
   ngOnInit() {
     this.visitService.getAll().then(visits => {
-      this.visits = visits; this.datetimeService.formatVisits(visits); this.sharedService.refreshUnseenNumberVisits();
+      console.log(visits);
+      this.visits = visits;
+      this.datetimeService.formatVisits(visits);
+      this.sharedService.refreshUnseenNumberVisits();
+
     }).catch(error => {
       this.toastr.error(error);
     });

@@ -1,18 +1,3 @@
-.send-message-btn
-{
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-color: transparent;
-  color:#337ab7;
-}
-
-.send-message-btn:hover {
-  color: #0f0f0f;
-  background-color: transparent;
-}
-
 .send-message
 {
   resize: none;
@@ -20,7 +5,6 @@
 .send-wrap
 {
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
   padding:10px;
   /*background: #f8f8f8;*/
 }

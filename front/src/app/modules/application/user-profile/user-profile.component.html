@@ -1,39 +1,39 @@
 <div class="container">
-  <legend class="pointer" (click)="show == 1 ? show = 0 : show = 1">Mon profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <legend class="pointer" (click)="show == 1 ? show = 0 : show = 1"><span class="glyphicon glyphicon-chevron-down"></span> Mon profil </legend>
   <app-profile [user]="user" [constants]="constants" [show]="show == 1"></app-profile>
 </div>
 <div class="container">
-  <legend class="pointer" (click)="show == 2 ? show = 0 : show = 2">Mes informations <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <legend class="pointer" (click)="show == 2 ? show = 0 : show = 2"><span class="glyphicon glyphicon-chevron-down"></span> Mes informations </legend>
   <app-information [user]="user" [show]="show == 2"></app-information>
 </div>
 
 <div class="container">
-  <legend class="pointer" (click)="show == 3 ? show = 0 : show = 3">Utilisateur bloqués <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <legend class="pointer" (click)="show == 3 ? show = 0 : show = 3"><span class="glyphicon glyphicon-chevron-down"></span> Utilisateur bloqués </legend>
   <app-block-user [user]="user" [show]="show == 3"></app-block-user>
 </div>
 
 <div class="container">
-  <legend class="pointer" (click)="show == 4 ? show = 0 : show = 4">Mon mot de passe <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <legend class="pointer" (click)="show == 4 ? show = 0 : show = 4"><span class="glyphicon glyphicon-chevron-down"></span> Mon mot de passe </legend>
   <app-change-password [user]="user" [show]="show == 4"></app-change-password>
 </div>
 
 <div class="container">
-  <legend class="pointer" (click)="show == 5 ? show = 0 : show = 5">Mes photos de profil <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <legend class="pointer" (click)="show == 5 ? show = 0 : show = 5"><span class="glyphicon glyphicon-chevron-down"></span> Mes photos de profil </legend>
   <app-upload [user]="user" [show]="show == 5"></app-upload>
 </div>
 
 <div class="container">
-  <legend class="pointer" (click)="show == 6 ? show = 0 : show = 6">Mes alertes email <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <legend class="pointer" (click)="show == 6 ? show = 0 : show = 6"><span class="glyphicon glyphicon-chevron-down"></span> Mes alertes email </legend>
   <app-alerts [user]="user" [show]="show == 6"></app-alerts>
 </div>
 
 <div class="container">
-  <legend class="pointer" (click)="show == 7 ? show = 0 : show = 7">Désactivation <span class="glyphicon glyphicon-chevron-down"></span></legend>
+  <legend class="pointer" (click)="show == 7 ? show = 0 : show = 7"><span class="glyphicon glyphicon-chevron-down"></span> Désactivation </legend>
   <app-desactivate [user]="user" [show]="show == 7"></app-desactivate>
 </div>
 
 <div class="container">
-  <legend class="pointer" (click)="show == 8 ? show = 0 : show = 8">Mon abonnement <span class="glyphicon glyphicon-chevron-down"></span></legend>
-  <app-desactivate [user]="user" [show]="show == 8"></app-desactivate>
+  <legend class="pointer" (click)="show == 8 ? show = 0 : show = 8"><span class="glyphicon glyphicon-chevron-down"></span> Mon abonnement </legend>
+  <app-premium [show]="show == 8"></app-premium>
 </div>
 

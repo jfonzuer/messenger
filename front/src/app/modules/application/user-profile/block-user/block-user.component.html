@@ -1,4 +1,6 @@
 <form class="form-horizontal" [hidden]="!show">
+  <p *ngIf="user.blockedUsers.length == 0">Aucun utilisateur bloqué</p>
+
   <fieldset>
     <div class="form-group" *ngFor="let user of user.blockedUsers">
       <div class="col-sm-3">

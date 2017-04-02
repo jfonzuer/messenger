@@ -6,7 +6,7 @@
 
 <div class="col-sm-12" *ngIf="selectedConversation">
   <div class="col-sm-4">
-    <h5><strong>{{ selectedConversation.userTwo.username}}</strong></h5>
+    <a [routerLink]="['/app/profile', selectedConversation.userTwo.id ]"><strong>{{ selectedConversation.userTwo.username}}</strong></a>
   </div>
   <div class="col-sm-4">
     <app-last-activity [lastActivityDatetime]="selectedConversation.userTwo.lastActivityDatetime"></app-last-activity>
@@ -19,9 +19,9 @@
         <span class="glyphicon glyphicon-cog"></span>
       </button>
       <ul class="dropdown-menu small-text pointer">
-        <li><a (click)="deleteConversation()">Supprimer la conversation <span class="glyphicon glyphicon-trash"></span></a></li>
-        <li *ngIf="!isUserBlocked"><a (click)="block()">Bloquer l'utilisateur <span class="glyphicon glyphicon-ban-circle"></span></a></li>
-        <li *ngIf="isUserBlocked"><a (click)="unblock()">Débloquer l'utilisateur <span class="glyphicon glyphicon-ban-circle"></span></a></li>
+        <li><a (click)="deleteConversation()"><span class="glyphicon glyphicon-trash"></span> Supprimer la conversation </a></li>
+        <li *ngIf="!isUserBlocked"><a (click)="block()"><span class="glyphicon glyphicon-ban-circle"></span> Bloquer l'utilisateur </a></li>
+        <li *ngIf="isUserBlocked"><a (click)="unblock()"><span class="glyphicon glyphicon-ban-circle"></span> Débloquer l'utilisateur </a></li>
       </ul>
     </div>
   </div>
@@ -36,7 +36,7 @@
     </a>
     <div class="media-body">
       <small class="pull-right time"><i class="fa fa-clock-o"></i> {{ message.sendSince }}</small>
-      <h5 class="media-heading">{{ message.source.username }}</h5>
+      <h6>{{ message.source.username }}</h6>
 
       <small class="col-sm-10" *ngIf="message.type == 'TEXT'">
         {{ message.content }}

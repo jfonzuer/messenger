@@ -20,7 +20,7 @@
         <input name="file" type="file" (change)="fileChangeEvent($event)" required autofocus (keyup.enter)="send(uploadForm.form.valid)">
       </div>
       <div class="col-sm-3">
-        <button type="submit" class="btn btn-success" (click)="send(uploadForm.form.valid)"><span class="glyphicon glyphicon-plus"></span></button>
+        <button type="submit" class="btn btn-sm btn-danger" (click)="send(uploadForm.form.valid)"><span class="glyphicon glyphicon-send"></span></button>
       </div>
     </div>
   </fieldset>

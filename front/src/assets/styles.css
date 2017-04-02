@@ -1,5 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 
+body {
+  font-size: 13px;
+}
+
+a {
+  color:white;
+}
+
+.form-control {
+  color: #060606;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+  background-color: #060606;
+}
+
+a:hover {
+  color:white;
+}
+
 .unauth-navbar-right {
   padding-top: 20px;
 }
@@ -14,7 +34,7 @@
 }
 
 .small-text {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .pointer {
@@ -48,7 +68,11 @@
 }
 
 .badge {
-  background-color: #060606;
+  background-color: #282828;
+}
+
+.thumbnail {
+  background-color: inherit;
 }
 
 .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
@@ -115,4 +139,8 @@
   .collapse.in{
     display:block !important;
   }
+}
+
+.navbar-inverse .navbar-nav > li > a.active {
+  color: #060606;
 }

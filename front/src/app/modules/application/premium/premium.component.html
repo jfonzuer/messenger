@@ -1,5 +1,5 @@
-<div class="jumbotron" *ngIf="!isPremium">
-  <h3><strong> Devenez premium :</strong></h3>
+<div class="jumbotron" *ngIf="!isPremium && show">
+  <h3> Devenez premium : </h3>
   <hr>
   <h4><i class="glyphicon-euro glyphicon"></i><strong>  19,99 € / mois </strong></h4>
   <p><i class="glyphicon glyphicon-chevron-right"></i>  Vous bénéficier d'une période d'essai de deux semaines</p>
@@ -10,12 +10,12 @@
   <p><a href="https://domine-app-test.chargebee.com/hosted_pages/plans/premium?subscription[email]={{ user.email }}&customer[email]=pgiraultmatz@gmail.com&customer[cf_user_id]={{ user.id }}" class="btn btn-danger btn-lg"> <i class="glyphicon glyphicon-shopping-cart"></i> Devenir premium </a></p>
 </div>
 
-<div *ngIf="isPremium">
-  <h3><strong> Vous êtes premium :</strong></h3>
+<div *ngIf="isPremium && show">
+  <h4>Vous êtes premium : </h4>
   <hr>
   <h4><i class="glyphicon glyphicon-chevron-right"></i>  Votre bénéficiez au début d'une période d'essai de <strong> 14 jours</strong></h4>
   <p><i class="glyphicon glyphicon-envelope"></i>  Vous pouvez envoyez des messages aux autres membres du site.</p>
   <p><i class="glyphicon glyphicon-eye-open"></i>  Vous pouvez consulter les visites de votre profil.</p>
   <p><i class="glyphicon glyphicon-info-sign"></i>  Votre abonnement peut être interrompu à tout moment.</p>
-  <p><a href="" class="btn btn-danger btn-lg"><i class="glyphicon glyphicon-shopping-cart"></i> Mon compte premium  </a></p>
+  <p><a href="https://domine-app-test.chargebeeportal.com/portal/login?email=pgiraultmatz@gmail.com" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-shopping-cart"></i> Mon compte premium  </a></p>
 </div>
