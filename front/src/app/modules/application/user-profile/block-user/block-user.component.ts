@@ -13,6 +13,7 @@ export class BlockUserComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
+  loading:boolean = false;
 
   constructor(private us:UserService, private sharedService:SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
@@ -23,11 +24,18 @@ export class BlockUserComponent implements OnInit {
 
   unblock(user:User) {
     let currentUser:User = this.sharedService.getCurrentUser();
+    this.loading = true;
     this.us.unblockUser(user)
       .then(users => {
+        this.loading = false;
+        this.user.blockedUsers = users;
         currentUser.blockedUsers = users;
         this.sharedService.refreshUser(currentUser);
+        this.toastr.success("L'utilisateur a bien été débloqué");
       })
-      .catch(error => this.toastr.error(error));
+      .catch(error => {
+        this.loading = false;
+        this.toastr.error(error)
+      });
   }
 }

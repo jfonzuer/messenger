@@ -50,11 +50,11 @@ public class MessengerUtils {
     }
 
     public static boolean isDomina(User user) {
-        return user.getType().getName().equals(DOMINA);
+        return user.getType().getId().equals(DOMINA_ID);
     }
 
     public static boolean isSub(User user) {
-        return user.getType().getName().equals(SUBMISSIVE);
+        return user.getType().getId().equals(SUBMISSIVE_ID);
     }
 
     public static UserType getOtherType(User user) {

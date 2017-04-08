@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
   @Input() user:User;
   @Input() constants:Constant;
   @Input() show:boolean = false;
+  loading:boolean = false;
 
   selectedFetishId:number[] = [];
   title:string;
@@ -33,11 +34,19 @@ export class ProfileComponent implements OnInit {
     this.fetishService.updateCheckedFetishes(fetish, event, this.selectedFetishId);
   }
 
-  send(valid:boolean) {
-    if (valid) {
-      // on met à jour la liste des fetishes
-      this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
-      this.userService.updateProfile(this.user).then(user => { this.user = user; this.sharedService.refreshUser(user); this.toastr.success("Mise à jour effectuée"); }).catch(error => this.toastr.error(error));
-    }
+  send() {
+    this.loading = true;
+    // on met à jour la liste des fetishes
+    this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
+    this.userService.updateProfile(this.user).then(user => {
+      this.loading = false;
+      this.user = user; this.sharedService.refreshUser(user);
+      this.toastr.success("Mise à jour effectuée");
+    }).catch(
+      error => {
+        this.toastr.error(error)
+        this.loading = false;
+      }
+    );
   }
 }

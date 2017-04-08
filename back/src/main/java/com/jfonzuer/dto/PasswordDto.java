@@ -1,11 +1,19 @@
 package com.jfonzuer.dto;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * Created by pgm on 22/10/16.
  */
 public class PasswordDto {
+
+    @NotNull
     private String current;
+
+    @NotNull
     private String password;
+
+    @NotNull
     private String confirmation;
 
     public PasswordDto() {

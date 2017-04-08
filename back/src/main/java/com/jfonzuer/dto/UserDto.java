@@ -1,5 +1,7 @@
 package com.jfonzuer.dto;
 
+import com.sun.istack.internal.NotNull;
+
 import java.util.List;
 
 /**
@@ -8,22 +10,45 @@ import java.util.List;
 public class UserDto {
 
     private Long id;
+
+    @NotNull
     private String username;
+
+    @NotNull
     private String email;
+
     private String description;
+
+    @NotNull
     private String birthDate;
+
     private List<FetishDto> fetishes;
+
     private List<String> authorities;
+
     private List<ImageDto> images;
+
+    @NotNull
     private UserTypeDto userType;
+
     private String lastActivityDatetime;
+
     private Long reportedAsFake;
+
     private Boolean notifyMessage;
+
     private Boolean notifyVisit;
+
     private Boolean enabled;
+
     private Boolean isBlocked;
+
     private List<UserDto> blockedUsers;
+
+    @NotNull
     private CountryDto country;
+
+    @NotNull
     private AreaDto area;
 
     public UserDto() {

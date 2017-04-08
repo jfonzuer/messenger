@@ -22,4 +22,9 @@
 </div>
 
 
+<div class="row" *ngIf="pager && !pager.last">
+  <div class="col-sm-offset-5">
+    <a class="btn btn-sm" style="color:white" (click)="scrollDown()">Plus de résultats <span class="glyphicon glyphicon-chevron-down"></span></a>
+  </div>
+</div>
 

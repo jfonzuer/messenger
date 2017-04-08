@@ -4,40 +4,40 @@
       <legend>Créer un compte :</legend>
 
       <div class="form-group">
-        <div class="col-sm-5">
+        <div class="col-sm-8">
           <input type="text" class="form-control" required placeholder="Nom d'utilisateur" (keyup.enter)="updateInformation(informationForm.form.valid)" name="username" [(ngModel)]="user.username">
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5">
+        <div class="col-sm-8">
           <input type="email" class="form-control" required placeholder="Email" name="email" (keyup.enter)="updateInformation(informationForm.form.valid)" [(ngModel)]="user.email">
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5">
+        <div class="col-sm-8">
           <input type="text" class="form-control" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[012])\/[0-9]{4}" required placeholder="Date de naissance (jj/mm/aaaa)" (keyup.enter)="updateInformation(informationForm.form.valid)" name="birthDate" [(ngModel)]="birthDate">
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5">
+        <div class="col-sm-8">
           <input type="password" class="form-control" required placeholder="Mot de passe" name="password" [(ngModel)]="password">
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5" *ngIf="types">
+        <div class="col-sm-8" *ngIf="constants">
           <label>Type :</label>
           <select class="form-control" [(ngModel)]="user.userType.id" name="userType" required>
-            <option *ngFor="let type of types" [value]="type.id">{{ type.name }}</option>
+            <option *ngFor="let type of constants.userTypes" [value]="type.id">{{ type.name }}</option>
           </select>
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5" *ngIf="constants">
+        <div class="col-sm-8" *ngIf="constants">
           <label>Pays :</label>
           <select class="form-control" [(ngModel)]="user.country.id" name="country" required>
             <option *ngFor="let country of constants.countries" [value]="country.id">{{ country.name }}</option>
@@ -46,7 +46,7 @@
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5" *ngIf="constants">
+        <div class="col-sm-8" *ngIf="constants">
           <label>Région :</label>
           <select class="form-control" [(ngModel)]="user.area.id" name="area" required [ngSwitch]="user.country.id">
             <ng-container *ngSwitchCase="1">
@@ -69,7 +69,7 @@
       </div>
 
       <div class="form-group">
-        <div class="col-sm-10" *ngIf="constants">
+        <div class="col-sm-8" *ngIf="constants">
           <label>Pratiques :</label>
           <div class="radio">
             <label *ngFor="let fetish of constants.fetishes; let i = index">
@@ -81,14 +81,14 @@
       </div>
 
       <div class="form-group">
-        <div class="col-sm-10">
+        <div class="col-sm-8">
           <label>Description :</label>
           <textarea class="form-control" rows="4" name="description" (keyup.enter)="send(sendForm.form.valid)" [(ngModel)]="user.description" required></textarea>
         </div>
       </div>
 
       <div class="form-group">
-        <div class="col-sm-10">
+        <div class="col-sm-8">
           <div class="checkbox">
             <label>
               <input type="checkbox" name="terms"  required [(ngModel)]="terms"><app-terms></app-terms>
@@ -102,9 +102,10 @@
       <br>
 
       <div class="form-group">
-        <div class="col-sm-10">
+        <div class="col-sm-1">
           <button id="submit" [disabled]="isBot" type="submit" class="btn btn-danger">Valider</button>
         </div>
+        <app-spinner [loading]="loading"></app-spinner>
       </div>
     </fieldset>
   </form>

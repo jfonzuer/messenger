@@ -11,12 +11,14 @@ import com.jfonzuer.service.AsyncService;
 import com.jfonzuer.service.MailService;
 import com.jfonzuer.service.TokenService;
 import com.jfonzuer.service.UserService;
+import com.sun.istack.internal.NotNull;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -45,17 +47,24 @@ public class RegisterController {
     @Autowired
     private TokenService tokenService;
 
+    /**
+     * endpoint permettant à un utilisateur de se register
+     * @param register
+     * @param request
+     */
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public void add(@RequestBody RegisterDto register, HttpServletRequest request) {
-
-        // TODO : validation via annotation and exception handling
-
-        System.out.println("register = " + register);
+    public void add(@Valid @RequestBody RegisterDto register, HttpServletRequest request) {
         User user = UserMapper.fromDto(register.getUser());
+        System.out.println("user.getType() = " + user.getType());
 
         if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
-            throw new IllegalArgumentException("L'adresse email est déjà utilisée");
+            throw new IllegalArgumentException("L'adrcesse email est déjà utilisée");
         }
+        if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
+            throw new IllegalArgumentException("Le nom d'utilisateur est déjà utilisée");
+        }
+        System.out.println("user.getArea() = " + user.getArea());
+        
         userService.createUser(user, register.getPassword());
         String token = UUID.randomUUID().toString();
         tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));
@@ -68,7 +77,7 @@ public class RegisterController {
      * @param email
      */
     @RequestMapping(value = "password/reset/mail", method = RequestMethod.POST)
-    public void resetPassword(HttpServletRequest request, @RequestBody String email) {
+    public void resetPassword(HttpServletRequest request, @NotNull @RequestBody String email) {
         User user = userRepository.findByEmail(email);
 
         if (user == null) {
@@ -107,7 +116,7 @@ public class RegisterController {
      * @param resetPasswordDto
      */
     @RequestMapping(value = "/password/reset", method = RequestMethod.POST)
-    public void resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+    public void resetPassword(@Valid @RequestBody ResetPasswordDto resetPasswordDto) {
         userService.resetPassword(resetPasswordDto);
     }
 }

@@ -5,6 +5,7 @@ import {DatetimeService} from "../../../services/datetime.service";
 import {SharedService} from "../../../services/shared.service";
 import {environment} from "../../../../environments/environment";
 import {ToastsManager} from "ng2-toastr";
+import {Pager} from "../../../model/pager";
 
 @Component({
   selector: 'app-visit',
@@ -15,6 +16,7 @@ export class VisitComponent implements OnInit {
 
   visits:Visit[];
   uploadImageUrl:string;
+  pager:Pager;
 
   constructor(private visitService: VisitService, private datetimeService:DatetimeService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadImageUrl = environment.uploadImageUrl;
@@ -22,14 +24,26 @@ export class VisitComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.visitService.getAll().then(visits => {
-      console.log(visits);
-      this.visits = visits;
-      this.datetimeService.formatVisits(visits);
+    this.getVisits();
+    this.visits = [];
+  }
+
+  getVisits() {
+    this.visitService.getVisits(this.pager).then(response => {
+      console.log(response);
+      this.visits = this.visits.concat(response.content);
+      this.pager = new Pager(response.number, response.last, response.size);
+      console.log(this.pager);
+
       this.sharedService.refreshUnseenNumberVisits();
 
-    }).catch(error => {
+    })/*.catch(error => {
       this.toastr.error(error);
-    });
+    });*/
+  }
+
+  scrollDown() {
+    this.pager.page = this.pager.page + 1;
+    this.getVisits();
   }
 }

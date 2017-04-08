@@ -1,8 +1,12 @@
 package com.jfonzuer.service;
 
-import com.jfonzuer.dto.*;
+import com.jfonzuer.dto.PasswordDto;
+import com.jfonzuer.dto.ResetPasswordDto;
+import com.jfonzuer.dto.SearchDto;
+import com.jfonzuer.dto.UserDto;
 import com.jfonzuer.dto.mapper.SearchMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
+import com.jfonzuer.dto.response.InformationUpdateDto;
 import com.jfonzuer.entities.*;
 import com.jfonzuer.repository.*;
 import com.jfonzuer.security.JwtTokenUtil;
@@ -12,7 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mobile.device.Device;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +31,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * Created by pgm on 17/10/16.
@@ -45,6 +53,9 @@ public class UserService {
     private final MailService mailService;
     private final VisitRepository visitRepository;
     private final AsyncService asyncService;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @Autowired
     public UserService(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, UserRoleRepository userRoleRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, TokenRepository tokenRepository, MailService mailService, VisitRepository visitRepository, AsyncService asyncService) {
@@ -74,8 +85,9 @@ public class UserService {
      */
     public void updatePassword(HttpServletRequest request, PasswordDto dto) {
         User user = getUserFromToken(request);
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        if (!passwordEncoder.encode(dto.getCurrent()).equals(user.getPassword())) {
+        if (!authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), dto.getPassword())).isAuthenticated()) {
             throw new IllegalArgumentException("Votre mot de passe actuel est incorrect");
         }
 
@@ -166,6 +178,7 @@ public class UserService {
         user.setReportedAsFake(0L);
         user.setLastActivityDatetime(LocalDateTime.now());
         user.setLastReportDate(LocalDate.now().minusDays(1));
+        user.setActivated(false);
         user.setNotifyVisit(true);
         user.setNotifyMessage(true);
         user = userRepository.save(user);
@@ -221,13 +234,22 @@ public class UserService {
      * @param dto
      * @return
      */
-    public UserDto updateInformations(User user, UserDto dto) {
+    public InformationUpdateDto updateInformations(User user, UserDto dto, Device device) {
         User updatedUser = UserMapper.fromDto(dto);
+        String token = null;
+
+        // si l'utilisateur a changé d'email, on génére un nouveau token
+        if (!updatedUser.getEmail().equals(user.getEmail())) {
+            token = jwtTokenUtil.generateToken(dto, device);
+        }
         user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());
         throwExceptionIfUnderaged(user.getBirthDate());
         user.setBirthDate(updatedUser.getBirthDate());
-        return UserMapper.toDto(userRepository.save(user));
+
+        user = userRepository.save(user);
+
+        return InformationUpdateDto.Builder.anInformationUpdateDto().withUser(UserMapper.toDto(user)).withToken(token).build();
     }
 
 
@@ -261,7 +283,7 @@ public class UserService {
 
 
     private void throwExceptionIfUnderaged(LocalDate birthdate) {
-        if (ChronoUnit.YEARS.between(LocalDate.now(), birthdate) < 18) {
+        if (ChronoUnit.YEARS.between(birthdate, LocalDate.now()) < 18) {
             throw new IllegalArgumentException("Vous devez avoir plus de 18 ans pour vous inscrire sur ce site");
         }
     }

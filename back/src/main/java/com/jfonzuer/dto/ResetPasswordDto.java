@@ -1,12 +1,19 @@
 package com.jfonzuer.dto;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * Created by pgm on 24/10/16.
  */
 public class ResetPasswordDto {
 
+    @NotNull
     private PasswordDto passwordConfirmation;
+
+    @NotNull
     private String token;
+
+    @NotNull
     private Long userId;
 
     public ResetPasswordDto() {

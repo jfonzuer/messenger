@@ -392,6 +392,11 @@ public class User implements UserDetails, Serializable {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        return result;
+    }
 
     public static final class Builder {
         private Long id;

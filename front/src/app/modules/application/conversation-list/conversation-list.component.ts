@@ -42,7 +42,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   }
 
   onSelect(conversation : Conversation) {
-
     if (conversation.id != this.selectedConversation.id) {
       conversation.readByUserOne = true;
       this.selectedConversation = conversation;

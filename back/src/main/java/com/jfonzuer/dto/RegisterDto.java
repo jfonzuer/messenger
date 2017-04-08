@@ -1,10 +1,16 @@
 package com.jfonzuer.dto;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * Created by pgm on 22/10/16.
  */
 public class RegisterDto {
+
+    @NotNull
     private UserDto user;
+
+    @NotNull
     private String password;
 
     public RegisterDto() {

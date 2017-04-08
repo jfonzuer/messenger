@@ -15,6 +15,7 @@ export class PasswordResetComponent implements OnInit {
   userId:number;
   token:string;
   passwordConfirmation:PasswordConfirmation = new PasswordConfirmation();
+  loading:boolean = false;
 
   constructor(private route:ActivatedRoute, private router:Router, private userService: UserService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
@@ -33,19 +34,23 @@ export class PasswordResetComponent implements OnInit {
     });
   }
 
-  send(valid:boolean) {
-    if (valid) {
-      if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
-        console.log(this.passwordConfirmation);
-        console.log(new ResetPassword(this.passwordConfirmation, this.token, this.userId));
-        //this.userService.resetPassword(this.passwordConfirmation)
-        this.userService.resetPassword(new ResetPassword(this.passwordConfirmation, this.token, this.userId))
-          .then(() => { this.toastr.success("Le mot de passe a été modifié, vous allez être redirigé vers la page de login"); setTimeout(this.router.navigate(['/unauth/home']), 2000) })
-          .catch(error => this.toastr.error(error));
-      }
-      else {
-        this.toastr.error("Les mots de passe doivent être identiques");
-      }
+  send() {
+    if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
+      this.loading = true;
+      console.log(this.passwordConfirmation);
+      console.log(new ResetPassword(this.passwordConfirmation, this.token, this.userId));
+      //this.userService.resetPassword(this.passwordConfirmation)
+      this.userService.resetPassword(new ResetPassword(this.passwordConfirmation, this.token, this.userId))
+        .then(() => {
+          this.toastr.success("Le mot de passe a été modifié, vous allez être redirigé vers la page de login"); setTimeout(this.router.navigate(['/unauth/home']), 2000) })
+        .catch(error => {
+            this.loading = false;
+            this.toastr.error(error)
+          }
+        );
+    }
+    else {
+      this.toastr.error("Les mots de passe doivent être identiques");
     }
   }
 }

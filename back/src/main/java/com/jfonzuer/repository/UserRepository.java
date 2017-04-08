@@ -20,6 +20,7 @@ import java.util.List;
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
+    List<User> findAllByEmailOrUsername(String email, String username);
 
     User findByIdAndEnabledAndIsBlocked(Long id, Boolean enabled, Boolean isBlocked);
 
@@ -30,7 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "and (:keyword is null or lower(u.description) like concat('%', lower(:keyword), '%') or lower(u.username) like concat('%', lower(:keyword) ,'%')) " +
             "and ((:dateOne is null and :dateTwo is null) or (u.birthDate between :dateOne and :dateTwo)) " +
             "order by u.lastActivityDatetime desc ")
-
     Page<User> search(@Param("id") Long id, @Param("type") UserType type, @Param("country") Country country, @Param("area") Area area, @Param("keyword") String keyword, @Param("dateOne") LocalDate dateOne, @Param("dateTwo") LocalDate dateTwo, Pageable p);
 
     List<User> findByReportedAsFakeGreaterThanOrderByReportedAsFakeDesc(Long reportedTime);

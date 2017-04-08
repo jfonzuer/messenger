@@ -1,4 +1,3 @@
-
 <div class="send-wrap" *ngIf="sendImage && !isUserBlocked">
   <input style="margin-top: 10px;" name="file" type="file" (change)="fileChangeEvent($event)" required autofocus>
   <h3 *ngIf="file"><i class="glyphicon glyphicon-picture"></i> {{ file.name }} <button class="btn btn-danger" (click)="uploadImage()"><i class="glyphicon glyphicon-ok"></i></button></h3>
@@ -18,7 +17,7 @@
         <input type="checkbox" name="enter" [(ngModel)]="enter"> Entrer = Envoyer
       </label>
     </div>
-    <button *ngIf="!sendImage && !isUserBlocked" type="submit" class="col-sm-2 text-right btn btn-default send-message-btn pull-right" [disabled]="!sendForm.form.valid"><i class="fa fa-plus"></i>  Envoyer</button>
+    <button *ngIf="!sendImage && !isUserBlocked" type="submit" class="col-sm-2 text-right btn btn-default send-message-btn pull-right" [disabled]="!sendForm.form.valid"><i class="glyphicon glyphicon-send"></i>   Envoyer</button>
   </div>
 </form>
 

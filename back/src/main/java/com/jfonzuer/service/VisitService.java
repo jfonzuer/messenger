@@ -26,7 +26,7 @@ public class VisitService {
     }
 
     public Page<VisitDto> getAll(User user, Pageable p) {
-        Page<Visit> visits = this.visitRepository.findAllByVisited(user, p);
+        Page<Visit> visits = this.visitRepository.findAllByVisitedOrderByIdDesc(user, p);
 
         // on récupére les visits unseen et on les set à seen avant de les save
         List<Visit> unseenVisits = this.visitRepository.findAllByVisitedAndIsSeenByVisitedOrderByIdDesc(user, false);

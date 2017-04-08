@@ -1,5 +1,5 @@
 <!-- The Modal -->
-<div id="myModal" [ngClass]="{display: selectedImage != null }" style="/*display: block*/" class="modal">
+<div id="myModal" [ngClass]="{display: selectedImage != null }" class="modal">
   <span class="close" (click)="selectedImage = null">&times;</span>
   <img *ngIf="selectedImage" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}">
 </div>
@@ -32,19 +32,17 @@
     <a class="btn btn-sm" (click)="scrollUp()"><span class="glyphicon glyphicon-chevron-up"></span></a>
   </div>
   <div class="media msg" *ngFor="let message of messages">
-    <a class="pull-left" href="#">
-    </a>
     <div class="media-body">
-      <small class="pull-right time"><i class="fa fa-clock-o"></i> {{ message.sendSince }}</small>
-      <h6>{{ message.source.username }}</h6>
+      <p [ngClass]="{'align-right': message.source.id !== selectedConversation.userOne.id }">{{ message.source.username }}</p>
 
-      <small class="col-sm-10" *ngIf="message.type == 'TEXT'">
+      <small [ngClass]="{'pull-right other-user-message': message.source.id !== selectedConversation.userOne.id }"  class="message" *ngIf="message.type == 'TEXT'">
         {{ message.content }}
       </small>
-      <small class="col-sm-10" *ngIf="message.type == 'IMAGE'">
+      <small class="col-sm-10" *ngIf="message.type == 'IMAGE'" [ngClass]="{'pull-right': message.source.id !== selectedConversation.userOne.id }" >
         <a (click)="selectedImage = message"><img src="{{ uploadImageUrl }}{{ message.url }}" class="image medium-image center-block"></a>
       </small>
     </div>
+    <small  [ngClass]="{'pull-right': message.source.id !== selectedConversation.userOne.id }" class="time"><i class="fa fa-clock-o"></i> {{ message.sendSince }}</small>
   </div>
   <small class="pull-right time" [innerHTML]="selectedConversation.readByUserTwo ? 'Lu' : 'Envoyé'" ></small>
 </div>

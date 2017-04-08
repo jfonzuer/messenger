@@ -6,9 +6,10 @@
       <div class="col-sm-3">
         <p>{{ user.username }}</p>
       </div>
-      <div class="col-sm-2">
-        <button type="submit" (click)="unblock(user)" class="btn btn-sm btn-danger">Débloquer</button>
+      <div class="col-sm-1">
+        <button type="button" (click)="unblock(user)" class="btn btn-sm btn-danger">Débloquer</button>
       </div>
+      <app-spinner [loading]="loading"></app-spinner>
     </div>
   </fieldset>
 </form>

@@ -29,7 +29,6 @@ export class ConversationService {
   }
 
   getAll() {
-
     let headers = this.authenticationService.getHeaders();
 
     return this.http.get(this.baseUrl + 'conversations', {headers: headers})

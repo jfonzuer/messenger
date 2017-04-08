@@ -5,6 +5,7 @@ import {AuthenticationService} from "./authentication.service";
 import {Http} from "@angular/http";
 import {Visit} from "../model/visit";
 import {RequestService} from "./request.service";
+import {Pager} from "../model/pager";
 
 @Injectable()
 export class VisitService {
@@ -15,24 +16,28 @@ export class VisitService {
     this.baseUrl = environment.baseUrl;
   }
 
-  getAll() {
+  getVisits(pager:Pager) : any {
     let headers = this.authenticationService.getHeaders();
 
-    return this.http.get(this.baseUrl + 'visits', {headers:headers})
+    let queryParams = '?l=1';
+    if (pager) {
+      queryParams = queryParams.concat('&p=' + pager.page);
+    }
+
+    return this.http.get(this.baseUrl + 'visits/' + queryParams, {headers:headers})
       .toPromise()
       .then(response => {
+        console.log(response);
         this.rs.handleResponse(response);
 
-        // si reponse non vide
-        if (response.text()) {
-          let visits:Visit[] = response.json().content;
-          for(let visit of visits) {
-            //this.datetimeService.formatVisit( visit);
-            this.datetimeService.formatAge(visit.visitor);
-          }
-          return visits;
+        let body = response.json();
+        let visits:Visit[] = body.content;
+        for(let visit of visits) {
+          this.datetimeService.formatVisit( visit);
+          this.datetimeService.formatAge(visit.visitor);
         }
-        return [];
+        body.content = visits;
+        return body;
       })
       .catch(this.rs.handleError);
   }

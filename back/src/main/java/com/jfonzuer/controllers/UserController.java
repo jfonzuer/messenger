@@ -3,6 +3,7 @@ package com.jfonzuer.controllers;
 import com.jfonzuer.dto.*;
 import com.jfonzuer.dto.mapper.SearchMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
+import com.jfonzuer.dto.response.InformationUpdateDto;
 import com.jfonzuer.entities.Search;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.entities.UserType;
@@ -20,12 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mobile.device.Device;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -88,7 +91,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
-    public UserDto updateProfile(HttpServletRequest request, @RequestBody UserDto dto) {
+    public UserDto updateProfile(HttpServletRequest request, @Valid @RequestBody UserDto dto) {
         User user = userService.getUserFromToken(request);
         return userService.updateProfile(user, dto);
     }
@@ -100,10 +103,9 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/informations", method = RequestMethod.PUT)
-    public UserDto updateInformation(HttpServletRequest request, @RequestBody UserDto userDto) {
-        // TODO : validation via annotation and exception handling
+    public InformationUpdateDto updateInformation(HttpServletRequest request, Device device, @Valid @RequestBody UserDto userDto) {
         User user = userService.getUserFromToken(request);
-        return userService.updateInformations(user, userDto);
+        return userService.updateInformations(user, userDto, device);
     }
 
 
@@ -113,7 +115,7 @@ public class UserController {
      * @param passwordDto
      */
     @RequestMapping(value = "/password/reset", method = RequestMethod.PUT)
-    public void updatePassword(HttpServletRequest request, @RequestBody PasswordDto passwordDto) {
+    public void updatePassword(HttpServletRequest request, @Valid @RequestBody PasswordDto passwordDto) {
         userService.updatePassword(request, passwordDto);
     }
 
@@ -193,8 +195,8 @@ public class UserController {
     @RequestMapping(value = "/unblock", method = RequestMethod.POST)
     public List<UserDto> unblock(HttpServletRequest request, @RequestBody UserDto dto) {
         User user = userService.getUserFromToken(request);
-        User userToBlock = UserMapper.fromDto(dto);
-        userService.unblockUser(user, userToBlock);
+        User userToUnblock = UserMapper.fromDto(dto);
+        userService.unblockUser(user, userToUnblock);
         return user.getBlockedUsers().stream().map(UserMapper::toLightDto).collect(Collectors.toList());
     }
 }

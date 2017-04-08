@@ -37,14 +37,18 @@ public class MailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         String loginUrl = appUrl + "unauth/login";
         try {
-            //mimeMessage.setContent("Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a>", "text/html; charset=utf-8");
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
+            //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
-            //helper.setTo(visited.getEmail());
-            helper.setSubject(visitor.getUsername() + " a visité votre profil");
-            helper.setText("Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a>", true);
+            helper.setSubject("[Dominapp] "+ visitor.getUsername() + " a visité votre profil");
+            helper.setText(
+                    "Bonjour " + visited.getUsername() + ",<br><br>" +
+                            visited.getUsername() + " a visité votre profil <br><br> " +
+                            "Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a> <br><br> " +
+                            "L'équipe Dominapp.", true);
             javaMailSender.send(mimeMessage);
+
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -54,14 +58,18 @@ public class MailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         String loginUrl = appUrl + "unauth/login";
         try {
-            mimeMessage.setContent("Connectez vous à l'application pour consulter vos messages : <a href=" + loginUrl + ">Connexion</a>", "text/html; charset=utf-8");
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
-            helper.setSubject(sender.getUsername() + " vous a envoyé un message votre profil");
-            helper.setText("Connectez vous à l'application pour consulter vos messages : <a href=" + loginUrl + ">Connexion</a>", true);
-            //javaMailSender.send(mimeMessage);
+            helper.setSubject("[Dominapp] "+ sender.getUsername() + " vous a envoyé un message");
+            helper.setText(
+                    "Bonjour " + user.getUsername() + ",<br><br>" +
+                            sender.getUsername() + " vous a envoyé un message <br><br> " +
+                            "Connectez vous à l'application pour consulter vos messages : <a href=" + loginUrl + ">Connexion</a> <br><br> " +
+                            "L'équipe Dominapp.", true);
+            javaMailSender.send(mimeMessage);
+
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -71,15 +79,16 @@ public class MailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         String validationUrl = appUrl + "unauth/home/" + token;
         try {
-            mimeMessage.setContent("" +
-                    "Merci de vous être inscris sur Dominapp. <br> " +
-                    "Validez votre compte en cliquant sur ce lien : <a href=" + validationUrl + ">Je valide mon compte</a> <br> " +
-                    "L'équipe Dominapp", "text/html; charset=utf-8");
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
-            helper.setSubject("Bienvenue sur Dominapp " + user.getUsername());
+            helper.setSubject("[Dominapp] Bienvenue sur Dominapp");
+            helper.setText(
+                    "Bonjour " + user.getUsername() + ",<br><br>" +
+                            "Merci de vous être inscris sur Dominapp. <br><br> " +
+                            "Validez votre compte en cliquant sur ce lien : <a href=" + validationUrl + ">Je valide mon compte</a> <br><br> " +
+                            "L'équipe Dominapp.", true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -88,14 +97,18 @@ public class MailService {
 
     public void sendResetTokenEmail(Locale locale, String token, User user) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String resetLink = appUrl + "password/reset/" + user.getId() + "/" +token;
+        String resetLink = appUrl + "unauth/password/reset/" + user.getId() + "/" +token;
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
-            helper.setSubject("Réinitialiser le mot de passe");
-            helper.setText("Cliquer sur le lien suivant pour réinitialiser le mot de passe : <a href=" + resetLink + ">Réinitialiser</a>", true);
+            helper.setSubject("[Dominapp] Réinitialiser votre mot de passe");
+            helper.setText(
+                    "Bonjour " + user.getUsername() + ",<br><br>" +
+                            "Merci de vous être inscris sur Dominapp. <br><br> " +
+                            "Pour réinitialiser votre mot de passer, cliquer sur le lien suivant : <a href=" + resetLink + ">Réinitialiser</a> <br><br> " +
+                            "L'équipe Dominapp.", true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -112,8 +125,8 @@ public class MailService {
             helper.setSubject("[Dominapp] Activez votre compte");
             helper.setText(
                     "Bonjour " + user.getUsername() + ",<br><br>" +
-                    "Cliquez sur le lien suivant pour activer votre compte : <a href=" + activationLink + ">Activer</a> <br><br>" +
-                    "L'équipe Dominapp.", true);
+                            "Cliquez sur le lien suivant pour activer votre compte : <a href=" + activationLink + ">Activer</a> <br><br>" +
+                            "L'équipe Dominapp.", true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();

@@ -10,6 +10,7 @@ import {ToastsManager} from "ng2-toastr";
 })
 export class SendActivationMailComponent implements OnInit {
   email:string;
+  loading:boolean = false;
 
   constructor(private authenticationService:AuthenticationService, private router:Router, private toastr: ToastsManager, public vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
@@ -17,17 +18,19 @@ export class SendActivationMailComponent implements OnInit {
 
   ngOnInit() {
     console.log("init SendActivationMailComponent");
-    this.email = 'u3@gmail.com';
+    this.email = 'pgiraultmatz@gmail.com';
   }
 
   send() {
-    // TODO implement loader
+    this.loading = true;
     this.authenticationService.sendActivationEmail(this.email).then(() => {
-      this.toastr.success("Un email vous a été envoyé pour activer votre compte.")
+      this.toastr.success("Un email vous a été envoyé pour activer votre compte.");
+      this.loading = false;
       setTimeout(() => this.router.navigate(['/unauth/home']), 2000);
     })
       .catch(error => {
         console.debug("catch", error);
+        this.loading = false;
         this.toastr.error(error.json().message);
       });
   }

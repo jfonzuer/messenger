@@ -15,6 +15,7 @@ export class ChangePasswordComponent implements OnInit {
 
   @Input() user:User;
   @Input() show:boolean;
+  loading:boolean = false;
 
   passwordConfirmation: PasswordConfirmation = new PasswordConfirmation();
 
@@ -25,16 +26,20 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit() {
   }
 
-  updatePassword(valid:boolean) {
-    if (valid) {
-      if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
-        this.userService.updatePassword(this.passwordConfirmation).then(() => {
-          this.toastr.success("Le mot de passe a été modifié avec succés.");
-          this.authenticationService.refreshToken().then(response => { this.localStorageService.setObject('token', response.token) }).catch(error => this.toastr.error(error));
+  updatePassword() {
+    if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
+      this.loading = true;
+      this.userService.updatePassword(this.passwordConfirmation).then(() => {
+        this.loading = false;
+        this.toastr.success("Le mot de passe a été modifié avec succés.");
+        this.authenticationService.refreshToken().then(response => { this.localStorageService.setObject('token', response.token) }).catch(error => this.toastr.error(error));
+      })
+        .catch(error => {
+          this.toastr.error(error);
+          this.loading = false;
         })
-      } else {
-        this.toastr.error("Les mots de passe doivent être identiques");
-      }
+    } else {
+      this.toastr.error("Les mots de passe doivent être identiques");
     }
   }
 

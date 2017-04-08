@@ -1,15 +1,14 @@
 package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.AuthenticationRequestDto;
+import com.jfonzuer.dto.JwtAuthenticationResponse;
+import com.jfonzuer.dto.UserDto;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.exception.AccountNotActivatedException;
 import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtTokenUtil;
-import com.jfonzuer.dto.UserDto;
-import com.jfonzuer.dto.JwtAuthenticationResponse;
-import com.jfonzuer.service.AsyncService;
 import com.jfonzuer.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +20,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
@@ -70,6 +71,7 @@ public class AuthenticationController {
         if (user.getBlocked()) {
             throw new UnauthorizedException("Votre compte a été suspendu, contactez l'administration de l'application : contact@dominapp.com");
         }
+        System.out.println("user.getActivated() = " + user.getActivated());
         if (!user.getActivated()) {
             throw new AccountNotActivatedException("Vous n'avez pas encore activé votre compte");
         }

@@ -34,11 +34,10 @@ export class RegisterComponent implements OnInit {
   // Captcha
   googleKey:string;
   isBot:boolean = true;
-
+  loading:boolean = false;
   constants:Constant;
 
-  constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: CoolLocalStorage,
-              private router:Router, private fetishService:FetishService, private typeService:UserTypeService, private toastr: ToastsManager, vcRef: ViewContainerRef, public overlay: Overlay, public modal: Modal) {
+  constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: CoolLocalStorage, private router:Router, private fetishService:FetishService, private typeService:UserTypeService, private toastr: ToastsManager, vcRef: ViewContainerRef, public overlay: Overlay, public modal: Modal) {
     this.toastr.setRootViewContainerRef(vcRef);
     this.googleKey = environment.googleKey;
   }
@@ -51,7 +50,7 @@ export class RegisterComponent implements OnInit {
 
     // init register
     this.user.username = 'test';
-    this.user.email = 'pgiraultmatz@gmail.com';
+    this.user.email = 'jack.fonzuer@yahoo.com';
     this.password = 'test';
     this.user.fetishes = [new Fetish(1, "t"), new Fetish(2, "t")];
     this.user.description = "test";
@@ -60,20 +59,25 @@ export class RegisterComponent implements OnInit {
     this.route.data.forEach((data:any) => {
       // si les resolvers renvoient une erreur, elles se trouvent dans data
       data.constants instanceof Object ? this.constants = data.constants : this.toastr.error("Erreur de connexion");
-      console.log("constants", this.constants);
     });
   }
 
   send(valid:boolean) {
     if (valid && !this.isBot) {
-        // on set la valeur birthdate avc le format standard
-        this.user.birthDate = this.datetimeService.toStandardFormat(this.birthDate);
-        // on met à jour la liste des fetishes
-        this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
-
-        this.userService.post(new Register(this.user, this.password))
-          .then(response => { this.toastr.success("Inscription effectuée, vous allez être redirigé vers le login"); setTimeout(() => this.router.navigate(['/unauth/home']), 3000); })
-          .catch(error => this.toastr.error(error))
+      // on set la valeur birthdate avc le format standard
+      this.user.birthDate = this.datetimeService.toStandardFormat(this.birthDate);
+      // on met à jour la liste des fetishes
+      this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
+      this.loading = true;
+      this.userService.post(new Register(this.user, this.password))
+        .then(response => {
+          this.toastr.success("Inscription effectuée, vous allez être redirigé vers le login"); setTimeout(() => this.router.navigate(['/unauth/home']), 3000);
+        })
+        .catch(error => {
+            this.toastr.error(error);
+            this.loading = false;
+          }
+        )
     }
   }
 

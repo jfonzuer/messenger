@@ -23,10 +23,10 @@ export class TermsComponent implements OnInit {
       .showClose(true)
       .title('Condtions générales d\'utilisation')
       .body(`
-      <h1>PRÉAMBULE</h1>
+      <h4>PRÉAMBULE</h4>
       Avant toute utilisation des services du site internet accessible à l’adresse www.dominapp.com (ci-après désigné par le « Site »), vous vous engagez à lire et à accepter sans réserve les présentes conditions générales d'utilisation (ci-après les « CGU »).
       
-      <h1>ARTICLE 1 : DÉFINITIONS</h1>
+      <h4>ARTICLE 1 : DÉFINITIONS</h4>
       Abonnements : également désignés par « Pack », sont des contrats souscrits pour des périodes de 1, 3 ou 6 mois. Les Abonnements sont destinés aux Utilisateurs masculins et donnent accès à l’intégralité des services payants du Site. Les tarifs des Abonnements sont définis à l’article 3 des présentes CGU.
       
       Le site constitue un Service payant mis à la disposition des Utilisateurs masculins. L'abonnement premium permet à un Utilisateur masculin de contacter une Utilisatrice via son Compte, afin de solliciter une prise de contact via le Site.
@@ -37,7 +37,7 @@ export class TermsComponent implements OnInit {
       
       Utilisateur : Internaute ayant adhéré aux présentes CGU. On distingue les « Utilisateurs masculins » (Hommes) des « Utilisatrices » (Femmes), « l'(les) Utilisateur(s) » désignant communément l'un ou l'autre.
       
-      <h1>ARTICLE 2 : INSCRIPTION ET CONDITIONS D’ACCÈS AUX SERVICES DU SITE</h1>
+      <h4>ARTICLE 2 : INSCRIPTION ET CONDITIONS D’ACCÈS AUX SERVICES DU SITE</h4>
       2.1 Objet des Services
       
       Le Site est un espace convivial destiné aux seuls Utilisateurs, créé pour faciliter les rencontres virtuelles entre hommes soumis et femmes dominatrices, en leur permettant de faire connaissance ou de s'amuser librement dans un contexte humoristique tout en développant leur réseau social.
@@ -98,7 +98,7 @@ export class TermsComponent implements OnInit {
       
       Cependant, au lancement du site, pour une période de quelques mois, les nouvels auront un accès premium garantit pour découvrir le site.
       
-      <h1>ARTICLE 3 : LES ABONNEMENTS</h1>
+      <h4>ARTICLE 3 : LES ABONNEMENTS</h4>
       3.1 Les Packs
       
       Le pack premium est facturé 19,90 euros TTC. Ce montant est prélevé au jour de la souscription.
@@ -109,7 +109,7 @@ export class TermsComponent implements OnInit {
       
       La sécurité du paiement est assurée par Paypal.
       
-      <h1>ARTICLE 4 : DURÉE ET RENOUVELLEMENT DES ABONNEMENTS</h1>
+      <h4>ARTICLE 4 : DURÉE ET RENOUVELLEMENT DES ABONNEMENTS</h4>
       4.1 Droit de rétractation
       
       Conformément à l'article L. 121-21 du Code de la consommation, toute souscription à un Abonnement pourra être remboursée sans pénalité sur simple demande non motivée dans un délai de 14 jours à compter de ladite souscription par l'envoi d'un courriel adressé à dominapp.contact@gmail.com avec, en pièce jointe, la facture d’achat reçue du service Paypal. Il ne sera procédé qu'à un seul remboursement par RIB et par Compte d’Utilisateur.
@@ -143,7 +143,7 @@ export class TermsComponent implements OnInit {
       En cas de réactivation du Compte d’Utilisateur, les données conservées lui seront réaffectées.
       La désactivation ne supprime pas le Compte de l’Utilisateur ni ne libère l’Utilisateur de ses obligations.
       
-      <h1>ARTICLE 5 : OBLIGATIONS ET RESPONSABILITÉ DES UTILISATEURS</h1>
+      <h4>ARTICLE 5 : OBLIGATIONS ET RESPONSABILITÉ DES UTILISATEURS</h4>
       5.1 Obligations
       
       Les Utilisateurs s'engagent lors de la souscription au Site :
@@ -170,7 +170,7 @@ export class TermsComponent implements OnInit {
       Dans le cas où la responsabilité de Dominapp serait recherchée à raison d'un manquement par un Utilisateur aux obligations qui lui incombent au terme de la loi ou des CGU, ce dernier s'engage à garantir Dominapp ontre toute condamnation prononcée à son encontre trouvant son origine dans le manquement imputé à l'Utilisateur.
       Dominapp n'exerce aucun contrôle des sites et sources externes (pages web, forums...) vers lesquels redirigent les liens hypertextes mis en ligne par les Utilisateurs sur le Site et ne saurait être tenu responsable de leur contenu. A ce titre, les Utilisateurs sont invités à interrompre leur consultation et à alerter Dominapp en cas de découverte d'un tel lien hypertexte pointant vers un site ou une source externe dont le titre et ou les contenus constituent une violation du droit français.
       
-      <h1>ARTICLE 6 : OBLIGATIONS ET RESPONSABILITÉ de Dominapp</h1>
+      <h4>ARTICLE 6 : OBLIGATIONS ET RESPONSABILITÉ de Dominapp</h4>
       6.1 Obligations
       
       Dominapp s'engage à fournir aux Utilisateurs un service en ligne conforme aux règles de l'art et à la législation.
@@ -196,7 +196,7 @@ export class TermsComponent implements OnInit {
       
       Dominapp ne garantit pas que les Services seront utilisables en cas de défaillance du Fournisseur d'accès Internet de l'Utilisateur, ou en cas de non fonctionnement ou de mauvaises conditions d'accès provoquées par l'encombrement du réseau internet et toutes autres raisons extérieures à Dominapp et ses prestataires, et ayant un caractère de force majeure tel que défini par les juridictions françaises.
       
-      <h1>ARTICLE 7 : VIE PRIVÉE</h1>
+      <h4>ARTICLE 7 : VIE PRIVÉE</h4>
       Dominapp attache la plus grande importance à protéger la vie privée de ses Utilisateurs et de ses visiteurs.
       
       Les Utilisateurs sont invités à signaler tout dysfonctionnement et notamment tout manquement à leurs droits (à titre d’exemple : diffusion de leurs photos par des tiers sur notre Site) via la rubrique « Contact », accessible directement depuis la page d’accueil de notre site, ou via les adresses notamment courriel précisées ci-après.
@@ -282,12 +282,12 @@ export class TermsComponent implements OnInit {
       Au terme d'une période maximale d'un an, le Site procèdera à la suppression automatique et définitive de tout message supprimé ou placé dans la rubrique Spams par les Utilisateurs (destinataires et/ou expéditeurs).
       Les Utilisateurs sont informés que les messages supprimés en application du présent article ne pourront en aucun cas être restaurés par le Site.
       
-      <h1>ARTICLE 8 : PROPRIÉTÉ INTELLECTUELLE</h1>
+      <h4>ARTICLE 8 : PROPRIÉTÉ INTELLECTUELLE</h4>
       Les graphismes, les photographies, les animations, les vidéos et les textes contenus sur le Site et plus globalement les éléments permettant d'assurer ou de faciliter la navigabilité au sein du Site - architecture, design, pages de code, pages CSS, et autres éléments - sont la propriété intellectuelle exclusive de Dominapp et ne peuvent être reproduits, utilisés ou représentés sous quelque forme que ce soit, sur quelque support que ce soit et par quelque media que ce soit, sans l'autorisation expresse de Dominapp , sous peine de poursuites judiciaires.
       Les droits d'utilisation concédés par Dominapp à l'Utilisateur sont réservés à un usage privé et personnel dans le cadre et pour la durée de l'Abonnement. Toute autre utilisation par l'Utilisateur est interdite sans l'autorisation de Dominapp. Toute autre utilisation est interdite sans l'autorisation de Dominapp. L'Utilisateur s'interdit notamment de modifier, copier, reproduire, télécharger, diffuser, transmettre, exploiter commercialement et/ou distribuer de quelque façon que ce soit les Services, les pages du Site, ou les codes informatiques des éléments composant les Services et le Site.
       L’Utilisateur concède à Dominapp une licence d'utilisation des droits de propriété intellectuelle attachés aux contenus publics fournis par ce même Utilisateur, aux fins de diffusion sur le Site. Cette licence comprend notamment, sous réserve des dispositions de l’article 7.1, le droit pour Dominapp de reproduire, représenter, adapter, traduire, numériser, utiliser aux fins du Service ou de sous-licencier les informations à caractère public concernant l’Utilisateur (élément du Profil, informations, images, vidéos, description, critères de recherche, etc.) sur tout ou partie du Service Dominapp (sur le Site, par courriel…) et/ou dans les mailings d’Dominapp et de manière générale sur tous supports de communication électronique (courriel, SMS, MMS, WAP, Internet) dans le cadre du Service. A ce titre, l’Utilisateur autorise expressément Dominapp à modifier lesdits contenus afin de respecter la charte graphique des Services Dominapp ou des autres supports de communication visés ci-dessus et/ou de les rendre compatibles avec ses performances techniques ou les formats des supports concernés. Ces droits sont concédés pour toute la durée d'exécution des présentes CGU entre l’Utilisateur et Dominapp. L’Utilisateur s'interdit de copier, reproduire, ou utiliser les contenus relatifs aux autres Utilisateurs.
       
-      <h1>ARTICLE 9 : SANCTIONS, SUSPENSION D’ACCÈS AU COMPTE ET RÉSILIATION</h1>
+      <h4>ARTICLE 9 : SANCTIONS, SUSPENSION D’ACCÈS AU COMPTE ET RÉSILIATION</h4>
       9.1 Points Boulet/Points Fake et Badges
       
       Tout Utilisateur importuné ou témoin du non-respect des présentes CGU par un autre Utilisateur doit le signaler au plus tôt en sélectionnant les fiches desdits Utilisateurs ou la rubrique « Contact » afin de cliquer sur les mentions « Signaler comme Fake » ou « Ce mec est un boulet ! ».
@@ -322,13 +322,13 @@ export class TermsComponent implements OnInit {
       Le Compte résilié est définitivement détruit. L’Utilisateur ne pourra plus accéder à son Compte ni utiliser les Services du Site. De même le Compte ne sera plus visible pour les autres Utilisateurs.
       Le Compte étant détruit, les données renseignées par l'Utilisateur ne pourront plus être communiquées à ce dernier sous réserve des dispositions du décret 2011-219 du 25 février 2011 relatif à la conservation et à la communication des données permettant l’identification de toute personne ayant contribuée à la création d’un contenu en ligne.
       
-      <h1>ARTICLE 10 : MODIFICATION DES CONDITIONS D'UTILISATION</h1>
+      <h4>ARTICLE 10 : MODIFICATION DES CONDITIONS D'UTILISATION</h4>
       Dominapp pourra modifier ou compléter les présentes CGU.
       Elles seront applicables aux Utilisateurs lors de la souscription d’un Abonnement et, elles rentreront en vigueur envers les Utilisateurs en cours d'Abonnement lors de la reconduction tacite de cet Abonnement.
       Les Utilisateurs en cours d'Abonnement seront avertis des nouvelles Conditions d'Utilisation en vigueur sur leur Compte Utilisateur, dans les termes prévus à l'article 4.2.
       Toutes modifications remplacent et annulent les précédentes stipulations dès lors qu'elles ont été acceptées par les Utilisateurs.
       
-      <h1>ARTICLE 11 : DROIT APPLICABLE/ JURIDICTIONS COMPÉTENTES</h1>
+      <h4>ARTICLE 11 : DROIT APPLICABLE/ JURIDICTIONS COMPÉTENTES</h4>
       Les présentes CGU sont soumises au droit français, la langue d'interprétation des présentes CGU est la langue française. Tout litige né de l'exécution des présentes CGU ou en relation avec les présentes CGU sera soumis aux juridictions compétentes sur le territoire français.
       Si une ou plusieurs stipulations des présentes CGU étai(en)t déclarée(s) nulle(s) en application d'une loi, d'un règlement ou à la suite d'une décision définitive d'une juridiction compétente, les autre stipulations garderont toute leur force et leur portée sous réserve que les présentes CGU ne soient pas dénaturées, et que cela n'entraîne pas un déséquilibre significatif des obligations à la charges des parties.
       Le fait pour une partie de ne pas se prévaloir d'un manquement de l'autre partie à l'une des quelconques dispositions des présentes CGU ne saurait s'interpréter comme une renonciation de sa part à se prévaloir dans l'avenir d'un tel manquement.

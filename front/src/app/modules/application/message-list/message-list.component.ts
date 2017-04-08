@@ -55,31 +55,29 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   block() {
-    if (confirm("Êtes vous sûr de vouloir bloquer cet utilisateur ?")) {
-      let currentUser:User = this.sharedService.getCurrentUser();
-      this.us.blockUser(this.selectedConversation.userTwo)
-        .then(users => {
-          currentUser.blockedUsers = users;
-          this.sharedService.refreshUser(currentUser);
-          this.isUserBlocked = true;
-          this.messengerService.blockUser(true);
-        })
-        .catch(error => this.toastr.error(error));
-    }
+    let currentUser:User = this.sharedService.getCurrentUser();
+    this.us.blockUser(this.selectedConversation.userTwo)
+      .then(users => {
+        currentUser.blockedUsers = users;
+        this.sharedService.refreshUser(currentUser);
+        this.isUserBlocked = true;
+        this.toastr.success("L'utilisateur a bien été bloqué")
+        this.messengerService.blockUser(true);
+      })
+      .catch(error => this.toastr.error(error));
   }
 
   unblock() {
-    if (confirm("Êtes vous sûr de vouloir débloquer cet utilisateur ?")) {
-      let currentUser:User = this.sharedService.getCurrentUser();
-      this.us.unblockUser(this.selectedConversation.userTwo)
-        .then(users => {
-          currentUser.blockedUsers = users;
-          this.sharedService.refreshUser(currentUser);
-          this.isUserBlocked = false;
-          this.messengerService.blockUser(false);
-        })
-        .catch(error => this.toastr.error(error));
-    }
+    let currentUser:User = this.sharedService.getCurrentUser();
+    this.us.unblockUser(this.selectedConversation.userTwo)
+      .then(users => {
+        currentUser.blockedUsers = users;
+        this.sharedService.refreshUser(currentUser);
+        this.isUserBlocked = false;
+        this.toastr.success("L'utilisateur a bien été débloqué")
+        this.messengerService.blockUser(false);
+      })
+      .catch(error => this.toastr.error(error));
   }
 
   deleteConversation() : void {
@@ -137,8 +135,8 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   private defineTimers(userId: number) : void {
-      this.formatMessageTimer = Observable.timer(0, 60000);
-      this.formatMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
+    this.formatMessageTimer = Observable.timer(0, 60000);
+    this.formatMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
   }
 
 

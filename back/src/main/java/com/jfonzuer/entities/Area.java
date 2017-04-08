@@ -51,6 +51,14 @@ public class Area {
         this.country = country;
     }
 
+    @Override
+    public String toString() {
+        return "Area{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", country=" + country +
+                '}';
+    }
 
     public static class AreaBuilder {
         private Long id;
