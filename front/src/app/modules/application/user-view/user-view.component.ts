@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from "@angular/core";
 import {User} from "../../../model/user";
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {environment} from "../../../../environments/environment";
 import {ToastsManager} from "ng2-toastr";
+import {Image} from "../../../model/image";
 
 @Component({
   selector: 'app-user-view',
@@ -14,6 +15,7 @@ export class UserViewComponent implements OnInit {
   user:User;
   loading:boolean = true;
   uploadImageUrl:string;
+  selectedImage:Image;
 
   constructor(private route:ActivatedRoute, private userService:UserService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadImageUrl = environment.uploadImageUrl;

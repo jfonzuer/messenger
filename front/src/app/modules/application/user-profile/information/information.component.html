@@ -1,26 +1,26 @@
-<form class="form-horizontal" [hidden]="!show">
+<form class="form-horizontal" (ngSubmit)="updateInformation()" [hidden]="!show">
   <fieldset>
     <div class="form-group">
       <div class="col-sm-5">
-        <input type="text" class="form-control" required placeholder="Nom d'utilisateur" (keyup.enter)="updateInformation()" name="username" [(ngModel)]="user.username">
+        <input type="text" class="form-control" required placeholder="Nom d'utilisateur" name="username" [(ngModel)]="user.username">
       </div>
     </div>
 
     <div class="form-group">
       <div class="col-sm-5">
-        <input type="email" class="form-control" required placeholder="Email" name="email" (keyup.enter)="updateInformation()" [(ngModel)]="user.email">
+        <input type="email" class="form-control" required placeholder="Email" name="email" [(ngModel)]="user.email">
       </div>
     </div>
 
     <div class="form-group">
       <div class="col-sm-5">
-        <input type="text" class="form-control" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[012])\/[0-9]{4}" required placeholder="Date de naissance" (keyup.enter)="updateInformation()" name="birthDate" [(ngModel)]="birthDate">
+        <input type="text" class="form-control" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])\/(0[1-9]|1[012])\/[0-9]{4}" required placeholder="Date de naissance" name="birthDate" [(ngModel)]="birthDate">
       </div>
     </div>
 
     <div class="form-group">
       <div class="col-sm-1">
-        <button type="button" class="btn btn-sm btn-danger" (click)="updateInformation()">Valider</button>
+        <button type="submit" class="btn btn-sm btn-danger">Valider</button>
       </div>
       <app-spinner [loading]="loading"></app-spinner>
     </div>

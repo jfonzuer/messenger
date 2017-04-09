@@ -8,6 +8,7 @@ import com.jfonzuer.entities.Image;
 import com.jfonzuer.entities.Message;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ImageRepository;
+import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.storage.StorageService;
 import com.jfonzuer.validator.MediaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,16 +41,14 @@ public class ImageService {
     private String conversationLocation;
 
     private final ImageRepository imageRepository;
-    private final StorageService storageService;
     private final MediaValidator mediaValidator;
 
     @Autowired
     private CouchDbImageService couchDbImageService;
 
     @Autowired
-    public ImageService(ImageRepository imageRepository, StorageService storageService, MediaValidator mediaValidator) {
+    public ImageService(ImageRepository imageRepository, MediaValidator mediaValidator) {
         this.imageRepository = imageRepository;
-        this.storageService = storageService;
         this.mediaValidator = mediaValidator;
     }
 
@@ -64,17 +64,11 @@ public class ImageService {
         if (order == 1) {
             Image image = images.get(order - 1);
             imageRepository.delete(image);
-            // TODO test if theses lines are need or not
-            /*
-            // suppression de l'image
-            if (!image.getUrl().equals(defaultImage)) {
-                storageService.delete(image.getUrl());
-            }
-            */
         }
         String filename = order + "_" + user.getUsername() + mediaValidator.getExtension(file.getContentType());
         String uuid = UUID.randomUUID().toString();
         Image image = Image.Builder.anImage().withUrl(uuid).withUser(user).withOrderNumber(order).build();
+        imageRepository.save(image);
         couchDbImageService.store(file, uuid);
         return ImageMapper.toDto(image);
     }

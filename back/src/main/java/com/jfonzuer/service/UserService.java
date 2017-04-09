@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -85,9 +86,11 @@ public class UserService {
      */
     public void updatePassword(HttpServletRequest request, PasswordDto dto) {
         User user = getUserFromToken(request);
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        if (!authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), dto.getPassword())).isAuthenticated()) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), dto.getCurrent()));
+        } catch (BadCredentialsException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("Votre mot de passe actuel est incorrect");
         }
 
