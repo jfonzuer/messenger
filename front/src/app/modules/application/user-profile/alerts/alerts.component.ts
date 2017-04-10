@@ -15,6 +15,7 @@ export class AlertsComponent implements OnInit {
   @Input() user:User;
   @Input() show:boolean;
   alerts:Alerts = new Alerts();
+  loading:boolean = false;
 
   constructor(private userService :UserService, private sharedService:SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vRef);
@@ -28,7 +29,17 @@ export class AlertsComponent implements OnInit {
   send() {
     // si les préférences ont changé
     if (this.alerts.notifyMessage != this.user.notifyMessage || this.alerts.notifyVisit != this.user.notifyVisit) {
-      this.userService.updateAlerts(this.alerts).then(response =>  { this.toastr.success(response.message); this.setAlerts(this.alerts); }).catch(error => this.toastr.error(error))
+      this.loading = true;
+      this.userService.updateAlerts(this.alerts)
+        .then(response => {
+          this.loading = false;
+          this.toastr.success(response.message);
+          this.setAlerts(this.alerts);
+        })
+        .catch(error => {
+          this.loading = false;
+          this.toastr.error(error)
+        })
     }
   }
 

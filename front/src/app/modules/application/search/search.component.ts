@@ -26,6 +26,7 @@ export class SearchComponent implements OnInit {
   title:string;
   uploadImageUrl:string;
   pager:Pager;
+  loading:boolean;
 
   ageOne:number = 18;
   ageTwo:number = 99;
@@ -59,21 +60,27 @@ export class SearchComponent implements OnInit {
     this.userService.getUsers(this.pager).then(response => {
       this.pager == null ? this.users = response.content : this.users = this.users.concat(response.content);
       this.pager = new Pager(response.number, response.last, response.size);
-    }).catch(e => this.toastr.error(e));
+    }).catch(e => {
+      this.toastr.error(e)
+    });
   }
 
   searchUsers() {
+    this.loading = true;
     this.userService.searchUsers(this.search, this.pager).then(response => {
+      console.log(response);
+      this.loading = false;
       let list:User[] = response.content;
       this.searched = true;
       this.search.keyword ? this.previewFromDescription(list) : null;
 
       this.users = this.users.concat(response.content);
       this.pager = new Pager(response.number, response.last, response.size);
-      if (this.search.keyword) {
 
-      }
-    }).catch(e => this.toastr.error(e));
+    }).catch(e => {
+      this.loading = false;
+      this.toastr.error(e);
+    });
   }
 
   scrollDown() {

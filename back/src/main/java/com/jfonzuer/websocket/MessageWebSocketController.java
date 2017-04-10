@@ -1,8 +1,6 @@
 package com.jfonzuer.websocket;
 
-import com.jfonzuer.dto.ConversationDto;
 import com.jfonzuer.dto.MessageDto;
-import com.jfonzuer.dto.mapper.ConversationMapper;
 import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.Message;
@@ -11,21 +9,14 @@ import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.service.*;
 import com.jfonzuer.utils.MessengerUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.Locale;
 
 /**
@@ -58,7 +49,7 @@ public class MessageWebSocketController {
     @Transactional
     @MessageMapping("/ws-conversation-endpoint/{id}")
     public void addMessage(@DestinationVariable String id, MessageDto dto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-
+        System.err.println("dto = " + dto);
         User sender = (User) headerAccessor.getSessionAttributes().get("connectedUser");
         Locale locale = (Locale) headerAccessor.getSessionAttributes().get("locale");
 
@@ -67,8 +58,6 @@ public class MessageWebSocketController {
         User target = MessengerUtils.getOtherUser(c, sender);
 
         // si user est bloqué on renvoit l'erreur à la session correspondante dans le channel queue/errors
-        System.err.println("target.getBlockedUsers().contains(sender) = " + target.getBlockedUsers().contains(sender));
-
         try {
             userService.throwExceptionIfBlocked(sender, target);
         } catch (IllegalArgumentException e) {
@@ -80,6 +69,7 @@ public class MessageWebSocketController {
         userRepository.save(target);
 
         Conversation conversation = conversationService.updateConversation(c, sender, dto);
+        System.err.println("conversation = " + conversation);
         this.webSocketService.sendToConversationsUsers(conversation);
 
         Message message = MessageMapper.fromDto(dto);

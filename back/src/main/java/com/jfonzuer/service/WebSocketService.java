@@ -29,6 +29,8 @@ public class WebSocketService {
      * @param conversation
      */
     public void sendToConversationsUsers(Conversation conversation) {
+        System.err.println("conversationEndpoint + conversation.getUserOne().getId() = " + conversationEndpoint + conversation.getUserOne().getId());
+        System.err.println("conversationEndpoint + conversation.getUserOne().getId() = " + conversationEndpoint + conversation.getUserTwo().getId());
         this.template.convertAndSend(conversationEndpoint + conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
         this.template.convertAndSend(conversationEndpoint + conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
     }

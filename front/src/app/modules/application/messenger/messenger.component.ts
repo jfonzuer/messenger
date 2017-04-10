@@ -34,11 +34,12 @@ export class MessengerComponent implements OnInit, OnDestroy {
     this.toastr.setRootViewContainerRef(vRef);
     // si on ajoute un message et que la conversation existe, on send le message via websocket sinon on l'envoit via une requête.
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.selectedConversation.id ? this.send(message) : null );
-    //this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
-    //this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
+    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
   }
 
   ngOnInit() {
+
     this.route.data.forEach((data:any) => {
       this.user = data.user;
     });
@@ -52,6 +53,9 @@ export class MessengerComponent implements OnInit, OnDestroy {
 
           this.messengerService.changeConversation(conversation)
         });
+      // sinon
+      } else {
+        this.connect(null);
       }
     });
   }
@@ -63,14 +67,12 @@ export class MessengerComponent implements OnInit, OnDestroy {
   }
 
   connect(conversationId) {
-    /*
     var that = this;
     let url:string = this.baseUrl + 'ws-conversation-endpoint?token=' + this.localStorageService.getObject('token');
     var socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
     console.error("CHANGE CONVERSATION");
-    /*
     this.stompClient.connect({}, function (frame) {
       //console.log('Connected: ' + frame);
       if (conversationId) {
@@ -82,22 +84,23 @@ export class MessengerComponent implements OnInit, OnDestroy {
         that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
           that.messengerService.receiveMessage(JSON.parse(response.body));
         });
-
-        that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
-          //console.log("web socket response", response);
-          console.error(JSON.parse(response.body));
-          that.messengerService.updateConversation(JSON.parse(response.body));
-        });
       }
+
+      // endpoint de reception des messages d'autres conversations
+      that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
+        //console.log("web socket response", response);
+        console.error(JSON.parse(response.body));
+        that.messengerService.updateConversation(JSON.parse(response.body));
+      });
+
     }, function (err) {
       that.toastr.error("Erreur lors de la connexion", null, {toastLife: 5000});
     });
-    */
   }
 
   public ngOnDestroy(): void {
-    //this.changeConversationSubscription.unsubscribe();
+    this.changeConversationSubscription.unsubscribe();
     this.addMessageSubscription.unsubscribe();
-    //this.addConversationSubscription.unsubscribe();
+    this.addConversationSubscription.unsubscribe();
   }
 }

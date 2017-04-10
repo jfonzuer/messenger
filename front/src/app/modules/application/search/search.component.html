@@ -12,7 +12,7 @@
 
     <div class="form-group">
       <div class="col-sm-5">
-        <input type="text" class="form-control" placeholder="Dans la description" name="keyword" [(ngModel)]="search.keyword">
+        <input type="text" class="form-control" placeholder="Pseudo ou mot clé dans la description" name="keyword" [(ngModel)]="search.keyword">
       </div>
     </div>
 
@@ -72,6 +72,9 @@
 </form>
 
 <hr>
+<div style="font-size: 60px;" *ngIf="loading">
+  <app-spinner [loading]="loading"></app-spinner>
+</div>
 
 <div class="row">
   <div class="col-sm-3" *ngFor="let user of users">
@@ -84,11 +87,9 @@
   </div>
 </div>
 
-<hr>
-
-<div class="row" *ngIf="pager && !pager.last">
+<div class="row" *ngIf="pager != null && !pager.last">
   <div class="col-sm-offset-5">
-    <a class="btn btn-sm" style="color:black" (click)="scrollDown()">Plus de résultats <span class="glyphicon glyphicon-chevron-down"></span></a>
+    <a class="btn btn-sm" style="color:white" (click)="scrollDown()">Plus de résultats <span class="glyphicon glyphicon-chevron-down"></span></a>
   </div>
 </div>
 

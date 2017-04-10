@@ -60,7 +60,7 @@ export class ConversationService {
     return this.http.post(this.baseUrl + 'conversations', userMessage, {headers: headers})
       .toPromise()
       .then(response => {
-        console.log(response);
+        // console.log(response);
         this.rs.handleResponse(response);
         return response.json();
       })

@@ -19,6 +19,13 @@ a {
 a:hover {
   color:white;
 }
+.text-primary, .text-primary:hover {
+  color: white;
+}
+
+.media, .media-body {
+  overflow: visible;
+}
 
 .unauth-navbar-right {
   padding-top: 20px;

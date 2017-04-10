@@ -29,7 +29,7 @@ export class AdminService {
   block(id:number) {
     let headers = this.authenticationService.getHeaders();
 
-    return this.http.put(this.baseUrl + 'admin/unblock/' + id, {}, {headers: headers})
+    return this.http.put(this.baseUrl + 'admin/block/' + id, {}, {headers: headers})
       .toPromise()
       .then(() => {
       })
@@ -39,7 +39,7 @@ export class AdminService {
   unblock(id:number) {
     let headers = this.authenticationService.getHeaders();
 
-    return this.http.put(this.baseUrl + 'admin/block/' + id, {}, {headers: headers})
+    return this.http.put(this.baseUrl + 'admin/unblock/' + id, {}, {headers: headers})
       .toPromise()
       .then(() => {})
       .catch(this.rs.handleError);

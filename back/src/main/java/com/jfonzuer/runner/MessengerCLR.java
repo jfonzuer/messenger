@@ -266,7 +266,7 @@ public class MessengerCLR implements CommandLineRunner {
                     .withActivated(true)
                     // last subscription 1 day ago
                     .withLastSubscriptionCheck(Timestamp.from(Instant.now().minusSeconds(24 * 3600)))
-                    .withSubscriptionId("HtZEwIZQDboJSbSHM")
+                    .withSubscriptionId("Hr551C2QDhJT4baIQ")
                     .build();
 
             u1.setBlockedUsers(new HashSet<>(Arrays.asList(u2)));

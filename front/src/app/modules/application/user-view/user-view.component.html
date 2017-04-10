@@ -25,7 +25,7 @@
         <img style="" src="{{ uploadImageUrl }}{{ user.images[0].url }}/image" (click)="selectedImage = user.images[0]" class="img-circle image medium-image center-block">
         <br>
         <div class="row">
-          <h5 style="text-decoration: underline">Autres photos :</h5>
+          <h5 style="text-decoration: underline" *ngIf="user.images.length > 1">Autres photos :</h5>
           <img style="margin-top: 5%;" src="{{ uploadImageUrl }}{{ user.images[1].url }}/image" class="medium-image image" *ngIf="user.images[1]" (click)="selectedImage = user.images[1]">
           <span>&nbsp;</span>
           <img style="margin-top: 5%;" src="{{ uploadImageUrl }}{{ user.images[2].url }}/image" class="medium-image image" *ngIf="user.images[2]" (click)="selectedImage = user.images[2]">
