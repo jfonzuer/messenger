@@ -112,8 +112,10 @@ public class ConversationController {
     public ConversationDto getConversationBetweenCurrentUserAndSpecifiedUser(HttpServletRequest request, @PathVariable Long id) {
         LOGGER.info(" in getConversationBetweenCurrentUserAndSpecifiedUser ");
         User currentUser = userService.getUserFromToken(request);
+        System.err.println("currentUser = " + currentUser);
         subscriptionService.checkSubscriptionAsync(currentUser);
         User specifiedUser = userRepository.findOne(id);
+        System.err.println("specifiedUser = " + specifiedUser);
         Conversation conversation = conversationService.getConversationOrCreateOne(currentUser, specifiedUser);
         return ConversationMapper.toDto(conversation, currentUser);
     }

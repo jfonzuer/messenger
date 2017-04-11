@@ -102,7 +102,6 @@ public class JwtTokenUtil implements Serializable {
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
         System.out.println("created = " + created);
-        System.out.println("lastPasswordReset = " + lastPasswordReset);
         return (lastPasswordReset != null && created.before(lastPasswordReset));
     }
 

@@ -55,13 +55,8 @@ public class SubscriptionService {
         Optional<UserRole> optionalPremium = user.getUserRoles().stream().filter(us -> us.getRole().equals("ROLE_PREMIUM")).findFirst();
         Optional<UserRole> optionalAdmin = user.getUserRoles().stream().filter(us -> us.getRole().equals("ROLE_ADMIN")).findFirst();
 
-        System.err.println("optionalAdmin.isPresent() = " + optionalAdmin.isPresent());
-        System.err.println("MessengerUtils.isSub(user) = " + MessengerUtils.isSub(user));
-        System.err.println("user.getSubscriptionId() = " + user.getSubscriptionId());
-
         Timestamp lastCheck = user.getLastSubscriptionCheck();
         Timestamp TwelveHoursBeforeNow = Timestamp.from(Instant.now().minusSeconds(12*3600));
-        System.out.println("lastCheck.before(TwelveHoursBeforeNow) = " + lastCheck.before(TwelveHoursBeforeNow));
 
         if (!optionalAdmin.isPresent() && MessengerUtils.isSub(user) && user.getSubscriptionId() != null && lastCheck.before(TwelveHoursBeforeNow)) {
             Environment.configure(paymentSitename, apiKey);

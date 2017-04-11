@@ -21,10 +21,6 @@ public class ConversationMapper {
     }
 
     public static ConversationDto toDto(Conversation c, User u) {
-        System.out.println("------------------------------------------");
-        System.out.println("c.getReadByUserTwo() = " + c.getReadByUserTwo());
-        System.out.println("(MessengerUtils.isUserOne(u,c) ? c.getReadByUserOne() : c.getReadByUserTwo()).toString() = " + (MessengerUtils.isUserOne(u,c) ? c.getReadByUserOne() : c.getReadByUserTwo()).toString());
-        System.out.println("MessengerUtils.isUserOne(c, u) = " + MessengerUtils.isUserOne(u,c));
 
         return c != null ? new ConversationDto.ConversationDtoBuilder()
                 .setId(c.getId())

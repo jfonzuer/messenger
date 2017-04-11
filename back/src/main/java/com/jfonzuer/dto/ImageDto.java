@@ -41,28 +41,40 @@ public class ImageDto {
         this.url = url;
     }
 
-    public static class ImageDtoBuilder {
+
+    public static final class Builder {
         private Long id;
-        private Integer order;
+        private Integer orderNumber;
         private String url;
 
-        public ImageDtoBuilder setId(Long id) {
+        private Builder() {
+        }
+
+        public static Builder anImageDto() {
+            return new Builder();
+        }
+
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public ImageDtoBuilder setOrder(Integer order) {
-            this.order = order;
+        public Builder withOrderNumber(Integer orderNumber) {
+            this.orderNumber = orderNumber;
             return this;
         }
 
-        public ImageDtoBuilder setUrl(String url) {
+        public Builder withUrl(String url) {
             this.url = url;
             return this;
         }
 
-        public ImageDto createImageDto() {
-            return new ImageDto(id, order, url);
+        public ImageDto build() {
+            ImageDto imageDto = new ImageDto();
+            imageDto.setId(id);
+            imageDto.setOrderNumber(orderNumber);
+            imageDto.setUrl(url);
+            return imageDto;
         }
     }
 }

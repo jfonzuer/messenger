@@ -1,7 +1,7 @@
 <!-- The Modal -->
 <div id="myModal" [ngClass]="{display: selectedImage != null }" class="modal">
   <span class="close" (click)="selectedImage = null">&times;</span>
-  <img *ngIf="selectedImage" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}">
+  <img *ngIf="selectedImage" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}/image">
 </div>
 
 <div class="col-sm-12" *ngIf="selectedConversation">
@@ -37,8 +37,9 @@
       <small [ngClass]="{'pull-right other-user-message': message.source.id !== selectedConversation.userOne.id }"  class="message" *ngIf="message.type == 'TEXT'">
         {{ message.content }}
       </small>
-      <small class="col-sm-10" *ngIf="message.type == 'IMAGE'" [ngClass]="{'pull-right': message.source.id !== selectedConversation.userOne.id }" >
-        <a (click)="selectedImage = message"><img src="{{ uploadImageUrl }}{{ message.url }}" class="image medium-image center-block"></a>
+
+      <small *ngIf="message.type == 'IMAGE'">
+        <a (click)="selectedImage = message" [ngClass]="{'pull-right': message.source.id !== selectedConversation.userOne.id }"><img src="{{ uploadImageUrl }}{{ message.url }}/image" class="image medium-image"></a>
       </small>
     </div>
     <small  [ngClass]="{'pull-right': message.source.id !== selectedConversation.userOne.id }" class="time" *ngIf="!messages[i+1] || (messages[i+1] && messages[i+1].source.id != message.source.id)"><i class="fa fa-clock-o"></i> {{ message.sendSince }}</small>

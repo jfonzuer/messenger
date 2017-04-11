@@ -26,6 +26,11 @@ export class MessengerComponent implements OnInit, OnDestroy {
   addMessageSubscription:any;
   changeConversationSubscription: any;
   addConversationSubscription:any;
+  conversationsSubscription:any;
+
+  // ws subscriptions
+  conversationSubscription:any;
+  errorSubscription:any;
 
   selectedConversation:Conversation;
 
@@ -49,11 +54,10 @@ export class MessengerComponent implements OnInit, OnDestroy {
       if (params['id']) {
         let userId = +params['id'];// (+) converts string 'id' to a number
         this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => {
-          //console.log("conversation : ", conversation);
-
+          console.log("conversation : ", conversation);
           this.messengerService.changeConversation(conversation)
         });
-      // sinon
+        // sinon
       } else {
         this.connect(null);
       }
@@ -70,26 +74,37 @@ export class MessengerComponent implements OnInit, OnDestroy {
     var that = this;
     let url:string = this.baseUrl + 'ws-conversation-endpoint?token=' + this.localStorageService.getObject('token');
     var socket = new SockJS(url);
+
     this.stompClient = Stomp.over(socket);
+
+    if (that.conversationSubscription) {
+      that.conversationSubscription.unsubscribe();
+    }
+    if (that.errorSubscription) {
+      that.errorSubscription.unsubscribe();
+    }
+    if (that.conversationsSubscription) {
+      that.conversationsSubscription.unsubscribe();
+    }
 
     console.error("CHANGE CONVERSATION");
     this.stompClient.connect({}, function (frame) {
       //console.log('Connected: ' + frame);
       if (conversationId) {
 
-        that.stompClient.subscribe('/queue/errors/' + that.user.id, function (response) {
-          that.toastr.error(response.body);
-        });
-
-        that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
+        that.conversationSubscription = that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
           that.messengerService.receiveMessage(JSON.parse(response.body));
         });
       }
 
+      that.errorSubscription = that.stompClient.subscribe('/queue/errors/' + that.user.id, function (response) {
+        that.toastr.error(response.body);
+      });
+
       // endpoint de reception des messages d'autres conversations
-      that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
+      that.conversationsSubscription = that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
         //console.log("web socket response", response);
-        console.error(JSON.parse(response.body));
+        //console.error(JSON.parse(response.body));
         that.messengerService.updateConversation(JSON.parse(response.body));
       });
 
@@ -102,5 +117,15 @@ export class MessengerComponent implements OnInit, OnDestroy {
     this.changeConversationSubscription.unsubscribe();
     this.addMessageSubscription.unsubscribe();
     this.addConversationSubscription.unsubscribe();
+
+    if (this.conversationSubscription) {
+      this.conversationSubscription.unsubscribe();
+    }
+    if (this.errorSubscription) {
+      this.errorSubscription.unsubscribe();
+    }
+    if (this.conversationsSubscription) {
+      this.conversationsSubscription.unsubscribe();
+    }
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter, ViewContainerRef, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, ViewContainerRef, OnDestroy} from "@angular/core";
 import {MessageService} from "../../../services/message.service";
 import {ConversationService} from "../../../services/conversation.service";
 import {User} from "../../../model/user";
@@ -24,6 +24,7 @@ MessageSendComponent implements OnInit, OnDestroy {
   // subscriptions
   changeConversationSubscription: any;
   blockUserSubscription:any;
+  deleteConversationSubscription:any;
 
   file:File;
   private sizeLimit:number;
@@ -39,6 +40,7 @@ MessageSendComponent implements OnInit, OnDestroy {
       this.selectedConversation = conversation;
       this.isUserBlocked = this.sharedService.isUserBlocked(this.selectedConversation.userTwo);
     });
+    this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.selectedConversation = null);
     this.blockUserSubscription = this.messengerService.blockUserObservable.subscribe(block => this.isUserBlocked = block);
     this.sizeLimit = environment.sizeLimit;
     this.uploadImageUrl = environment.uploadImageUrl;
@@ -93,9 +95,11 @@ MessageSendComponent implements OnInit, OnDestroy {
   }
 
   private sendMessage() {
-    this.message.conversation = this.selectedConversation;
-    this.messengerService.addMessage(this.message);
-    this.message.content = '';
+    if (this.selectedConversation) {
+      this.message.conversation = this.selectedConversation;
+      this.messengerService.addMessage(this.message);
+      this.message.content = '';
+    }
   }
 
   private createConversation() {
@@ -106,7 +110,6 @@ MessageSendComponent implements OnInit, OnDestroy {
       this.messengerService.addConversation(this.selectedConversation);
     }).catch(error => this.toastr.error(error));
   }
-
 
   public ngOnDestroy(): void {
     this.changeConversationSubscription.unsubscribe();

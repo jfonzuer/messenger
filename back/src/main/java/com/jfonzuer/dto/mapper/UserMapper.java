@@ -70,6 +70,7 @@ public class UserMapper {
                 .withArea(dto.getArea() == null ? null : AreaMapper.fromDto(dto.getArea()))
                 .withFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))
                 .withType(dto.getUserType() == null ? null : UserTypeMapper.fromDto(dto.getUserType()))
+                .withImages(dto.getImages() == null ? null : dto.getImages().stream().map(ImageMapper::fromDto).collect(Collectors.toList()))
                 .build() : null;
     }
 

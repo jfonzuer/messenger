@@ -8,10 +8,18 @@ import com.jfonzuer.entities.Image;
  */
 public class ImageMapper {
     public static ImageDto toDto(Image image) {
-        return image != null ? new ImageDto.ImageDtoBuilder()
-                .setId(image.getId())
-                .setOrder(image.getOrderNumber())
-                .setUrl(image.getUrl())
-                .createImageDto() : null;
+        return image != null ? ImageDto.Builder.anImageDto()
+                .withId(image.getId())
+                .withOrderNumber(image.getOrderNumber())
+                .withUrl(image.getUrl())
+                .build() : null;
+    }
+
+    public static Image fromDto(ImageDto dto) {
+        return dto != null ? Image.Builder.anImage()
+                .withId(dto.getId())
+                .withOrderNumber(dto.getOrderNumber())
+                .withUrl(dto.getUrl())
+                .build() : null;
     }
 }
