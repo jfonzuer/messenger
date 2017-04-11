@@ -118,7 +118,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
     this.messageService.getMessages(userId, this.pager).then(response => {
       console.debug("messages", response);
       this.concatMessage(response);
-      this.pager = new Pager(response.number, response.last, response.size);
+      this.pager = new Pager(response.number, response.last, response.size, 10);
 
       // trigger conversation loaded event
       this.messengerService.conversationLoaded();

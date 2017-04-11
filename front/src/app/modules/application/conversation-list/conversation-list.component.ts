@@ -1,5 +1,4 @@
-import {Component, OnInit, EventEmitter, Output, Input, ViewContainerRef, OnDestroy} from '@angular/core';
-import {Observable} from "rxjs";
+import {Component, OnInit, ViewContainerRef, OnDestroy} from "@angular/core";
 import {ConversationService} from "../../../services/conversation.service";
 import {SharedService} from "../../../services/shared.service";
 import {Conversation} from "../../../model/conversation";
@@ -7,6 +6,7 @@ import {environment} from "../../../../environments/environment";
 import {MessengerService} from "../../../services/messenger.service";
 import {ToastsManager} from "ng2-toastr";
 import {Message} from "../../../model/message";
+import {Pager} from "../../../model/pager";
 
 @Component({
   selector: 'app-conversation-list',
@@ -20,7 +20,9 @@ export class ConversationListComponent implements OnInit, OnDestroy {
 
   // filter
   name:string;
+
   uploadImageUrl:string;
+  pager:Pager;
 
   // subscriptions
   deleteConversationSubscription:any;
@@ -68,8 +70,10 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   }
 
   private getConversations() {
-    this.conversationService.getAll().then(response => {
-      this.conversations = response.content;
+
+    this.conversationService.getConversations(this.pager).then(response => {
+      this.pager == null ? this.conversations = response.content : this.conversations = this.conversations.concat(response.content);
+      this.pager = new Pager(response.number, response.last, response.size, 10);
 
       // on refresh le readByUserTwo
       let selectedConversation = this.conversations.find(c => c.id == this.selectedConversation.id);
@@ -77,11 +81,28 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     }).catch(error => this.toastr.error(error));
   }
 
+  scrollDown() {
+    this.pager.page = this.pager.page + 1;
+    if (this.pager != null) {
+      // length = 10
+      // update page
+      // this.pager.page = Math.floor(this.conversations.length / 10);
+      // let i = this.conversations.length % 10;
+      // this.pager.length = 10 - i;
+
+      this.pager.page = Math.floor(this.conversations.length / 1);
+      let i = this.conversations.length % 1;
+      this.pager.length = 1 - i;
+    }
+    this.getConversations();
+  }
+
   // méthode permettant d'ajouter la conversation à la liste dans le cas de conversation supprimée puis recommencée
   private checkIfConversationExists(message:Message) {
     let index:number = this.conversations.findIndex(c => c.id == message.conversation.id);
     // si elle n'existe pas, on la place en premier
     if (index < 0) {
+      this.pager = null;
       this.getConversations();
     }
   }

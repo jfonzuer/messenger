@@ -73,7 +73,7 @@ public class ConversationController {
     public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
         User user = userService.getUserFromToken(request);
         subscriptionService.checkSubscriptionAsync(user);
-        return conversationRepository.findAllByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(user, false, user, false, p).map(c -> ConversationMapper.toDto(c, user));
+        return conversationRepository.findByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(user, false, user, false, p).map(c -> ConversationMapper.toDto(c, user));
     }
 
     /**

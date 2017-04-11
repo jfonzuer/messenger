@@ -6,6 +6,7 @@ import {Http} from "@angular/http";
 import {UserMessage} from "../model/userMessage";
 import {Conversation} from "../model/conversation";
 import {RequestService} from "./request.service";
+import {Pager} from "../model/pager";
 
 @Injectable()
 export class ConversationService {
@@ -28,10 +29,18 @@ export class ConversationService {
       .catch(this.rs.handleError);
   }
 
-  getAll() {
+  getConversations(pager:Pager) {
     let headers = this.authenticationService.getHeaders();
 
-    return this.http.get(this.baseUrl + 'conversations', {headers: headers})
+    let queryParams = '?';
+    if (pager) {
+      queryParams = queryParams.concat('&l=' + pager.length);
+      queryParams = queryParams.concat('&p=' + pager.page);
+    } else {
+      queryParams = queryParams.concat('&l=1');
+    }
+
+    return this.http.get(this.baseUrl + 'conversations' + queryParams, {headers: headers})
       .toPromise()
       .then(response => {
         this.rs.handleResponse(response);

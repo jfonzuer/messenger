@@ -32,7 +32,7 @@ export class VisitComponent implements OnInit {
     this.visitService.getVisits(this.pager).then(response => {
       console.log(response);
       this.visits = this.visits.concat(response.content);
-      this.pager = new Pager(response.number, response.last, response.size);
+      this.pager = new Pager(response.number, response.last, response.size, 10);
       console.log(this.pager);
 
       this.sharedService.refreshUnseenNumberVisits();

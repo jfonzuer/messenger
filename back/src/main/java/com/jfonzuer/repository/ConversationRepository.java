@@ -23,7 +23,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     Page<Conversation> findAllByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(User userOne, User userTwo, Boolean isDeletedByUserTwo, Pageable p);
 
 
-    Page<Conversation> findAllByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(User userOne, Boolean isDeletedByUserOne, User userTwo, Boolean isDeletedByUserTwo, Pageable p);
+    Page<Conversation> findByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(User userOne, Boolean isDeletedByUserOne, User userTwo, Boolean isDeletedByUserTwo, Pageable p);
 
     Conversation findByIdAndUserOneOrUserTwo(Long id, User userOne, User userTwo);
     Conversation findByUserOneAndUserTwoOrUserTwoAndUserOne(User userOne, User userTwo, User userOne1, User userTwo1);

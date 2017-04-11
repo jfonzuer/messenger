@@ -59,7 +59,7 @@ export class SearchComponent implements OnInit {
   getUsers() {
     this.userService.getUsers(this.pager).then(response => {
       this.pager == null ? this.users = response.content : this.users = this.users.concat(response.content);
-      this.pager = new Pager(response.number, response.last, response.size);
+      this.pager = new Pager(response.number, response.last, response.size, 10);
     }).catch(e => {
       this.toastr.error(e)
     });
@@ -75,7 +75,7 @@ export class SearchComponent implements OnInit {
       this.search.keyword ? this.previewFromDescription(list) : null;
 
       this.users = this.users.concat(response.content);
-      this.pager = new Pager(response.number, response.last, response.size);
+      this.pager = new Pager(response.number, response.last, response.size, 10);
 
     }).catch(e => {
       this.loading = false;

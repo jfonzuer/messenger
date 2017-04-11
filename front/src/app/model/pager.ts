@@ -4,5 +4,5 @@ import {Response} from "@angular/http";
  */
 
 export class Pager {
-  constructor(public page:number, public last:boolean, public size:number) {}
+  constructor(public page:number, public last:boolean, public size:number, public length:number) {}
 }
