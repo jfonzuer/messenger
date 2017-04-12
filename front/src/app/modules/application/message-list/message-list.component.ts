@@ -34,6 +34,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
   isReadConversationSubscription: any;
   addConversationSubscription:any;
   receiveMessageSubscription:any;
+  addMessageSubscription:any;
 
   isRead:boolean;
   isUserBlocked:boolean;
@@ -52,6 +53,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
     this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.pager = null; this.selectedConversation = conversation; this.getMessages(this.selectedConversation.userTwo.id)});
     this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(message => this.addMessage(message));
+    this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => { this.isRead = false; console.log(this.isRead); } );
   }
 
   block() {
@@ -145,5 +147,6 @@ export class MessageListComponent implements OnInit, OnDestroy {
     this.isReadConversationSubscription.unsubscribe();
     this.addConversationSubscription.unsubscribe();
     this.receiveMessageSubscription.unsubscribe();
+    this.addMessageSubscription.unsubscribe();
   }
 }

@@ -3,6 +3,12 @@
   box-shadow: 0 0 3px #ddd;
   padding:0;
 }
+.media {
+  margin-top: 10px;
+}
+.media-body[_ngcontent-nof-25] {
+ padding-bottom: 0px;
+}
 
 .msg-wrap
 {
@@ -13,7 +19,7 @@
 }
 
 .media-body {
-  padding-bottom: 10px;
+  padding-bottom: 6px;
 }
 
 .align-right {

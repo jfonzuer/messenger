@@ -107,7 +107,7 @@ MessageSendComponent implements OnInit, OnDestroy {
     this.conversationService.post(new UserMessage(this.selectedConversation.userTwo, this.message)).then(response => {
       this.message.content = '';
       this.selectedConversation = response;
-      this.messengerService.addConversation(this.selectedConversation);
+      //this.messengerService.addConversation(this.selectedConversation);
     }).catch(error => this.toastr.error(error));
   }
 

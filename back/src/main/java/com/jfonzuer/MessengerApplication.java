@@ -26,7 +26,8 @@ public class MessengerApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedMethods("GET", "POST", "DELETE","PUT")
-						.allowedOrigins(frontUrl);
+						//.allowedOrigins(frontUrl);
+						.allowedOrigins("*");
 			}
 		};
 	}
