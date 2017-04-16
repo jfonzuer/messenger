@@ -1,7 +1,6 @@
 package com.jfonzuer.dto;
 
-import com.sun.istack.internal.NotNull;
-
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

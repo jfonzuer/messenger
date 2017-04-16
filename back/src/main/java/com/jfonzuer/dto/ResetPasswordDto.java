@@ -1,6 +1,6 @@
 package com.jfonzuer.dto;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by pgm on 24/10/16.

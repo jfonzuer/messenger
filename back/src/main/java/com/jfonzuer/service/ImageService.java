@@ -31,14 +31,8 @@ public class ImageService {
 
     private final static Integer MAX_NUMBER = 3;
 
-    @Value("${upload.images.directory}")
-    private String imagesLocation;
-
     @Value("${image.default.name}")
     private String defaultImage;
-
-    @Value("${upload.conversation.directory}")
-    private String conversationLocation;
 
     private final ImageRepository imageRepository;
     private final MediaValidator mediaValidator;

@@ -11,3 +11,8 @@
 npm-debug.log
 **/uploads/**
 **/logs/**
+**/properties/**
+**/2-PRIVILEGES.sql
+**/back/application.properties
+**/docker/data
+**/docker/back/app.jar

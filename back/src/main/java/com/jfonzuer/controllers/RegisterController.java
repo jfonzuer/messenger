@@ -11,7 +11,6 @@ import com.jfonzuer.service.AsyncService;
 import com.jfonzuer.service.MailService;
 import com.jfonzuer.service.TokenService;
 import com.jfonzuer.service.UserService;
-import com.sun.istack.internal.NotNull;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;
 
