@@ -1,31 +1,19 @@
 package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.*;
-import com.jfonzuer.dto.mapper.SearchMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.dto.response.InformationUpdateDto;
-import com.jfonzuer.entities.Search;
 import com.jfonzuer.entities.User;
-import com.jfonzuer.entities.UserType;
-import com.jfonzuer.entities.Visit;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.repository.VisitRepository;
-import com.jfonzuer.security.JwtTokenUtil;
-import com.jfonzuer.service.MailService;
 import com.jfonzuer.service.UserService;
-import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

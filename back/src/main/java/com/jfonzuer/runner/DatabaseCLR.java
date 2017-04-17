@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -28,17 +29,12 @@ import java.util.stream.Stream;
  */
 @Component
 @Profile("!prod")
+@Order(1)
 public class DatabaseCLR implements CommandLineRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseCLR.class);
 
-    private final UserRepository userRepository;
-    private final ConversationRepository conversationRepository;
-    private final MessageRepository messageRepository;
-    private final UserRoleRepository userRoleRepository;
     private final FetishRepository fetishRepository;
-    private final VisitRepository visitRepository;
-    private final ImageRepository imageRepository;
     private final UserTypeRepository userTypeRepository;
     private final CountryRepository countryRepository;
     private final AreaRepository areaRepository;
@@ -47,14 +43,8 @@ public class DatabaseCLR implements CommandLineRunner {
     private String defaultImage;
 
     @Autowired
-    public DatabaseCLR(UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, UserRoleRepository userRoleRepository, FetishRepository fetishRepository, VisitRepository visitRepository, ImageRepository imageRepository, UserTypeRepository userTypeRepository, CountryRepository countryRepository, AreaRepository areaRepository) {
-        this.userRepository = userRepository;
-        this.conversationRepository = conversationRepository;
-        this.messageRepository = messageRepository;
-        this.userRoleRepository = userRoleRepository;
+    public DatabaseCLR(FetishRepository fetishRepository, UserTypeRepository userTypeRepository, CountryRepository countryRepository, AreaRepository areaRepository) {
         this.fetishRepository = fetishRepository;
-        this.visitRepository = visitRepository;
-        this.imageRepository = imageRepository;
         this.userTypeRepository = userTypeRepository;
         this.countryRepository = countryRepository;
         this.areaRepository = areaRepository;
@@ -65,12 +55,19 @@ public class DatabaseCLR implements CommandLineRunner {
     public void run(String... strings) throws Exception {
 
         PasswordEncoder encoder = new BCryptPasswordEncoder();
-        Fetish f1 = new Fetish.FetishBuilder().setId(1L).setName("fetish1").createFetish();
-        Fetish f2 = new Fetish.FetishBuilder().setId(2L).setName("fetish2").createFetish();
-        Fetish f3 = new Fetish.FetishBuilder().setId(3L).setName("fetish3").createFetish();
-        Fetish f4 = new Fetish.FetishBuilder().setId(4L).setName("fetish4").createFetish();
-
-        List<Fetish> fetishes = Arrays.asList(f1, f2, f3, f4);
+        Fetish f1 = new Fetish.FetishBuilder().setName("Ballbusting").createFetish();
+        Fetish f2 = new Fetish.FetishBuilder().setName("Bondage").createFetish();
+        Fetish f3 = new Fetish.FetishBuilder().setName("Chasteté").createFetish();
+        Fetish f4 = new Fetish.FetishBuilder().setName("Cuckolding").createFetish();
+        Fetish f5 = new Fetish.FetishBuilder().setName("Face-sitting").createFetish();
+        Fetish f6 = new Fetish.FetishBuilder().setName("Féminisation").createFetish();
+        Fetish f7 = new Fetish.FetishBuilder().setName("Foot-worship").createFetish();
+        Fetish f8 = new Fetish.FetishBuilder().setName("Gode-ceinture").createFetish();
+        Fetish f9 = new Fetish.FetishBuilder().setName("Humiliation").createFetish();
+        Fetish f10 = new Fetish.FetishBuilder().setName("Scato").createFetish();
+        Fetish f11 = new Fetish.FetishBuilder().setName("Uro").createFetish();
+        Fetish f12 = new Fetish.FetishBuilder().setName("Whipping & Caning").createFetish();
+        List<Fetish> fetishes = Arrays.asList(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12);
 
         // on insére les fetishes dans la bdd
         fetishes.stream().forEach(f -> fetishRepository.save(f));
@@ -157,150 +154,5 @@ public class DatabaseCLR implements CommandLineRunner {
         UserType ut1 = UserType.Builder.anUserType().withId(MessengerUtils.DOMINA_ID).withName("Dominatrice").build();
         UserType ut2 = UserType.Builder.anUserType().withId(MessengerUtils.SUBMISSIVE_ID).withName("Soumis").build();
         Stream.of(ut1, ut2).forEach(userTypeRepository::save);
-
-        User u1 = User.Builder.anUser()
-                .withEmail("pgiraultmatz@gmail.com")
-                .withBirthDate(LocalDate.of(1992, 3, 29))
-                .withUsername("pgm")
-                .withPassword(encoder.encode("test"))
-                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .withEnabled(true)
-                .withIsBlocked(false)
-                .withDescription("je suis le membre 1")
-                .withFetishes(fetishes)
-                .withArea(a1)
-                .withCountry(c1)
-                .withType(ut2)
-                .withReportedAsFake(0L)
-                .withLastActivityDatetime(LocalDateTime.now())
-                .withLastReportDate(LocalDate.now().minusDays(1L))
-                .withNotifyMessage(true)
-                .withNotifyVisit(true)
-                .withActivated(true)
-                .build();
-        User u2 = User.Builder.anUser()
-                .withEmail("u1@gmail.com")
-                .withUsername("user2")
-                .withPassword(encoder.encode("test"))
-                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .withEnabled(true)
-                .withIsBlocked(false)
-                .withDescription("je suis le membre 2")
-                .withBirthDate(LocalDate.of(1988, 3, 29))
-                .withArea(a5)
-                .withCountry(c1)
-                .withType(ut1)
-                .withReportedAsFake(10L)
-                .withLastActivityDatetime(LocalDateTime.now())
-                .withLastReportDate(LocalDate.now().minusDays(1L))
-                .withNotifyMessage(true)
-                .withNotifyVisit(true)
-                .withActivated(true)
-                .build();
-        User u3 = User.Builder.anUser()
-                .withEmail("u2@gmail.com")
-                .withUsername("member3")
-                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .withPassword(encoder.encode("test"))
-                .withEnabled(true)
-                .withIsBlocked(false)
-                .withDescription("je suis le membre 3")
-                .withBirthDate(LocalDate.of(1988, 3, 29))
-                .withArea(a60)
-                .withCountry(c4)
-                .withType(ut1)
-                .withReportedAsFake(15L)
-                .withLastActivityDatetime(LocalDateTime.now())
-                .withLastReportDate(LocalDate.now().minusDays(1L))
-                .withNotifyMessage(true)
-                .withNotifyVisit(true)
-                .withActivated(true)
-                .build();
-
-        User u4 = User.Builder.anUser()
-                .withEmail("u3@gmail.com")
-                .withUsername("member4")
-                .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
-                .withPassword(encoder.encode("test"))
-                .withEnabled(true)
-                .withIsBlocked(false)
-                .withDescription("je suis le membre 4")
-                .withBirthDate(LocalDate.of(1988, 3, 29))
-                .withArea(a1)
-                .withCountry(c1)
-                .withType(ut2)
-                .withReportedAsFake(20L)
-                .withLastActivityDatetime(LocalDateTime.now())
-                .withLastReportDate(LocalDate.now().minusDays(1L))
-                .withNotifyMessage(true)
-                .withNotifyVisit(true)
-                .withActivated(true)
-                // last subscription 1 day ago
-                .withLastSubscriptionCheck(Timestamp.from(Instant.now().minusSeconds(24 * 3600)))
-                .withSubscriptionId("Hr551C2QDhJT4baIQ")
-                .build();
-
-        u1.setBlockedUsers(new HashSet<>(Arrays.asList(u2)));
-
-        // save users
-        Stream.of(u1, u2, u3, u4).forEach(m -> userRepository.save(m));
-
-        Image u1i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u1).build();
-        Image u2i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u2).build();
-        Image u3i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u3).build();
-        Image u4i1 = Image.Builder.anImage().withOrderNumber(1).withUrl(defaultImage).withUser(u4).build();
-        Stream.of(u1i1, u2i1, u3i1, u4i1).forEach(i -> imageRepository.save(i));
-
-        UserRole us1 = new UserRole(u1, "ROLE_USER");
-        UserRole us2 = new UserRole(u1, "ROLE_ADMIN");
-        UserRole us3 = new UserRole(u1, "ROLE_PREMIUM");
-        UserRole us4 = new UserRole(u2, "ROLE_USER");
-        UserRole us5 = new UserRole(u3, "ROLE_USER");
-        UserRole us6 = new UserRole(u4, "ROLE_USER");
-        UserRole us7 = new UserRole(u4, "ROLE_PREMIUM");
-
-        Stream.of(us1, us2, us3, us4, us5, us6, us7).forEach(us -> userRoleRepository.save(us));
-
-        // visits
-        Visit v1 = new Visit(LocalDate.now(), u2, u1, false);
-        Visit v2 = new Visit(LocalDate.now(), u3, u1, false);
-        Visit v3 = new Visit(LocalDate.now(), u2, u1, false);
-        Stream.of(v1, v2, v3).forEach(v -> this.visitRepository.save(v));
-
-        Conversation conv1 = new Conversation.ConversationBuilder()
-                .setId(1L)
-                .setPreview("conversation 1")
-                .setLastModified(LocalDateTime.now())
-                .setUserOne(u1)
-                .setUserTwo(u2)
-                .setIsReadByUserOne(false)
-                .setIsReadByUserTwo(false)
-                .setIsDeletedByUserOne(false)
-                .setIsDeletedByUserTwo(false)
-                .createConversation();
-        conversationRepository.save(conv1);
-
-        Conversation conv2 = new Conversation.ConversationBuilder()
-                .setId(2L)
-                .setPreview("conversation 2")
-                .setLastModified(LocalDateTime.of(2000, Month.APRIL, 2, 9, 30))
-                .setUserOne(u1)
-                .setUserTwo(u3)
-                .setIsReadByUserOne(false)
-                .setIsReadByUserTwo(false)
-                .setIsDeletedByUserOne(false)
-                .setIsDeletedByUserTwo(false)
-                .createConversation();
-        conversationRepository.save(conv2);
-
-        //memberRepository.flush();
-
-        List<User> listMemberst1 = Arrays.asList(u1, u2);
-
-        Message ms1 = new Message.MessageBuilder().setId(1L).setSource(u1).setConversation(conv1).setContent("Salut").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
-        Message ms2 = new Message.MessageBuilder().setId(2L).setSource(u2).setConversation(conv1).setContent("Salut ça va ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
-        Message ms3 = new Message.MessageBuilder().setId(3L).setSource(u1).setConversation(conv1).setContent("Parfait et toi gros frère ?").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
-        Message ms4 = new Message.MessageBuilder().setId(4L).setSource(u2).setConversation(conv1).setContent("Parfaitement oklm bro ").setSentDateTime(LocalDateTime.now()).setUserOne(u1).setUserTwo(u2).setIsDeletedByUserOne(false).setIsDeletedByUserTwo(false).setType(MessageType.TEXT).createMessage();
-        Stream.of(ms1, ms2, ms3, ms4).forEach(ms -> messageRepository.save(ms));
     }
 }

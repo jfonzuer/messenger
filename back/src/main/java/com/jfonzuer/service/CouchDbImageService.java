@@ -1,6 +1,5 @@
 package com.jfonzuer.service;
 
-import com.jfonzuer.controllers.ConversationController;
 import com.jfonzuer.dto.ImageDocument;
 import com.jfonzuer.exception.ResourceNotFoundException;
 import com.jfonzuer.exception.StorageException;

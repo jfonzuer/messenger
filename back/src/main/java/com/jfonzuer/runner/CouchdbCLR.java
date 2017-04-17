@@ -26,6 +26,8 @@ public class CouchdbCLR implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        couchDbImageConnector.createDatabaseIfNotExists();
+
         // si l'image par défaut n'existe pas déjà on la crée
         if (couchDbImageConnector.find(ImageDocument.class, "profile.png") == null) {
             InputStream resource = new ClassPathResource("profile.png").getInputStream();

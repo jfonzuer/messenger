@@ -1,10 +1,7 @@
 package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.VisitDto;
-import com.jfonzuer.dto.mapper.VisitMapper;
 import com.jfonzuer.entities.User;
-import com.jfonzuer.entities.Visit;
-import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.VisitRepository;
 import com.jfonzuer.service.SubscriptionService;
 import com.jfonzuer.service.UserService;
@@ -17,10 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by pgm on 18/10/16.

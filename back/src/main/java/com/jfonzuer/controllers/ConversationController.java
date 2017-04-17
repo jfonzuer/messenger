@@ -4,29 +4,20 @@ import com.jfonzuer.dto.ConversationDto;
 import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.dto.UserMessageDto;
 import com.jfonzuer.dto.mapper.ConversationMapper;
-import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.Conversation;
-import com.jfonzuer.entities.Message;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ConversationRepository;
-import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.service.*;
-import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by pgm on 20/09/16.
