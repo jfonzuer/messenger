@@ -34,7 +34,6 @@ export class AuthenticationService {
     return this.http.post(this.baseUrl + 'resend/activation/email', email, headers)
       .toPromise()
       .then(response => {
-        console.log(response);
         return response;
       })
   }

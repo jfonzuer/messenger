@@ -37,8 +37,6 @@ export class PasswordResetComponent implements OnInit {
   send() {
     if (this.passwordConfirmation.password == this.passwordConfirmation.confirmation) {
       this.loading = true;
-      console.log(this.passwordConfirmation);
-      console.log(new ResetPassword(this.passwordConfirmation, this.token, this.userId));
       //this.userService.resetPassword(this.passwordConfirmation)
       this.userService.resetPassword(new ResetPassword(this.passwordConfirmation, this.token, this.userId))
         .then(() => {

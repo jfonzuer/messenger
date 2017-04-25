@@ -53,7 +53,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
     this.isReadConversationSubscription = this.messengerService.isConversationReadObservable.subscribe(read => this.isRead = read);
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.pager = null; this.selectedConversation = conversation; this.getMessages(this.selectedConversation.userTwo.id)});
     this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(message => this.addMessage(message));
-    this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => { this.isRead = false; console.log(this.isRead); } );
+    this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => { this.isRead = false; } );
   }
 
   block() {
@@ -98,14 +98,12 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   private addMessage(message:Message) {
-    console.log("add message event : ", message);
     message.sendSince = moment(message.sendDate).fromNow();
     this.messages.push(message);
   }
 
   private changeConversation(conversation:Conversation) {
     this.selectedConversation = conversation;
-    console.log(this.selectedConversation);
     this.pager = null;
     this.getMessages(this.selectedConversation.userTwo.id);
     this.isRead = this.selectedConversation.readByUserTwo;

@@ -83,7 +83,6 @@ export class ConversationService {
     return this.http.delete(this.baseUrl + 'conversations/' + conversation.id, {headers: headers})
       .toPromise()
       .then(response => {
-          console.log(response);
           this.rs.handleResponse(response);
         }
       )

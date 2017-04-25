@@ -35,7 +35,6 @@ export class UnauthHomeComponent implements OnInit {
 
     this.unauthUserS.getLastRegisteredDominas()
       .then(dominas => {
-        console.log(dominas);
         this.dominas = dominas as User[];
       })
   }

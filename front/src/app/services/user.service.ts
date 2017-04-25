@@ -70,7 +70,6 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/' + id, {headers: headers})
       .toPromise()
       .then(response => {
-        console.log(response);
         this.rs.handleResponse(response);
         let user:User = response.json();
 

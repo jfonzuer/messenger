@@ -17,8 +17,12 @@ public class CustomErrorViewResolver implements ErrorViewResolver {
 
     @Override
     public ModelAndView resolveErrorView(HttpServletRequest httpServletRequest, HttpStatus httpStatus, Map<String, Object> map) {
+        String returnView = "index.html";
+        if (map.get("path").equals("/robots.txt")) {
+            returnView = "robots.txt";
+        }
+
         return httpStatus == HttpStatus.NOT_FOUND
-                ? new ModelAndView("index.html", Collections.<String, Object> emptyMap(), HttpStatus.OK)
-                : null;
+                ? new ModelAndView(returnView, Collections.<String, Object> emptyMap(), HttpStatus.OK) : null;
     }
 }

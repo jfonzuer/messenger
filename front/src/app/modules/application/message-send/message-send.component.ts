@@ -67,7 +67,6 @@ MessageSendComponent implements OnInit, OnDestroy {
   fileChangeEvent(event:any) {
     this.file = event.target.files[0];
     this.sendImage = true;
-    console.log("file : ", this.file);
   }
 
   cancelSendImage() {
@@ -103,7 +102,6 @@ MessageSendComponent implements OnInit, OnDestroy {
   }
 
   private createConversation() {
-    console.log("create conversation");
     this.conversationService.post(new UserMessage(this.selectedConversation.userTwo, this.message)).then(response => {
       this.message.content = '';
       this.selectedConversation = response;

@@ -13,16 +13,11 @@ export class DatetimeService {
 
   formatLastActivty(user:User) {
     let now = moment();
-    console.log(user);
-    console.log(user.lastActivityDatetime);
     let lastActivityDatetime = moment(user.lastActivityDatetime);
     var duration = moment.duration(now.diff(lastActivityDatetime));
     var days = duration.asDays();
     var hours = duration.asHours();
     var mins = duration.asMinutes();
-    console.log("days", days);
-    console.log("hours", hours);
-    console.log("mins", mins);
 
     if (mins < 30 ) {
       user.lastActivity = "online"
@@ -43,15 +38,12 @@ export class DatetimeService {
   }
 
   formatSearch(search:Search, ageOne:number, ageTwo:number) {
-    console.log("search by age");
-    console.log(search);
     search.birthDateOne = moment().subtract(ageTwo, 'years').format('YYYY-MM-DD');
     search.birthDateTwo = moment().subtract(ageOne, 'years').format('YYYY-MM-DD');
   }
 
   formatVisit(visit:Visit) {
     visit.visitedDate = moment(visit.visitedDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
-    console.log(visit.visitedDate);
   }
 
   formatVisits(visits:Visit[]) {

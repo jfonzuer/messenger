@@ -40,7 +40,6 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("is domina : " + this.sharedService.isDomina())
     // init search userType
     this.search.userType = new UserType(this.sharedService.isDomina() ? 2 : 1);
     this.search.keyword = '';
@@ -68,7 +67,6 @@ export class SearchComponent implements OnInit {
   searchUsers() {
     this.loading = true;
     this.userService.searchUsers(this.search, this.pager).then(response => {
-      console.log(response);
       this.loading = false;
       let list:User[] = response.content;
       this.searched = true;

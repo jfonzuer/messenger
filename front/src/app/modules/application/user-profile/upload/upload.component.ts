@@ -47,7 +47,6 @@ export class UploadComponent implements OnInit {
   send(valid:boolean) {
     if (valid && this.file != null) {
       if (this.file.size < this.sizeLimit) {
-        console.log(this.orderNumber);
         this.loading = true;
         this.uploadService.uploadImage(this.file, this.orderNumber).subscribe(
           image => {
@@ -69,12 +68,9 @@ export class UploadComponent implements OnInit {
   }
 
   deleteImage(orderNumber:number) {
-    console.log(orderNumber);
     this.loading = true;
     this.uploadService.deleteImage(orderNumber).subscribe(
       images => {
-        console.log("success");
-        console.log(images);
         this.loading = false;
         this.user.images = images;
         this.sharedService.refreshUser(this.user);
@@ -88,11 +84,9 @@ export class UploadComponent implements OnInit {
   }
 
   setAsProfile(orderNumber:number) {
-    console.log("set as profile " + orderNumber);
     this.loading = true;
     this.uploadService.setAsProfile(orderNumber).subscribe(
       images => {
-        console.log(images);
         this.user.images = images;
         this.loading = false;
         this.sharedService.refreshUser(this.user);

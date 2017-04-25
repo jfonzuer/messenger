@@ -82,7 +82,6 @@ export class MessengerService {
   }
 
   addConversation(conversation:Conversation) {
-    console.log("add conversation observer");
     this.addConversationObserver.next(conversation);
   }
 

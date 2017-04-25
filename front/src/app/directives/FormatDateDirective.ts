@@ -14,9 +14,6 @@ export class FormatDateDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.myDate);
-    console.log(this.el);
-    console.log(this.el.nativeElement);
     //moment(visit.visitedDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
   }
 }

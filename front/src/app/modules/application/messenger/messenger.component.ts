@@ -54,7 +54,6 @@ export class MessengerComponent implements OnInit, OnDestroy {
       if (params['id']) {
         let userId = +params['id'];// (+) converts string 'id' to a number
         this.conversationService.getConversationBetweenSpecifiedUser(userId).then(conversation => {
-          console.log("conversation : ", conversation);
           this.messengerService.changeConversation(conversation)
         });
         // sinon
@@ -87,7 +86,6 @@ export class MessengerComponent implements OnInit, OnDestroy {
       that.conversationsSubscription.unsubscribe();
     }
 
-    console.error("CHANGE CONVERSATION");
     this.stompClient.connect({}, function (frame) {
       //console.log('Connected: ' + frame);
       if (conversationId) {

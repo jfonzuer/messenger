@@ -59,13 +59,11 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   private updateConversation(conversation:Conversation) {
     let index:number = this.conversations.findIndex(c => c.id == conversation.id);
     // si la conversation existe on la met à jour, sinon on la concatene à la liste existante en la plaçant en première place
-    console.log(index);
     index >= 0 ? this.conversations[index] = conversation : this.conversations = [conversation].concat(this.conversations);
   }
 
   // utilisé lorsque l'utilisateur initie une conversation
   private addConversation(conversation:Conversation) {
-    console.log("conversation", conversation);
     this.selectedConversation = conversation;
     this.conversations = [conversation].concat(this.conversations);
   }

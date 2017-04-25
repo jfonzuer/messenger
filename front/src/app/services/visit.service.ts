@@ -27,7 +27,6 @@ export class VisitService {
     return this.http.get(this.baseUrl + 'visits/' + queryParams, {headers:headers})
       .toPromise()
       .then(response => {
-        console.log(response);
         this.rs.handleResponse(response);
 
         let body = response.json();

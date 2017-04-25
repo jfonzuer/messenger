@@ -17,7 +17,6 @@ export class SendActivationMailComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("init SendActivationMailComponent");
     this.email = 'pgiraultmatz@gmail.com';
   }
 
