@@ -12,6 +12,8 @@ import com.jfonzuer.repository.*;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.utils.MessengerUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,8 @@ import java.util.Set;
  */
 @Service
 public class UserService {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -262,7 +266,7 @@ public class UserService {
      */
     public void resetPassword(ResetPasswordDto resetPasswordDto) {
         User user = userRepository.findOne(resetPasswordDto.getUserId());
-        System.out.println("userId = " + user.getId());
+        LOGGER.debug("Reset password for user id : {}", user.getId());
         Token token = tokenRepository.getByTokenAndUser(resetPasswordDto.getToken(), user);
 
         if (token == null) {
@@ -295,7 +299,7 @@ public class UserService {
 
         if (target.getBlockedUsers() != null /* && target.getBlockedUsers().contains(sender) */) {
             long nb = target.getBlockedUsers().stream().filter(u -> u.equals(sender)).count();
-            System.err.println("err = " + nb);
+            LOGGER.debug("nb of blocked user = {}", nb);
             if (nb == 1l) {
                 throw new IllegalArgumentException("Vous ne pouvez pas envoyer de message à cet utilisateur");
             }

@@ -48,7 +48,6 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
             User user = userRepository.findByEmail(username);
             user.setAuthorities(UserMapper.mapToGrantedAuthorities(user.getUserRoles()));
-            //System.out.println("jwtUser = " + jwtUser);
 
             if (jwtTokenUtil.validateToken(authToken, user)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

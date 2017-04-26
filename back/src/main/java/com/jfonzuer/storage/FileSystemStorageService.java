@@ -31,7 +31,7 @@ public class FileSystemStorageService implements StorageService {
                         .sorted(Comparator.reverseOrder())
                         // .map - path the Path to File
                         .map(Path::toFile)
-                        .peek(System.out::println)
+                        //.peek(System.out::println)
                         // forEach - calls an every File object the .delete() method
                         .forEach(File::delete);
             } catch (IOException e) {

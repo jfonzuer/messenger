@@ -7,11 +7,10 @@ import com.jfonzuer.entities.Token;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.TokenRepository;
 import com.jfonzuer.repository.UserRepository;
-import com.jfonzuer.service.AsyncService;
-import com.jfonzuer.service.MailService;
-import com.jfonzuer.service.TokenService;
-import com.jfonzuer.service.UserService;
+import com.jfonzuer.service.*;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +27,8 @@ import java.util.UUID;
 
 @RestController
 public class RegisterController {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
 
     @Autowired
     private UserService userService;
@@ -55,7 +56,7 @@ public class RegisterController {
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public void add(@Valid @RequestBody RegisterDto register, HttpServletRequest request) {
         User user = UserMapper.fromDto(register.getUser());
-        System.out.println("user.getType() = " + user.getType());
+        LOGGER.debug("user.getTypes() = {}", user.getType());
 
         if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
             throw new IllegalArgumentException("L'adrcesse email est déjà utilisée");
@@ -63,8 +64,8 @@ public class RegisterController {
         if (userRepository.findByEmail(register.getUser().getEmail()) != null) {
             throw new IllegalArgumentException("Le nom d'utilisateur est déjà utilisée");
         }
-        System.out.println("user.getArea() = " + user.getArea());
-        
+        LOGGER.debug("user.getArea() = {}", user.getArea());
+
         userService.createUser(user, register.getPassword());
         String token = UUID.randomUUID().toString();
         tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));

@@ -1,30 +1,29 @@
 package com.jfonzuer.service;
 
-import com.jfonzuer.dto.ConversationDto;
 import com.jfonzuer.dto.MessageDto;
-import com.jfonzuer.dto.mapper.ConversationMapper;
 import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.Message;
 import com.jfonzuer.entities.MessageType;
 import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.ConversationRepository;
-import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.utils.MessengerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by pgm on 08/01/17.
  */
 @Service
 public class ConversationService {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ConversationService.class);
 
     private final ConversationRepository conversationRepository;
     private final MessageService messageService;
@@ -43,7 +42,8 @@ public class ConversationService {
 
     public Conversation getConversationOrCreateOne(User currentUser, User specifiedUser) {
         Conversation conversation = conversationRepository.findByUserOneAndUserTwoOrUserTwoAndUserOne(currentUser, specifiedUser, currentUser, specifiedUser);
-        System.out.println("conversation = " + conversation);
+        LOGGER.debug("getConversationOrCreateOne conversation : {}", conversation);
+
         // si la conversation n'existe pas on la crée
         if (conversation == null) {
             conversation = new Conversation.ConversationBuilder()

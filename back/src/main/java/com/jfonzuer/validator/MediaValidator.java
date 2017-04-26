@@ -1,5 +1,8 @@
 package com.jfonzuer.validator;
 
+import com.jfonzuer.service.ImageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,8 @@ import java.util.HashMap;
  */
 @Component
 public class MediaValidator {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(MediaValidator.class);
 
     private Long maxSize = 2048*1000L;
     //public Long maxSize = 100*1000L;
@@ -36,8 +41,8 @@ public class MediaValidator {
         if (!isTypeSupported(file.getContentType())) {
             throw new IllegalArgumentException("Type not supported");
         }
-        System.out.println("file.getSize() = " + file.getSize());
-        System.out.println("maxSize = " + maxSize);
+        LOGGER.debug("file.getSize() = {}", file.getSize());
+        LOGGER.debug("maxSize() = {}", file.getSize());
         if (file.getSize() > maxSize) {
             throw new IllegalArgumentException("File is too big");
         }

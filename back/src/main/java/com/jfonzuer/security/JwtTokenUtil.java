@@ -5,6 +5,8 @@ import com.jfonzuer.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 @Component
 public class JwtTokenUtil implements Serializable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
 
     private static final long serialVersionUID = -3301605591108950415L;
 
@@ -101,7 +105,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-        System.out.println("created = " + created);
+        LOGGER.debug("created = {}", created);
         return (lastPasswordReset != null && created.before(lastPasswordReset));
     }
 
@@ -159,22 +163,10 @@ public class JwtTokenUtil implements Serializable {
     public Boolean validateToken(String token, User jwtUser) {
 
         final String username = getUsernameFromToken(token);
-        /*
-        System.out.println("username = " + username);
-        System.out.println("jwtUser.getEmail() = " + jwtUser.getEmail());
-        System.out.println("username.length() = " + username.length());
-        System.out.println("jwtUser.length = " + jwtUser.getEmail().length());
-        System.out.println("username.equals jwt username = " + username.equals(jwtUser.getUsername()));
-        */
-        
+        LOGGER.debug("username = {}", username);
+        LOGGER.debug("jwtUser.getEmail() = {}", jwtUser.getEmail());
         final Date created = getCreatedDateFromToken(token);
-        //final Date expiration = getExpirationDateFromToken(token);
-
-        //System.out.println("created = " + created);
-        
-        //System.out.println("!isTokenExpired(token) = " + !isTokenExpired(token));
-        //System.out.println("!isCreatedBeforeLastPasswordReset(created, jwtUser.getLastPasswordResetDate()) = " + !isCreatedBeforeLastPasswordReset(created, jwtUser.getLastPasswordResetDate()));
-
+        LOGGER.debug("!isCreatedBeforeLastPasswordReset(created, jwtUser.getLastPasswordResetDate()) = {}", !isCreatedBeforeLastPasswordReset(created, jwtUser.getLastPasswordResetDate()));
         return (
                 username.equals(jwtUser.getEmail())
                         && !isTokenExpired(token)

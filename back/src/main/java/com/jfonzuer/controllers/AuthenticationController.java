@@ -10,6 +10,8 @@ import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.service.SubscriptionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import java.time.LocalDateTime;
 
 @RestController
 public class AuthenticationController {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -71,7 +75,8 @@ public class AuthenticationController {
         if (user.getBlocked()) {
             throw new UnauthorizedException("Votre compte a été suspendu, contactez l'administration de l'application : contact@dominapp.com");
         }
-        System.out.println("user.getActivated() = " + user.getActivated());
+        LOGGER.debug("user.getActivated() {}", user.getActivated());
+
         if (!user.getActivated()) {
             throw new AccountNotActivatedException("Vous n'avez pas encore activé votre compte");
         }

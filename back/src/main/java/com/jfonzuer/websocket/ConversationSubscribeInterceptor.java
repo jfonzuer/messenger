@@ -6,6 +6,8 @@ import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.ConversationRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.service.ConversationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.messaging.Message;
@@ -18,6 +20,8 @@ import org.springframework.messaging.support.ChannelInterceptorAdapter;
  * Created by pgm on 05/02/17.
  */
 public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ConversationSubscribeInterceptor.class);
 
     @Autowired
     private ConversationService conversationService;
@@ -44,7 +48,7 @@ public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter 
             Long id = Long.parseLong(String.valueOf(destination.charAt(destination.length() - 1)));
 
             if (destination.contains("ws-conversation-broker")) {
-                System.out.println("conversationId = " + id);
+                LOGGER.debug("conversationId = {}", id);
                 Conversation conversation = conversationRepository.findOne(id);
 
                 if (conversation == null) {
@@ -54,7 +58,7 @@ public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter 
                     throw new UnauthorizedException("L'utilisateur ne fait pas partie de la discussion");
                 }
             } else if (destination.contains("ws-user-broker")) {
-                System.out.println("userId = " + id);
+                LOGGER.debug("userId = {}", id);
                 User user = userRepository.findOne(id);
                 if (user == null) {
                     throw new ResourceNotFoundException("L'utilisateur n'existe pas");

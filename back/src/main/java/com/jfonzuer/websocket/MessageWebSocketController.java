@@ -9,6 +9,8 @@ import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.service.*;
 import com.jfonzuer.utils.MessengerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,6 +26,8 @@ import java.util.Locale;
  */
 @Controller
 public class MessageWebSocketController {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(MessageWebSocketController.class);
 
     private final UserService userService;
     private final ConversationService conversationService;
@@ -49,7 +53,7 @@ public class MessageWebSocketController {
     @Transactional
     @MessageMapping("/ws-conversation-endpoint/{id}")
     public void addMessage(@DestinationVariable String id, MessageDto dto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-        System.err.println("dto = " + dto);
+        LOGGER.debug("add message dto : {}" + dto);
         User sender = (User) headerAccessor.getSessionAttributes().get("connectedUser");
         Locale locale = (Locale) headerAccessor.getSessionAttributes().get("locale");
 
@@ -69,7 +73,7 @@ public class MessageWebSocketController {
         userRepository.save(target);
 
         Conversation conversation = conversationService.updateConversation(c, sender, dto);
-        System.err.println("conversation = " + conversation);
+        LOGGER.debug("send conversation via websockets {}", conversation);
         this.webSocketService.sendToConversationsUsers(conversation);
 
         Message message = MessageMapper.fromDto(dto);
@@ -80,7 +84,6 @@ public class MessageWebSocketController {
         if (!target.getLastMessageBy().equals(sender)) {
             asyncService.executeAsync(() -> mailService.sendMessageNotification(locale, MessengerUtils.getOtherUser(c, sender), sender));
         }
-        System.out.println("message = " + message);
         this.template.convertAndSend("/ws-conversation-broker/conversation/" + id, MessageMapper.toDto(message));
     }
 }

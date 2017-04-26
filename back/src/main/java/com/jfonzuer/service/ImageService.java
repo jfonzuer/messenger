@@ -11,6 +11,9 @@ import com.jfonzuer.repository.ImageRepository;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.storage.StorageService;
 import com.jfonzuer.validator.MediaValidator;
+import org.apache.commons.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ImageService {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
 
     private final static Integer MAX_NUMBER = 3;
 
@@ -52,7 +57,6 @@ public class ImageService {
         validateOrder(order);
 
         List<Image> images = new ArrayList<>(user.getImages());
-        System.out.println("images = " + images);
 
         // s'il s'agit de la première photo on delete la photo par defaut dans la db
         if (order == 1) {
@@ -69,10 +73,10 @@ public class ImageService {
 
 
     public List<ImageDto> delete(Integer order, User user) {
-        System.out.println("delete order = " + order);
+        LOGGER.debug("delete order = {}",order);
 
         List<Image> images = new ArrayList<>(user.getImages());
-        System.out.println("images = " + images);
+        LOGGER.debug("images = {}", images);
         validateOrder(order);
 
         // suppression image profil en n'ayant pas d'autres photos
