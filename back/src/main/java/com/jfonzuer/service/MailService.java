@@ -8,6 +8,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -23,30 +25,52 @@ import java.util.concurrent.RunnableFuture;
 @Service
 public class MailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-
     @Value("${send.from.email}")
     private String fromEmail;
 
     @Value("${app.url}")
     private String appUrl;
 
+    @Value("${image.url}")
+    private String imageUrl;
+
+    private static String loginUrl;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Autowired
+    TemplateEngine templateEngine;
+
+
+    @Value("${app.url}")
+    public void setLoginUrl(String appUrl) {
+        String loginUrl = appUrl + "unauth/login";
+    }
 
     public void sendVisitNotification(Locale locale, User visited, User visitor) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String loginUrl = appUrl + "unauth/login";
         try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            String visitorProfile = appUrl + "app/profile/" + visitor.getId();
+            String imageSrc = imageUrl + visitor.getImages().stream().findFirst().get().getUrl() + "/image";
+
+            // Prepare the evaluation context
+            final Context ctx = new Context(locale);
+            ctx.setVariable("visitedName", visited.getUsername());
+            ctx.setVariable("visitorName", visitor.getUsername());
+            ctx.setVariable("visitorProfile", visitorProfile);
+            ctx.setVariable("imageSrc", imageSrc);
+            ctx.setVariable("loginUrl", loginUrl);
+
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] "+ visitor.getUsername() + " a visité votre profil");
-            helper.setText(
-                    "Bonjour " + visited.getUsername() + ",<br><br>" +
-                            visited.getUsername() + " a visité votre profil <br><br> " +
-                            "Connectez vous à l'application pour consulter vos visites : <a href=" + loginUrl + ">Connexion</a> <br><br> " +
-                            "L'équipe Dominapp.", true);
+
+            // Create the HTML body using Thymeleaf
+            final String htmlContent = templateEngine.process("visit", ctx);
+            helper.setText(htmlContent, true); // true = isHtml
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
@@ -55,19 +79,27 @@ public class MailService {
     }
 
     public void sendMessageNotification(Locale locale, User user, User sender) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String loginUrl = appUrl + "unauth/login";
         try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            String messengerUrl = appUrl + "app/conversation";
+            String imageSrc = imageUrl + sender.getImages().stream().findFirst().get().getUrl() + "/image";
+
+            // Prepare the evaluation context
+            final Context ctx = new Context(locale);
+            ctx.setVariable("userName", user.getUsername());
+            ctx.setVariable("senderName", sender.getUsername());
+            ctx.setVariable("messengerUrl", messengerUrl);
+            ctx.setVariable("imageSrc", imageSrc);
+            ctx.setVariable("loginUrl", loginUrl);
+
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] "+ sender.getUsername() + " vous a envoyé un message");
-            helper.setText(
-                    "Bonjour " + user.getUsername() + ",<br><br>" +
-                            sender.getUsername() + " vous a envoyé un message <br><br> " +
-                            "Connectez vous à l'application pour consulter vos messages : <a href=" + loginUrl + ">Connexion</a> <br><br> " +
-                            "L'équipe Dominapp.", true);
+
+            final String htmlContent = templateEngine.process("message", ctx);
+            helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
@@ -76,19 +108,22 @@ public class MailService {
     }
 
     public void sendRegisterNotification(Locale locale, User user, String token) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String validationUrl = appUrl + "unauth/home/" + token;
         try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            String validationUrl = appUrl + "unauth/home/" + token;
+
+            // Prepare the evaluation context
+            final Context ctx = new Context(locale);
+            ctx.setVariable("userName", user.getUsername());
+            ctx.setVariable("validationUrl", validationUrl);
+
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] Bienvenue sur Dominapp");
-            helper.setText(
-                    "Bonjour " + user.getUsername() + ",<br><br>" +
-                            "Merci de vous être inscris sur Dominapp. <br><br> " +
-                            "Validez votre compte en cliquant sur ce lien : <a href=" + validationUrl + ">Je valide mon compte</a> <br><br> " +
-                            "L'équipe Dominapp.", true);
+            final String htmlContent = templateEngine.process("register", ctx);
+            helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -96,37 +131,38 @@ public class MailService {
     }
 
     public void sendResetTokenEmail(Locale locale, String token, User user) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String resetLink = appUrl + "unauth/password/reset/" + user.getId() + "/" +token;
         try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            String resetLink = appUrl + "unauth/password/reset/" + user.getId() + "/" +token;
+
+            final Context ctx = new Context(locale);
+            ctx.setVariable("resetLink", resetLink);
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] Réinitialiser votre mot de passe");
-            helper.setText(
-                    "Bonjour " + user.getUsername() + ",<br><br>" +
-                            "Merci de vous être inscris sur Dominapp. <br><br> " +
-                            "Pour réinitialiser votre mot de passer, cliquer sur le lien suivant : <a href=" + resetLink + ">Réinitialiser</a> <br><br> " +
-                            "L'équipe Dominapp.", true);
+            final String htmlContent = templateEngine.process("reset-password", ctx);
+            helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
     public void sendActivationMail(Locale locale, String token, User user) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        String activationLink = appUrl + "unauth/home/"  + token;
         try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            String activationLink = appUrl + "unauth/home/"  + token;
+
+            final Context ctx = new Context(locale);
+            ctx.setVariable("activationLink", activationLink);
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] Activez votre compte");
-            helper.setText(
-                    "Bonjour " + user.getUsername() + ",<br><br>" +
-                            "Cliquez sur le lien suivant pour activer votre compte : <a href=" + activationLink + ">Activer</a> <br><br>" +
-                            "L'équipe Dominapp.", true);
+            final String htmlContent = templateEngine.process("activation", ctx);
+            helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
