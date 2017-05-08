@@ -44,7 +44,8 @@ public class VisitController {
      * @param p
      * @return
      */
-    @PreAuthorize("hasRole('PREMIUM')")
+    //TODO : uncomment to activate premium
+    //@PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.GET)
     public Page<VisitDto> getAllVisitsByUser(HttpServletRequest request, Pageable p) {
         User visited = userService.getUserFromToken(request);

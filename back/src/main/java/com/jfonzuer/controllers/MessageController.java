@@ -24,7 +24,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/messages")
-@PreAuthorize("hasRole('PREMIUM')")
+//TODO : uncomment to activate premium
+//@PreAuthorize("hasRole('PREMIUM')")
 public class MessageController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageController.class);

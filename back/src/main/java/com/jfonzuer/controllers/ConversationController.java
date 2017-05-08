@@ -59,7 +59,8 @@ public class ConversationController {
      * @param p
      * @return
      */
-    @PreAuthorize("hasRole('PREMIUM')")
+    //TODO : uncomment to activate premium
+    //@PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.GET)
     public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
         User user = userService.getUserFromToken(request);
@@ -73,7 +74,8 @@ public class ConversationController {
      * @param dto
      * @return
      */
-    @PreAuthorize("hasRole('PREMIUM')")
+    //TODO : uncomment to activate premium
+    //@PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(method = RequestMethod.POST)
     public ConversationDto add(HttpServletRequest request, @RequestBody UserMessageDto dto) {
         User userOne = userService.getUserFromToken(request);
@@ -98,7 +100,8 @@ public class ConversationController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasRole('PREMIUM')")
+    //TODO : uncomment to activate premium
+    //@PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ConversationDto getConversationBetweenCurrentUserAndSpecifiedUser(HttpServletRequest request, @PathVariable Long id) {
         LOGGER.info(" in getConversationBetweenCurrentUserAndSpecifiedUser ");
@@ -116,7 +119,8 @@ public class ConversationController {
      * @param request
      * @param id
      */
-    @PreAuthorize("hasRole('PREMIUM')")
+    //TODO : uncomment to activate premium
+    //@PreAuthorize("hasRole('PREMIUM')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteConversation(HttpServletRequest request, @PathVariable Long id) {
         User currentUser = userService.getUserFromToken(request);

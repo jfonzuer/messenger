@@ -70,7 +70,8 @@ public class AuthenticationController {
         userRepository.save(user);
 
         //subscriptionService.checkSubscription(user);
-        subscriptionService.checkSubscriptionAsync(user);
+        //TODO : uncomment to activate premium
+        //subscriptionService.checkSubscriptionAsync(user);
 
         if (user.getBlocked()) {
             throw new UnauthorizedException("Votre compte a été suspendu, contactez l'administration de l'application : contact@dominapp.com");
