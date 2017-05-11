@@ -13,8 +13,8 @@ npm-debug.log
 **/logs/**
 **/properties/**
 **/2-PRIVILEGES.sql
+**/docker/config.sh
 **/back/application.properties
-**/docker
 **/docker/data
 **/docker/back/app.jar
 
