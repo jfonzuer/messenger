@@ -69,7 +69,7 @@ public class MailService {
             helper.setSubject("[Dominapp] "+ visitor.getUsername() + " a visité votre profil");
 
             // Create the HTML body using Thymeleaf
-            final String htmlContent = templateEngine.process("visit", ctx);
+            final String htmlContent = templateEngine.process("mail/visit", ctx);
             helper.setText(htmlContent, true); // true = isHtml
             javaMailSender.send(mimeMessage);
 
@@ -98,7 +98,7 @@ public class MailService {
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] "+ sender.getUsername() + " vous a envoyé un message");
 
-            final String htmlContent = templateEngine.process("message", ctx);
+            final String htmlContent = templateEngine.process("mail/message", ctx);
             helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
 
@@ -122,7 +122,7 @@ public class MailService {
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] Bienvenue sur Dominapp");
-            final String htmlContent = templateEngine.process("register", ctx);
+            final String htmlContent = templateEngine.process("mail/register", ctx);
             helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
@@ -142,7 +142,7 @@ public class MailService {
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] Réinitialiser votre mot de passe");
-            final String htmlContent = templateEngine.process("reset-password", ctx);
+            final String htmlContent = templateEngine.process("mail/reset-password", ctx);
             helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
@@ -161,7 +161,7 @@ public class MailService {
             //helper.setTo(user.getEmail());
             helper.setTo("pgiraultmatz@gmail.com");
             helper.setSubject("[Dominapp] Activez votre compte");
-            final String htmlContent = templateEngine.process("activation", ctx);
+            final String htmlContent = templateEngine.process("mail/activation", ctx);
             helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {

@@ -27,6 +27,6 @@ export class HomeComponent implements OnInit {
       this.users = response.content;
     })
     let user = this.sharedService.getCurrentUser();
-    user.userType.name == 'Soumis' ? this.title = 'Dernieres dominatrices inscrites' : this.title = 'Derniers soumis inscris';
+    user.userType.name == 'Soumis' ? this.title = 'Dernieres dominatrices inscrites' : this.title = 'Derniers soumis inscrit';
   }
 }

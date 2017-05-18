@@ -18,14 +18,15 @@ cd $ROOT
 rm -r back/src/main/resources/static
 mkdir -p back/src/main/resources/static
 cp -r front/dist/* back/src/main/resources/static/
+cp front/dist/index.html back/src/main/resources/templates/app/index.html
 cp back/src/main/resources/robots.txt back/src/main/resources/static/robots.txt
-cp -r front/src/assets/bootstrap/fonts/* back/src/main/resources/static/assets/bootstrap/fonts/
+rm -r back/src/main/resources/static/assets
+cp -r front/src/assets back/src/main/resources/static/
 
 # rebuild l'image
 cd $PATH_TO_BACK
 rm -rf target/
-mvn package -DskipTests
-mvn clean install -P prod -DskipTests
+mvn clean package -P prod -DskipTests
 
 cd target/
 for f in *.jar

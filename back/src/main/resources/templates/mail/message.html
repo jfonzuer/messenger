@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Dominapp</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>Bonjour <span th:text="${userName}"></span></p>
+<p><img th:src="${imageSrc}" style="width: 80px; height: 80px;" /></p>
+<p><span th:text="${senderName}"></span> vous a envoyé un message</p>
+<a th:href="${messengerUrl}">Consulter vos messages</a>
+<p>Ou <a th:href="${loginUrl}">connectez vous</a> à l'application pour découvrir d'autres profils</p>
+<p>L'équipe <strong>Dominapp</strong></p>
+</body>
+</html>
