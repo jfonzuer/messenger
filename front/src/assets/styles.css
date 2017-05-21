@@ -111,7 +111,7 @@ a:hover {
 
 /** custom navbar **/
 
-@media (max-width: 970px) {
+@media (max-width: 990px) {
   .navbar-header {
     float: none;
   }

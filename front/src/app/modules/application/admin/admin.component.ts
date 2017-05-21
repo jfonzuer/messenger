@@ -14,7 +14,10 @@ export class AdminComponent implements OnInit {
   constructor(private adminService:AdminService) { }
 
   ngOnInit() {
-    this.adminService.getReportedUser().then(response => { console.debug('users ', response); this.users = response })
+    this.adminService.getReportedUser().then(response => {
+      //console.debug('users ', response);
+      this.users = response
+    })
   }
 
   unblock(user:User) {

@@ -1,6 +1,8 @@
 package com.jfonzuer.service;
 
 import com.jfonzuer.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
@@ -25,8 +27,13 @@ import java.util.concurrent.RunnableFuture;
 @Service
 public class MailService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
+
     @Value("${send.from.email}")
     private String fromEmail;
+
+    @Value("${send.to.email")
+    private String sendTo;
 
     @Value("${app.url}")
     private String appUrl;
@@ -35,6 +42,9 @@ public class MailService {
     private String imageUrl;
 
     private static String loginUrl;
+
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -64,8 +74,7 @@ public class MailService {
 
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
-            //helper.setTo(user.getEmail());
-            helper.setTo("pgiraultmatz@gmail.com");
+            setTo(helper, visited.getEmail());
             helper.setSubject("[Dominapp] "+ visitor.getUsername() + " a visité votre profil");
 
             // Create the HTML body using Thymeleaf
@@ -74,7 +83,7 @@ public class MailService {
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when sending visit notification mail to : {}", visited.getEmail(), e);
         }
     }
 
@@ -94,8 +103,7 @@ public class MailService {
             ctx.setVariable("loginUrl", loginUrl);
 
             helper.setFrom(this.fromEmail);
-            //helper.setTo(user.getEmail());
-            helper.setTo("pgiraultmatz@gmail.com");
+            setTo(helper, user.getEmail());
             helper.setSubject("[Dominapp] "+ sender.getUsername() + " vous a envoyé un message");
 
             final String htmlContent = templateEngine.process("mail/message", ctx);
@@ -103,7 +111,7 @@ public class MailService {
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when sending message notification to : {}", user.getEmail(), e);
         }
     }
 
@@ -119,14 +127,15 @@ public class MailService {
 
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
-            //helper.setTo(user.getEmail());
-            helper.setTo("pgiraultmatz@gmail.com");
+
+            setTo(helper, user.getEmail());
+
             helper.setSubject("[Dominapp] Bienvenue sur Dominapp");
             final String htmlContent = templateEngine.process("mail/register", ctx);
             helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when sending register notification mail to : {}", user.getEmail(), e);
         }
     }
 
@@ -139,14 +148,13 @@ public class MailService {
             ctx.setVariable("resetLink", resetLink);
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
-            //helper.setTo(user.getEmail());
-            helper.setTo("pgiraultmatz@gmail.com");
+            setTo(helper, user.getEmail());
             helper.setSubject("[Dominapp] Réinitialiser votre mot de passe");
             final String htmlContent = templateEngine.process("mail/reset-password", ctx);
             helper.setText(htmlContent, true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when sending reset token mail to : {}", user.getEmail(), e);
         }
     }
     public void sendActivationMail(Locale locale, String token, User user) {
@@ -158,14 +166,23 @@ public class MailService {
             ctx.setVariable("activationLink", activationLink);
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(this.fromEmail);
-            //helper.setTo(user.getEmail());
-            helper.setTo("pgiraultmatz@gmail.com");
+            setTo(helper, user.getEmail());
             helper.setSubject("[Dominapp] Activez votre compte");
             final String htmlContent = templateEngine.process("mail/activation", ctx);
             helper.setText(htmlContent, true);
+            LOGGER.debug("Send activation mail to : {}", user.getEmail());
+
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when sending activation mail to : {}", user.getEmail(), e);
         }
+    }
+
+    private void setTo(MimeMessageHelper helper, String email) throws MessagingException {
+        if (profile.equals("dev")) {
+            helper.setTo(sendTo);
+            return;
+        }
+        helper.setTo(email);
     }
 }

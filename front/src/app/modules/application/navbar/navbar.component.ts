@@ -67,10 +67,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   updateUnreadConversations() {
-    console.error("UPDATE unreadconversations");
+    //console.debug("UPDATE unreadconversations");
     this.conversationService.getUnreadNumberConversations().then(unreadConversations => {
       this.unreadConversations = unreadConversations;
-      console.error(this.unreadConversations);
+      //console.debug(this.unreadConversations);
       this.updateTitle();
     });
   }

@@ -17,11 +17,11 @@ import {AdminGuardService} from "../../services/guard/admin-guard.service";
 import {ConstantsResolve} from "../../services/resolve/constants-resolve.service";
 import {PremiumComponent} from "./premium/premium.component";
 import {PremiumGuardService} from "../../services/guard/premium-guard.service";
+import {AboutComponent} from "./about/about.component";
 
 /**
  * Created by pgmatz on 28/10/16.
  */
-
 @NgModule({
   imports: [RouterModule.forChild([
     {
@@ -36,7 +36,8 @@ import {PremiumGuardService} from "../../services/guard/premium-guard.service";
       { path: 'conversation', component: MessengerComponent, canActivate: [PremiumGuardService], resolve: {user:CurrentUserResolve} },
       { path: 'conversation/:id', component: MessengerComponent, canActivate: [PremiumGuardService], resolve: {user:CurrentUserResolve} },
       { path: 'visits', component: VisitComponent, canActivate: [PremiumGuardService] },
-      { path: 'search', component: SearchComponent, resolve: { constants:ConstantsResolve}  },
+      { path: 'search', component: SearchComponent, resolve: { constants:ConstantsResolve} },
+      { path: 'about', component: AboutComponent },
       { path: '', component: NavbarComponent, outlet: 'header'},
       { path: '', component: HeadingComponent, outlet: 'banner'},
       { path: '', component: FooterComponent, outlet: 'footer'}]

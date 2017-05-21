@@ -111,12 +111,12 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
     this.isUserBlocked = this.sharedService.isUserBlocked(conversation.userTwo);
 
-    console.debug("is user blocked", this.isUserBlocked);
+    //console.debug("is user blocked", this.isUserBlocked);
   }
 
   private getMessages(userId : number) {
     this.messageService.getMessages(userId, this.pager).then(response => {
-      console.debug("messages", response);
+      //console.debug("messages", response);
       this.concatMessage(response);
       this.pager = new Pager(response.number, response.last, response.size, 10);
 

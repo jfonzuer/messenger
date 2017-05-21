@@ -51,19 +51,19 @@ export class SharedService {
   }
 
   isAdmin(user:User) {
-    console.debug("isAdmin ", user.authorities.find(a => a == "ROLE_ADMIN") != null)
+    //console.debug("isAdmin ", user.authorities.find(a => a == "ROLE_ADMIN") != null)
     return user.authorities.find(a => a == "ROLE_ADMIN") != null;
   }
 
   isPremium() {
     let user:User = <User> this.getCurrentUser();
-    console.debug("isPremium ", user.authorities.find(a => a == "ROLE_PREMIUM") != null)
+    //console.debug("isPremium ", user.authorities.find(a => a == "ROLE_PREMIUM") != null)
     return user.authorities.find(a => a == "ROLE_PREMIUM") != null;
   }
 
   isUser() {
     let user:User = <User> this.getCurrentUser();
-    console.debug("isUser ", user.authorities.find(a => a == "ROLE_USER") != null)
+    //console.debug("isUser ", user.authorities.find(a => a == "ROLE_USER") != null)
     return user.authorities.find(a => a == "ROLE_USER") != null;
   }
 

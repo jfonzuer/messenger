@@ -17,7 +17,6 @@ export class SendActivationMailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.email = 'pgiraultmatz@gmail.com';
   }
 
   send() {
@@ -28,7 +27,7 @@ export class SendActivationMailComponent implements OnInit {
       setTimeout(() => this.router.navigate(['/unauth/home']), 2000);
     })
       .catch(error => {
-        console.debug("catch", error);
+        //console.debug("catch", error);
         this.loading = false;
         this.toastr.error(error.json().message);
       });

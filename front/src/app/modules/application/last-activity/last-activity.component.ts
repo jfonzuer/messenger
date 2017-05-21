@@ -16,7 +16,7 @@ export class LastActivityComponent implements OnInit {
 
   ngOnInit() {
     let now = moment();
-    console.debug("lastActivityDatetime", this.lastActivityDatetime);
+    //console.debug("lastActivityDatetime", this.lastActivityDatetime);
     let lastActivityDatetime = moment(this.lastActivityDatetime);
     var duration = moment.duration(now.diff(lastActivityDatetime));
     var mins = duration.asMinutes();

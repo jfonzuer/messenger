@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `messenger` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `messenger`;
--- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.18, for Linux (x86_64)
 --
 -- Host: localhost    Database: messenger
 -- ------------------------------------------------------
--- Server version	5.7.17-0ubuntu0.16.04.1
+-- Server version	5.7.18-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -75,7 +75,7 @@ CREATE TABLE `conversation` (
 
 LOCK TABLES `conversation` WRITE;
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
-INSERT INTO `conversation` VALUES (1,0,0,0,0,'2017-04-16 00:50:18','conversation 1',1,2),(2,0,0,0,0,'2000-04-02 09:30:00','conversation 2',1,3);
+INSERT INTO `conversation` VALUES (1,0,0,0,0,'2017-05-21 14:33:41','conversation 1',1,2),(2,0,0,0,0,'2000-04-02 09:30:00','conversation 2',1,3);
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +115,7 @@ CREATE TABLE `fetish` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +124,7 @@ CREATE TABLE `fetish` (
 
 LOCK TABLES `fetish` WRITE;
 /*!40000 ALTER TABLE `fetish` DISABLE KEYS */;
-INSERT INTO `fetish` VALUES (1,'fetish1'),(2,'fetish2'),(3,'fetish3'),(4,'fetish4');
+INSERT INTO `fetish` VALUES (1,'Ballbusting'),(2,'Bondage'),(3,'Chasteté'),(4,'Cuckolding'),(5,'Face-sitting'),(6,'Féminisation'),(7,'Foot-worship'),(8,'Gode-ceinture'),(9,'Humiliation'),(10,'Scato'),(11,'Uro'),(12,'Whipping & Caning');
 /*!40000 ALTER TABLE `fetish` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,7 +193,7 @@ CREATE TABLE `message` (
 
 LOCK TABLES `message` WRITE;
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
-INSERT INTO `message` VALUES (1,'Salut',0,0,'2017-04-16 00:50:18','TEXT',NULL,1,1,1,2),(2,'Salut ça va ?',0,0,'2017-04-16 00:50:18','TEXT',NULL,1,2,1,2),(3,'Parfait et toi gros frère ?',0,0,'2017-04-16 00:50:18','TEXT',NULL,1,1,1,2),(4,'Parfaitement oklm bro ',0,0,'2017-04-16 00:50:18','TEXT',NULL,1,2,1,2);
+INSERT INTO `message` VALUES (1,'Salut',0,0,'2017-05-21 14:33:41','TEXT',NULL,1,1,1,2),(2,'Salut ça va ?',0,0,'2017-05-21 14:33:41','TEXT',NULL,1,2,1,2),(3,'Parfait et toi gros frère ?',0,0,'2017-05-21 14:33:41','TEXT',NULL,1,1,1,2),(4,'Parfaitement oklm bro ',0,0,'2017-05-21 14:33:41','TEXT',NULL,1,2,1,2);
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -274,7 +274,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'','1992-03-29','je suis le membre 1','pgiraultmatz@gmail.com','','\0','2017-04-16 00:50:17','2017-04-14 21:03:37','2017-04-15',NULL,'','','$2a$10$FEAjefv0tM7GE3EEZudoC.1F727veJ9HpI42i/g5FEXCmbr0oScsu',0,NULL,'pgm',1,1,NULL,NULL,2),(2,'','1988-03-29','je suis le membre 2','u1@gmail.com','','\0','2017-04-16 00:50:17','2017-04-14 21:03:37','2017-04-15',NULL,'','','$2a$10$PYhX8n63CCUEPH2wf5qjeuxEEKhZr462xxTDnPeSWouQVuM6iTtkO',10,NULL,'user2',5,1,NULL,NULL,1),(3,'','1988-03-29','je suis le membre 3','u2@gmail.com','','\0','2017-04-16 00:50:17','2017-04-14 21:03:37','2017-04-15',NULL,'','','$2a$10$Zws1pY.Mt17XFoZLoWADOe0s3YFkyAJHHmOxo.IVxw.NXpQcmVD2S',15,NULL,'member3',60,4,NULL,NULL,1),(4,'','1988-03-29','je suis le membre 4','u3@gmail.com','','\0','2017-04-16 00:50:18','2017-04-14 21:03:37','2017-04-15','2017-04-15 00:50:18','','','$2a$10$wHgsjfUqwccWbeTLlxNR2OvBWRaUnJpsHiMye.vINYirBLqbKAddW',20,'Hr551C2QDhJT4baIQ','member4',1,1,NULL,NULL,2);
+INSERT INTO `user` VALUES (1,'','1990-01-01','je suis le membre 1','jack.fonzuer@yahoo.fr','','\0','2017-05-21 14:33:41','2017-05-20 10:47:01','2017-05-20',NULL,'','','$2a$10$vIzlHP6bYc307rxp3JznWOaVaBADBdRsLbgncjDd6g/Y76nY7o8Nu',0,NULL,'jack',1,1,NULL,NULL,1),(2,'','1988-03-29','je suis le membre 2','u1@gmail.com','','\0','2017-05-21 14:33:41','2017-05-20 10:47:01','2017-05-20',NULL,'','','$2a$10$CDnsTAxWVjomexja.nK/feEghPnAlMMkLMOWZaAoNo/2LNgQxitB2',10,NULL,'user2',28,2,NULL,NULL,2),(3,'','1988-01-01','je suis le membre 3','u2@gmail.com','','\0','2017-05-21 14:33:41','2017-05-20 10:47:01','2017-05-20',NULL,'','','$2a$10$fjiGp75NgY17F5u1RejkjeLyJrcIQmAffFpYY6WFVxWLYnlAF97my',15,NULL,'member3',37,3,NULL,NULL,1),(4,'','1988-01-01','je suis le membre 4','u3@gmail.com','','\0','2017-05-21 14:33:41','2017-05-20 10:47:01','2017-05-20','2017-05-20 14:33:41','','','$2a$10$PCMh39VYOFCnRILk2ukzhu6KbsW67Z390mG1uR/1FS1TSJ2MWR6Gq',20,'Hr551C2QDhJT4baIQ','member4',1,1,NULL,NULL,2);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -328,7 +328,7 @@ CREATE TABLE `user_fetishes` (
 
 LOCK TABLES `user_fetishes` WRITE;
 /*!40000 ALTER TABLE `user_fetishes` DISABLE KEYS */;
-INSERT INTO `user_fetishes` VALUES (1,1),(1,2),(1,3),(1,4);
+INSERT INTO `user_fetishes` VALUES (1,1),(1,1);
 /*!40000 ALTER TABLE `user_fetishes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -410,7 +410,7 @@ CREATE TABLE `visit` (
 
 LOCK TABLES `visit` WRITE;
 /*!40000 ALTER TABLE `visit` DISABLE KEYS */;
-INSERT INTO `visit` VALUES (1,0,'2017-04-16',1,2),(2,0,'2017-04-16',1,3),(3,0,'2017-04-16',1,2);
+INSERT INTO `visit` VALUES (1,0,'2017-05-21',1,2),(2,0,'2017-05-21',1,3),(3,0,'2017-05-21',1,2);
 /*!40000 ALTER TABLE `visit` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -423,4 +423,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-16  1:01:34
+-- Dump completed on 2017-05-21 14:36:14

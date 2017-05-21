@@ -23,7 +23,6 @@ export class PasswordForgotComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.email = 'pgiraultmatz@gmail.com';
   }
 
   send(valid:boolean) {

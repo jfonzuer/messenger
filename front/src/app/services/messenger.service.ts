@@ -58,7 +58,7 @@ export class MessengerService {
   }
 
   changeConversation(conversation:Conversation) {
-    console.error("change conversation event");
+    //console.debug("change conversation event");
     this.changeConversationObserver.next(conversation);
   }
 

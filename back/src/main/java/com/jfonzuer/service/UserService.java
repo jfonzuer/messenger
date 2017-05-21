@@ -94,7 +94,7 @@ public class UserService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), dto.getCurrent()));
         } catch (BadCredentialsException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when trying to authenticate user", e);
             throw new IllegalArgumentException("Votre mot de passe actuel est incorrect");
         }
 

@@ -49,12 +49,14 @@ export class RegisterComponent implements OnInit {
     this.user.userType = new UserType(0);
 
     // init register
+    /*
     this.user.username = 'test';
     this.user.email = 'jack.fonzuer@yahoo.com';
     this.password = 'test';
     this.user.fetishes = [new Fetish(1, "t"), new Fetish(2, "t")];
     this.user.description = "test";
     this.user.userType.id = 1;
+    */
 
     this.route.data.forEach((data:any) => {
       // si les resolvers renvoient une erreur, elles se trouvent dans data

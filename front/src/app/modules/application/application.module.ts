@@ -36,6 +36,7 @@ import {AdminService} from "../../services/admin.service";
 import {PremiumComponent} from "./premium/premium.component";
 import {PremiumGuardService} from "../../services/guard/premium-guard.service";
 import {LastActivityComponent} from "./last-activity/last-activity.component";
+import {AboutComponent} from "./about/about.component";
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -69,7 +70,8 @@ import {LastActivityComponent} from "./last-activity/last-activity.component";
     BlockUserComponent,
     AdminComponent,
     PremiumComponent,
-    LastActivityComponent
+    LastActivityComponent,
+    AboutComponent
   ],
   providers: [
     ConversationService,

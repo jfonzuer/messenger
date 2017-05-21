@@ -103,7 +103,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
       // endpoint de reception des messages d'autres conversations
       that.conversationsSubscription = that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
         //console.log("web socket response", response);
-        //console.error(JSON.parse(response.body));
+        //console.debug(JSON.parse(response.body));
         that.messengerService.updateConversation(JSON.parse(response.body));
       });
 

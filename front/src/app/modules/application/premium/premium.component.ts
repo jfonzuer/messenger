@@ -5,6 +5,7 @@ import {CoolLocalStorage} from "angular2-cool-storage";
 import {ActivatedRoute, Params} from "@angular/router";
 import {ToastsManager} from "ng2-toastr";
 import {SharedService} from "../../../services/shared.service";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-premium',
@@ -15,10 +16,12 @@ export class PremiumComponent implements OnInit {
 
   user:User;
   isPremium:boolean;
+  paymentApiUrl:string;
   @Input() show:boolean;
 
   constructor(private localStorageService: CoolLocalStorage,private route: ActivatedRoute, private authenticationS:AuthenticationService, private toastr: ToastsManager, vRef: ViewContainerRef, private sharedService: SharedService) {
-    this.toastr.setRootViewContainerRef(vRef)
+    this.toastr.setRootViewContainerRef(vRef);
+    this.paymentApiUrl = environment.paymentApiUrl;
   }
 
   ngOnInit() {

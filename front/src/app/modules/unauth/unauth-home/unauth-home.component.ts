@@ -25,7 +25,7 @@ export class UnauthHomeComponent implements OnInit {
     this.route.params.forEach((params: Params) => {
       // si on arrive avec l'id d'un utilisateur spécifié
         if (params['token']) {
-          console.debug('token', params['token']);
+          //console.debug('token', params['token']);
           let token:string = params['token'];
           this.authenticationS.sendActivationToken(token).then(() =>
             this.toastr.success("Votre compte a bien été activé")

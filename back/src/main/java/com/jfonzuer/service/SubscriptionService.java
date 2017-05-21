@@ -9,6 +9,8 @@ import com.jfonzuer.entities.UserRole;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.repository.UserRoleRepository;
 import com.jfonzuer.utils.MessengerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ import java.util.Optional;
  */
 @Service
 public class SubscriptionService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionService.class);
 
     @Value("${payment.sitename}")
     private String paymentSitename;
@@ -79,9 +83,9 @@ public class SubscriptionService {
                 }
                 userRepository.save(user);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Error when requesting payment api ", e);
             } catch (InvalidRequestException e) {
-                e.printStackTrace();
+                LOGGER.error("Error when requesting billing plan to payment api", e);
                 if (RESOURCE_NOT_FOUND.equals(e.apiErrorCode)) {
                     throw new IllegalArgumentException("Votre abonnement est expiré ou inexistant");
                 }
@@ -97,7 +101,7 @@ public class SubscriptionService {
             Result result = Subscription.retrieve(id).request();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when requesting payment api ", e);
         } catch (InvalidRequestException e) {
             if (RESOURCE_NOT_FOUND.equals(e.apiErrorCode)) {
                 exists = false;
