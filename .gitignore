@@ -17,4 +17,4 @@ npm-debug.log
 **/back/application.properties
 **/docker/data
 **/docker/back/app.jar
-
+**/docker/back/logback.xml
