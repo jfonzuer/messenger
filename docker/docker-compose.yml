@@ -30,5 +30,3 @@ services:
         depends_on:
           - mysql
           - couchdb
-        volumes:
-          - "./logs/messenger:/var/log/messenger"
