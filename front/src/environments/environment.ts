@@ -8,7 +8,7 @@ export const environment = {
   paymentApiUrl: 'https://domine-app-test.chargebeeportal.com',
   baseUrl: 'http://localhost:8080/',
   uploadImageUrl: 'http://localhost:5984/images/',
-  sizeLimit: 2048*1000,
+  sizeLimit: 2048 * 1000,
   googleKey: '6LfH0RgUAAAAABvJZsrsGTeeMajb44qKxG4qmwWe',
   appTitle: 'Dominapp'
 };

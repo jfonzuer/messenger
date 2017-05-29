@@ -27,6 +27,8 @@ services:
         build: ./back
         ports:
           - "8080:8080"
+        volumes:
+          - "./logs/messenger:/var/log/messenger"
         depends_on:
           - mysql
           - couchdb
