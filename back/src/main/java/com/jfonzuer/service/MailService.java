@@ -32,7 +32,7 @@ public class MailService {
     @Value("${send.from.email}")
     private String fromEmail;
 
-    @Value("${send.to.email")
+    @Value("${send.to.email}")
     private String sendTo;
 
     @Value("${app.url}")
@@ -80,6 +80,8 @@ public class MailService {
             // Create the HTML body using Thymeleaf
             final String htmlContent = templateEngine.process("mail/visit", ctx);
             helper.setText(htmlContent, true); // true = isHtml
+            LOGGER.debug("Send visit mail to : {}", visited.getEmail());
+
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
@@ -108,6 +110,8 @@ public class MailService {
 
             final String htmlContent = templateEngine.process("mail/message", ctx);
             helper.setText(htmlContent, true);
+            LOGGER.debug("Send message notification mail to : {}", user.getEmail());
+
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
@@ -133,6 +137,7 @@ public class MailService {
             helper.setSubject("[Dominapp] Bienvenue sur Dominapp");
             final String htmlContent = templateEngine.process("mail/register", ctx);
             helper.setText(htmlContent, true);
+            LOGGER.debug("Send register mail to : {}", user.getEmail());
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("Error when sending register notification mail to : {}", user.getEmail(), e);
@@ -152,6 +157,7 @@ public class MailService {
             helper.setSubject("[Dominapp] Réinitialiser votre mot de passe");
             final String htmlContent = templateEngine.process("mail/reset-password", ctx);
             helper.setText(htmlContent, true);
+            LOGGER.debug("Send reset mail to : {}", user.getEmail());
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("Error when sending reset token mail to : {}", user.getEmail(), e);
@@ -180,6 +186,7 @@ public class MailService {
 
     private void setTo(MimeMessageHelper helper, String email) throws MessagingException {
         if (profile.equals("dev")) {
+            LOGGER.debug("dev profile, sending mail to {}", sendTo);
             helper.setTo(sendTo);
             return;
         }

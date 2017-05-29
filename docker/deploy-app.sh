@@ -15,11 +15,6 @@ ng build --prod
 cp $PATH_TO_DOCKER/properties/application.properties $DIR/back/
 cp $PATH_TO_DOCKER/properties/logback.xml $DIR/back
 
-cd $ROOT
-rm -r back/src/main/resources/static
-mkdir -p back/src/main/resources/static
-cp -r front/dist/* back/src/main/resources/static/
-cp -r front/src/assets/bootstrap/fonts/* back/src/main/resources/static/assets/bootstrap/fonts/
 
 # rebuild l'image
 cd $PATH_TO_BACK

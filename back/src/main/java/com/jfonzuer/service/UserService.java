@@ -211,12 +211,12 @@ public class UserService {
         User visitor = getUserFromToken(request);
         User visited = userRepository.findByIdAndEnabledAndIsBlocked(visitedId, true, false);
 
-        if (!visited.equals(visitor) && !visitor.equals(visited.getLastVisitedBy())) {
+        //if (!visited.equals(visitor) && !visitor.equals(visited.getLastVisitedBy())) {
             visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
             visited.setLastVisitedBy(visitor);
             userRepository.save(visited);
             asyncService.executeAsync(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
-        }
+        //}
         return UserMapper.toDto(visited);
     }
 
