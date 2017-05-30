@@ -10,6 +10,9 @@ cp $DIR/properties/environment.prod.ts $DIR/../front/src/environments/environmen
 cd $PATH_TO_FRONT
 ng build --prod
 
+cd $PATH_TO_DOCKER/properties
+find . -type f -exec sed -i 's/dominapp-dev.com/dominapp.com/g' {} \;
+
 # on copie les properties dans /back
 cp $PATH_TO_DOCKER/properties/application.properties $DIR/back/
 cp $PATH_TO_DOCKER/properties/logback.xml $DIR/back

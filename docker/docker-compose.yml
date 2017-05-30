@@ -4,8 +4,8 @@ services:
         container_name: messenger-mysql
         build: ./mysql
         environment:
-          - MYSQL_ROOT_PASSWORD=root
-          - MYSQL_DATABASE=hnthsy6=
+          - MYSQL_ROOT_PASSWORD=hnthsy6=
+          - MYSQL_DATABASE=messenger
         ports:
           - "3307:3306"
         volumes:

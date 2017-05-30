@@ -18,3 +18,4 @@ npm-debug.log
 **/docker/data
 **/docker/back/app.jar
 **/docker/back/logback.xml
+**/docker/docker-compose.yml
