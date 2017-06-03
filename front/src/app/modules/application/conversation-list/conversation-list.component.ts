@@ -7,6 +7,7 @@ import {MessengerService} from "../../../services/messenger.service";
 import {ToastsManager} from "ng2-toastr";
 import {Message} from "../../../model/message";
 import {Pager} from "../../../model/pager";
+import {LoggerService} from "../../../services/logger.service";
 
 @Component({
   selector: 'app-conversation-list',
@@ -31,7 +32,8 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   addConversationSubscription:any;
   receiveMessageSubscription:any;
 
-  constructor(private conversationService: ConversationService, private sharedService: SharedService, private messengerService:MessengerService, private toastr: ToastsManager, vRef: ViewContainerRef) {
+  constructor(private conversationService: ConversationService, private sharedService: SharedService, private messengerService:MessengerService,
+              private toastr: ToastsManager, vRef: ViewContainerRef, private logger: LoggerService) {
     this.uploadImageUrl = environment.uploadImageUrl;
     this.toastr.setRootViewContainerRef(vRef);
 
@@ -60,6 +62,12 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     let index:number = this.conversations.findIndex(c => c.id == conversation.id);
     // si la conversation existe on la met à jour, sinon on la concatene à la liste existante en la plaçant en première place
     index >= 0 ? this.conversations[index] = conversation : this.conversations = [conversation].concat(this.conversations);
+    
+    // si le sender est l'utilisateur actuel, on switch pour cette conversation
+    if (conversation.userOne.id == this.sharedService.getCurrentUser().id) {
+      this.logger.log('conversation sender is authenticated user, switching to this conversation', '');
+      this.messengerService.changeConversation(conversation);
+    }
   }
 
   // utilisé lorsque l'utilisateur initie une conversation

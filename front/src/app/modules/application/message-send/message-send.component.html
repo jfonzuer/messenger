@@ -10,7 +10,7 @@
   </div>
 
   <div class="btn-panel">
-    <a *ngIf="!sendImage && !isUserBlocked && messages && messages.length > 0" class=" col-sm-3 btn" role="button" (click)="sendImage = true"><i class="fa fa-cloud-upload"></i> Envoyer une Image</a>
+    <a *ngIf="!sendImage && !isUserBlocked && selectedConversation && selectedConversation.id" class=" col-sm-3 btn" role="button" (click)="sendImage = true"><i class="fa fa-cloud-upload"></i> Envoyer une Image</a>
 
     <div class="checkbox col-sm-3 col-sm-offset-2" *ngIf="!sendImage && !isUserBlocked">
       <label>

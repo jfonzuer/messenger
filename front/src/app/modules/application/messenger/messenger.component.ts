@@ -9,6 +9,7 @@ import {MessengerService} from "../../../services/messenger.service";
 import {environment} from "../../../../environments/environment";
 import {CoolLocalStorage} from "angular2-cool-storage";
 import {ToastsManager} from "ng2-toastr";
+import {LoggerService} from "../../../services/logger.service";
 var SockJS = require('sockjs-client');
 var Stomp = require('stompjs');
 
@@ -34,7 +35,8 @@ export class MessengerComponent implements OnInit, OnDestroy {
 
   selectedConversation:Conversation;
 
-  constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef, private conversationService: ConversationService, private messengerService:MessengerService, private localStorageService:CoolLocalStorage) {
+  constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef, private conversationService: ConversationService,
+              private messengerService:MessengerService, private localStorageService:CoolLocalStorage, private logger: LoggerService) {
     this.baseUrl = environment.baseUrl;
     this.toastr.setRootViewContainerRef(vRef);
     // si on ajoute un message et que la conversation existe, on send le message via websocket sinon on l'envoit via une requête.
@@ -92,6 +94,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
       if (conversationId) {
 
         that.conversationSubscription = that.stompClient.subscribe('/ws-conversation-broker/conversation/' + conversationId, function (response) {
+          that.logger.log('WS client, receive message', response);
           that.messengerService.receiveMessage(JSON.parse(response.body));
         });
       }
@@ -102,8 +105,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
 
       // endpoint de reception des messages d'autres conversations
       that.conversationsSubscription = that.stompClient.subscribe('/ws-user-broker/conversations/' + that.user.id, function (response) {
-        //console.log("web socket response", response);
-        //console.debug(JSON.parse(response.body));
+        that.logger.log("WS client, conversation subscription", response);
         that.messengerService.updateConversation(JSON.parse(response.body));
       });
 

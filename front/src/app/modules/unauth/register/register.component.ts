@@ -25,19 +25,22 @@ import {environment} from "../../../../environments/environment";
 })
 export class RegisterComponent implements OnInit {
 
-  user:User = new User();
-  password:string;
-  birthDate:string = '29/03/1992';
-  selectedFetishId:number[] = [];
+  user: User = new User();
+  password: string;
+  birthDate: string;
+  selectedFetishId: number[] = [];
   types: UserType[];
-  terms:boolean;
+  terms: boolean;
   // Captcha
-  googleKey:string;
-  isBot:boolean = true;
-  loading:boolean = false;
-  constants:Constant;
+  googleKey: string;
+  isBot = true;
+  loading = false;
+  constants: Constant;
 
-  constructor(private route:ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService, private localStorageS: CoolLocalStorage, private router:Router, private fetishService:FetishService, private typeService:UserTypeService, private toastr: ToastsManager, vcRef: ViewContainerRef, public overlay: Overlay, public modal: Modal) {
+  constructor(private route: ActivatedRoute, private datetimeService: DatetimeService, private userService: UserService,
+              private localStorageS: CoolLocalStorage, private router: Router, private fetishService: FetishService,
+              private typeService: UserTypeService, private toastr: ToastsManager, vcRef: ViewContainerRef, public overlay: Overlay,
+              public modal: Modal) {
     this.toastr.setRootViewContainerRef(vcRef);
     this.googleKey = environment.googleKey;
   }
@@ -64,16 +67,17 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  send(valid:boolean) {
+  send(valid: boolean) {
     if (valid && !this.isBot) {
       // on set la valeur birthdate avc le format standard
       this.user.birthDate = this.datetimeService.toStandardFormat(this.birthDate);
       // on met à jour la liste des fetishes
       this.user.fetishes = this.fetishService.getFetishListFromIdList(this.selectedFetishId);
-      this.loading = true;
+      this.loading = true
       this.userService.post(new Register(this.user, this.password))
         .then(response => {
-          this.toastr.success("Inscription effectuée, vous allez être redirigé vers le login"); setTimeout(() => this.router.navigate(['/unauth/home']), 3000);
+          this.toastr.success('Inscription effectuée, vous allez être redirigé vers le login');
+          setTimeout(() => this.router.navigate(['/unauth/home']), 3000);
         })
         .catch(error => {
             this.toastr.error(error);

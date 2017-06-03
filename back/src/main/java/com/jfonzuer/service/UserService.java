@@ -259,7 +259,6 @@ public class UserService {
         return InformationUpdateDto.Builder.anInformationUpdateDto().withUser(UserMapper.toDto(user)).withToken(token).build();
     }
 
-
     /**
      * méthode utilisée lorsque l'utilisateur a oublié son mdp et le reset
      * @param resetPasswordDto

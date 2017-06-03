@@ -52,7 +52,6 @@ public class MailService {
     @Autowired
     TemplateEngine templateEngine;
 
-
     @Value("${app.url}")
     public void setLoginUrl(String appUrl) {
         String loginUrl = appUrl + "unauth/login";

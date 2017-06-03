@@ -16,13 +16,13 @@ export class MessengerService {
   private addConversationObserver: Observer<Conversation>;
 
   addMessageObservable: Observable<Message>;
-  private addMessageObserver:Observer<Message>;
+  private addMessageObserver: Observer<Message>;
 
   receiveMessageObservable: Observable<Message>;
-  private receiveMessageObserver:Observer<Message>;
+  private receiveMessageObserver: Observer<Message>;
 
   updateConversationObservable: Observable<Conversation>;
-  private updateConversationObserver:Observer<Conversation>;
+  private updateConversationObserver: Observer<Conversation>;
 
   deleteConversationObservable: Observable<Conversation>;
   private deleteConversationObserver: Observer<Conversation>;
@@ -36,7 +36,6 @@ export class MessengerService {
   conversationLoadedObservable: Observable<boolean>;
   private conversationLoadedObserver: Observer<boolean>;
 
-
   constructor() {
     this.changeConversationObservable = new Observable<Conversation>(observer => this.changeConversationObserver = observer).share();
     this.deleteConversationObservable = new Observable<Conversation>(observer => this.deleteConversationObserver = observer).share();
@@ -49,16 +48,16 @@ export class MessengerService {
     this.conversationLoadedObservable = new Observable<boolean>(observer => this.conversationLoadedObserver = observer).share();
   }
 
-  receiveMessage(message:Message) {
+  receiveMessage(message: Message) {
     this.receiveMessageObserver.next(message);
   }
 
-  updateConversation(conversation:Conversation) {
+  updateConversation(conversation: Conversation) {
     this.updateConversationObserver.next(conversation);
   }
 
-  changeConversation(conversation:Conversation) {
-    //console.debug("change conversation event");
+  changeConversation(conversation: Conversation) {
+    // console.debug("change conversation event");
     this.changeConversationObserver.next(conversation);
   }
 
@@ -69,23 +68,23 @@ export class MessengerService {
     this.conversationLoadedObserver.next(true);
   }
 
-  changeConversationRead(read:boolean) {
+  changeConversationRead(read: boolean) {
     this.isConversationReadObserver.next(read);
   }
 
-  addMessage(message:Message) {
+  addMessage(message: Message) {
     this.addMessageObserver.next(message);
   }
 
-  deleteConversation(conversation:Conversation) {
+  deleteConversation(conversation: Conversation) {
     this.deleteConversationObserver.next(conversation);
   }
 
-  addConversation(conversation:Conversation) {
+  addConversation(conversation: Conversation) {
     this.addConversationObserver.next(conversation);
   }
 
-  blockUser(block:boolean) {
+  blockUser(block: boolean) {
     this.blockUserObserver.next(block);
   }
 }
