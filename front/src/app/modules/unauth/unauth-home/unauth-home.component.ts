@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewContainerRef, OnDestroy} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from "@angular/core";
 import {UnauthUserService} from "../../../services/unauth-user.service";
 import {User} from "../../../model/user";
 import {ToastsManager} from "ng2-toastr";
 import {environment} from "../../../../environments/environment";
 import {ActivatedRoute, Params} from "@angular/router";
 import {AuthenticationService} from "../../../services/authentication.service";
+import { Meta, Title } from "@angular/platform-browser";
 
 @Component({
   selector: 'app-unauth-home',

@@ -290,3 +290,7 @@ a:hover {
       transform: scale(1.0);
     }
 }
+
+.jumbotron {
+  background-image: linear-gradient(to right, rgba(85, 9, 14, 0.99) 0, #dd4b39 100%)
+}
