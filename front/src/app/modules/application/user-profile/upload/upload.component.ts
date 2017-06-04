@@ -1,10 +1,11 @@
-import {Component, OnInit, Input, EventEmitter, Output, ViewContainerRef} from '@angular/core';
+import {Component, Input, OnInit, ViewContainerRef} from "@angular/core";
 import {User} from "../../../../model/user";
 import {Http} from "@angular/http";
 import {UploadService} from "../../../../services/upload.service";
 import {SharedService} from "../../../../services/shared.service";
 import {environment} from "../../../../../environments/environment";
 import {ToastsManager} from "ng2-toastr";
+import {Image} from "../../../../model/image";
 
 @Component({
   selector: 'app-upload',
@@ -22,6 +23,7 @@ export class UploadComponent implements OnInit {
   uploadImageUrl:string;
   private sizeLimit:number;
   loading:boolean = false;
+  selectedImage:Image;
 
   constructor(private http:Http, private uploadService: UploadService, private sharedService: SharedService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.sizeLimit = environment.sizeLimit;

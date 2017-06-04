@@ -1,8 +1,14 @@
+<!-- The Modal -->
+<div id="myModal" [ngClass]="{display: selectedImage != null }" class="modal">
+  <span class="close" (click)="selectedImage = null">&times;</span>
+  <img *ngIf="selectedImage" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}/image">
+</div>
+
 <form class="form-horizontal" #uploadForm="ngForm" [hidden]="!show">
   <fieldset>
     <div class="form-group">
       <div class="col-sm-2" *ngFor="let image of user.images; let i = index">
-        <img class="image small-image center-block" src="{{ uploadImageUrl }}{{ image.url }}/image">
+        <img (click)="selectedImage = image"  class="image small-image center-block" src="{{ uploadImageUrl }}{{ image.url }}/image">
         <br>
         <div class="col-sm-6" *ngIf="image.url != 'profile.png' && i != 0">
           <button class="btn btn-default btn-sm center-block" (click)="setAsProfile(image.orderNumber)"><span class="glyphicon glyphicon-user"></span></button>
