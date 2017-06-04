@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http} from "@angular/http";
+import {Http, Response} from "@angular/http";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "./authentication.service";
 import {environment} from "../../environments/environment";
@@ -26,7 +26,7 @@ export class MessageService {
 
     return this.http.get(this.baseUrl + 'messages/' + userId + queryParams, {headers: headers})
       .toPromise()
-      .then(response => {
+      .then((response: Response) => {
         this.rs.handleResponse(response);
         if (response.text()) {
           return response.json();
@@ -40,7 +40,7 @@ export class MessageService {
     let headers = this.authenticationService.getHeaders();
     return this.http.get(this.baseUrl + 'messages/newer/' + userId + '/' + messageId, {headers: headers})
       .toPromise()
-      .then(response => {
+      .then((response: Response) => {
         this.rs.handleResponse(response);
         if (response.text()) {
           return response.json();
@@ -56,14 +56,14 @@ export class MessageService {
 
     return this.http.post(this.baseUrl + 'messages', message, {headers: headers})
       .toPromise()
-      .then(response => {
+      .then((response: Response)=> {
         this.rs.handleResponse(response);
         return response.json();
       })
       .catch(this.rs.handleError);
   }
 
-  uploadImage(file:File, id:number) {
+  uploadImage(file:File, id: any) {
     let headers = this.authenticationService.getHeaders();
     let fileForm = new FormData();
     fileForm.append("file", file);

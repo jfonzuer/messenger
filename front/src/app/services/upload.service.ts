@@ -21,7 +21,7 @@ export class UploadService {
     return this.http.delete(this.baseUrl + 'medias/' + id, {headers:headers}).map(response => response.json()).catch(this.rs.handleError);
   }
 
-  uploadImage(file:File, order:number) {
+  uploadImage(file:File, order: any) {
       let headers = this.authenticationService.getHeaders();
       let fileForm = new FormData();
       fileForm.append("file", file);

@@ -1,5 +1,3 @@
-import {CommonModule} from "@angular/common";
-import {FormsModule} from "@angular/forms";
 import {NgModule} from "@angular/core";
 import {LoginComponent} from "./login/login.component";
 import {PasswordForgotComponent} from "./password-forgot/password-forgot.component";
@@ -18,7 +16,6 @@ import {UnauthHomeComponent} from "./unauth-home/unauth-home.component";
 import {UnauthUserService} from "../../services/unauth-user.service";
 import {SendActivationMailComponent} from "./send-activation-mail/send-activation-mail.component";
 import {ReCaptchaModule} from "angular2-recaptcha";
-import {CoolLoadingIndicatorModule} from "angular2-cool-loading-indicator";
 
 /**
  * Created by pgmatz on 28/10/16.

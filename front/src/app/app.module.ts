@@ -15,6 +15,7 @@ import {RequestService} from "./services/request.service";
 import {UserTypesResolve} from "./services/resolve/user-types-resolve";
 import {ToastModule} from "ng2-toastr";
 import {CoolStorageModule} from "angular2-cool-storage";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {CoolStorageModule} from "angular2-cool-storage";
     ApplicationModule,
     AppRoutingModule,
     ToastModule,
-    CoolStorageModule
+    CoolStorageModule,
+    BrowserAnimationsModule
   ],
   providers: [
     UserService,

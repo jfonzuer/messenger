@@ -1,21 +1,20 @@
-import {Component, OnDestroy, OnInit, ViewContainerRef} from '@angular/core';
-import {Message} from '../../../model/message';
-import {MessageService} from '../../../services/message.service';
-import {Pager} from '../../../model/pager';
-import {Observable} from 'rxjs';
-import {MessengerService} from '../../../services/messenger.service';
-import {DatetimeService} from '../../../services/datetime.service';
-import * as moment from 'moment/moment';
-import 'moment/locale/fr';
-import {ConversationService} from '../../../services/conversation.service';
-import {environment} from '../../../../environments/environment';
-import {UserService} from '../../../services/user.service';
-import {SharedService} from '../../../services/shared.service';
-import {User} from '../../../model/user';
-import {ToastsManager} from 'ng2-toastr';
-import {Conversation} from '../../../model/conversation';
+import {Component, OnDestroy, OnInit, ViewContainerRef} from "@angular/core";
+import {Message} from "../../../model/message";
+import {MessageService} from "../../../services/message.service";
+import {Pager} from "../../../model/pager";
+import {Observable} from "rxjs";
+import {MessengerService} from "../../../services/messenger.service";
+import {DatetimeService} from "../../../services/datetime.service";
+import * as moment from "moment/moment";
+import "moment/locale/fr";
+import {ConversationService} from "../../../services/conversation.service";
+import {environment} from "../../../../environments/environment";
+import {UserService} from "../../../services/user.service";
+import {SharedService} from "../../../services/shared.service";
+import {User} from "../../../model/user";
+import {ToastsManager} from "ng2-toastr";
+import {Conversation} from "../../../model/conversation";
 import {LoggerService} from "../../../services/logger.service";
-import {logger} from "codelyzer/util/logger";
 
 @Component({
   selector: 'app-message-list',
@@ -63,7 +62,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
     const currentUser: User = this.sharedService.getCurrentUser();
     this.us.blockUser(this.selectedConversation.userTwo)
       .then(users => {
-        currentUser.blockedUsers = users;
+        currentUser.blockedUsers = users as User[];
         this.sharedService.refreshUser(currentUser);
         this.isUserBlocked = true;
         this.toastr.success('L\'utilisateur a bien été bloqué');
@@ -76,7 +75,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
     const currentUser: User = this.sharedService.getCurrentUser();
     this.us.unblockUser(this.selectedConversation.userTwo)
       .then(users => {
-        currentUser.blockedUsers = users;
+        currentUser.blockedUsers = users as User[];
         this.sharedService.refreshUser(currentUser);
         this.isUserBlocked = false;
         this.toastr.success('L\'utilisateur a bien été débloqué');
@@ -128,7 +127,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   private getMessages(userId : number) {
-    this.messageService.getMessages(userId, this.pager).then(response => {
+    this.messageService.getMessages(userId, this.pager).then((response: any) => {
       this.logger.log('getMessages', response);
 
       this.concatMessage(response);
