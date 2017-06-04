@@ -62,7 +62,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     let index:number = this.conversations.findIndex(c => c.id == conversation.id);
     // si la conversation existe on la met à jour, sinon on la concatene à la liste existante en la plaçant en première place
     index >= 0 ? this.conversations[index] = conversation : this.conversations = [conversation].concat(this.conversations);
-    
+
     // si le sender est l'utilisateur actuel, on switch pour cette conversation
     if (conversation.userOne.id == this.sharedService.getCurrentUser().id) {
       this.logger.log('conversation sender is authenticated user, switching to this conversation', '');

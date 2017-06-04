@@ -19,7 +19,7 @@ export class MessageService {
   getMessages(userId:number, pager:Pager) {
 
     let headers = this.authenticationService.getHeaders();
-    let queryParams = '?l=1';
+    let queryParams = '?l=20';
     if (pager) {
       queryParams = queryParams.concat('&p=' + pager.page);
     }
