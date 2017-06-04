@@ -19,7 +19,7 @@ export class VisitService {
   getVisits(pager:Pager) : any {
     let headers = this.authenticationService.getHeaders();
 
-    let queryParams = '?l=20';
+    let queryParams = '?l=' + environment.pagerSize;
     if (pager) {
       queryParams = queryParams.concat('&p=' + pager.page);
     }

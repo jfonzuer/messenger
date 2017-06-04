@@ -60,11 +60,12 @@ export class ConversationListComponent implements OnInit, OnDestroy {
 
   private updateConversation(conversation:Conversation) {
     let index:number = this.conversations.findIndex(c => c.id == conversation.id);
+    let conversationIsInList = index >= 0;
     // si la conversation existe on la met à jour, sinon on la concatene à la liste existante en la plaçant en première place
-    index >= 0 ? this.conversations[index] = conversation : this.conversations = [conversation].concat(this.conversations);
+    conversationIsInList ? this.conversations[index] = conversation : this.conversations = [conversation].concat(this.conversations);
 
-    // si le sender est l'utilisateur actuel, on switch pour cette conversation
-    if (conversation.userOne.id == this.sharedService.getCurrentUser().id) {
+    // si la conversation n'est pas dans la liste et que le sender est l'utilisateur actuel, on switch pour cette conversation
+    if (!conversationIsInList && conversation.userOne.id == this.sharedService.getCurrentUser().id) {
       this.logger.log('conversation sender is authenticated user, switching to this conversation', '');
       this.messengerService.changeConversation(conversation);
     }
@@ -79,8 +80,11 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   private getConversations() {
 
     this.conversationService.getConversations(this.pager).then(response => {
+      this.logger.log('getConversations', response);
       this.pager == null ? this.conversations = response.content : this.conversations = this.conversations.concat(response.content);
-      this.pager = new Pager(response.number, response.last, response.size, 10);
+      this.pager = new Pager(response.number, response.last, response.size, environment.pagerSize);
+
+      this.logger.log('update conversation pager', this.pager);
 
       // on refresh le readByUserTwo
       let selectedConversation = this.conversations.find(c => c.id == this.selectedConversation.id);
@@ -93,13 +97,9 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     if (this.pager != null) {
       // length = 10
       // update page
-      // this.pager.page = Math.floor(this.conversations.length / 10);
-      // let i = this.conversations.length % 10;
-      // this.pager.length = 10 - i;
-
-      this.pager.page = Math.floor(this.conversations.length / 1);
-      let i = this.conversations.length % 1;
-      this.pager.length = 1 - i;
+      this.pager.page = Math.floor(this.conversations.length / environment.pagerSize);
+      let i = this.conversations.length % environment.pagerSize;
+      this.pager.length = environment.pagerSize - i;
     }
     this.getConversations();
   }

@@ -81,7 +81,7 @@ public class MessageWebSocketController {
         message = messageService.saveMessage(message, c.getUserOne(), c.getUserTwo());
 
         // send email if sender is not last sender
-        if (!target.getLastMessageBy().equals(sender)) {
+        if (!sender.equals(target.getLastMessageBy())) {
             asyncService.executeAsync(() -> mailService.sendMessageNotification(locale, MessengerUtils.getOtherUser(c, sender), sender));
         }
         this.template.convertAndSend("/ws-conversation-broker/conversation/" + id, MessageMapper.toDto(message));

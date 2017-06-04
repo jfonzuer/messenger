@@ -25,7 +25,7 @@ export class UserService {
 
   getUsers(pager:Pager) : any {
     let headers = this.authenticationService.getHeaders();
-    let queryParams = '?l=20';
+    let queryParams = '?l=' + environment.pagerSize;
     if (pager) {
       queryParams = queryParams.concat('&p=' + pager.page);
     }
@@ -48,7 +48,7 @@ export class UserService {
 
   searchUsers(search:Search, pager:Pager) {
     let headers = this.authenticationService.getHeaders();
-    let queryParams = '?l=20';
+    let queryParams = '?l=' + environment.pagerSize;
     if (pager) {
       queryParams = queryParams.concat('&p=' + pager.page);
     }

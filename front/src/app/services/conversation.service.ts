@@ -37,7 +37,7 @@ export class ConversationService {
       queryParams = queryParams.concat('&l=' + pager.length);
       queryParams = queryParams.concat('&p=' + pager.page);
     } else {
-      queryParams = queryParams.concat('&l=1');
+      queryParams = queryParams.concat('&l=' + environment.pagerSize);
     }
 
     return this.http.get(this.baseUrl + 'conversations' + queryParams, {headers: headers})

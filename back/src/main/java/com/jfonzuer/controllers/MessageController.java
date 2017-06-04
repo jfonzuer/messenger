@@ -108,9 +108,8 @@ public class MessageController {
         message.setUrl(uuid);
         messageRepository.save(message);
 
-
         // send email if sender is not last sender
-        if (!target.getLastMessageBy().equals(sender)) {
+        if (!sender.equals(target.getLastMessageBy())) {
             asyncService.executeAsync(() -> mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender));
         }
 
