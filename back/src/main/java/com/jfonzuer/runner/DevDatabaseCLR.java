@@ -64,14 +64,14 @@ public class DevDatabaseCLR implements CommandLineRunner {
         UserType ut2 = UserType.Builder.anUserType().withId(2L).build();
 
         User u1 = User.Builder.anUser()
-                .withEmail("jack.fonzuer@yahoo.fr")
+                .withEmail("contact@dominapp.com")
                 .withBirthDate(LocalDate.of(1990, 1, 1))
-                .withUsername("jack")
+                .withUsername("Jack")
                 .withPassword(encoder.encode("test"))
                 .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .withEnabled(true)
                 .withIsBlocked(false)
-                .withDescription("je suis le membre 1")
+                .withDescription("")
                 .withFetishes(fetishes)
                 .withArea(a1)
                 .withCountry(c1)

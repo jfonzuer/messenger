@@ -22,8 +22,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     //this.sharedService.redirectHome();
-    this.authentication.email = "jack.fonzuer@yahoo.fr";
-    this.authentication.password = "test";
+    //this.authentication.email = "jack.fonzuer@yahoo.fr";
+    //this.authentication.password = "test";
     //TODO raffraichissement du token ?
   }
 
