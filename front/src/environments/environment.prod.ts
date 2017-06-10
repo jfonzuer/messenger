@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  pagerSize: 10,
+  pagerSize: 12,
   paymentApiUrl: 'https://domine-app-test.chargebeeportal.com',
   baseUrl: 'http://dominapp.com/',
   uploadImageUrl: 'http://dominapp.com/images/',

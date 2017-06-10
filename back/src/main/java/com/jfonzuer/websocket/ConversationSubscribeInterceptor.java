@@ -54,9 +54,10 @@ public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter 
                 if (conversation == null) {
                     throw new ResourceNotFoundException("La conversation n'existe pas");
                 }
-                if (!conversationService.isUserPartOfConversation(conversation, connectedUser)) {
-                    throw new UnauthorizedException("L'utilisateur ne fait pas partie de la discussion");
-                }
+                // TODO SECURE IN AN OTHER MANNER : connectedUser is not obviously equals to the request user
+//                if (!conversationService.isUserPartOfConversation(conversation, connectedUser)) {
+//                    throw new UnauthorizedException("L'utilisateur ne fait pas partie de la discussion");
+//                }
             } else if (destination.contains("ws-user-broker")) {
                 LOGGER.debug("userId = {}", id);
                 User user = userRepository.findOne(id);

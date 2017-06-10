@@ -77,7 +77,7 @@ export class MessengerComponent implements OnInit, OnDestroy {
     var socket = new SockJS(url);
 
     this.stompClient = Stomp.over(socket);
-    //this.stompClient.debug = null;
+    this.stompClient.debug = null;
 
     if (that.conversationSubscription) {
       that.conversationSubscription.unsubscribe();
