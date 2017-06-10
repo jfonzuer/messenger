@@ -5,9 +5,9 @@
       <fieldset>
 
         <div class="form-group">
-          <div class="col-sm-5" *ngIf="types">
+          <div class="col-sm-5" *ngIf="constants">
             <select class="form-control" name="userType" [(ngModel)]="search.userType.id">
-              <option *ngFor="let type of types" [value]="type.id">{{ type.name }}</option>
+              <option *ngFor="let type of constants.userTypes" [value]="type.id">{{ type.name }}</option>
             </select>
           </div>
         </div>

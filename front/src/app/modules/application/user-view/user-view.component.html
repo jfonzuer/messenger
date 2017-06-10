@@ -39,7 +39,11 @@
         <p>{{ user.description }}</p>
         <br>
         <h4>Pratique(s) :</h4>
-        <span class="label label-default" style="margin-right: 3%;" *ngFor="let fetish of user.fetishes">{{ fetish.name }}</span>
+        <div class="row">
+          <div class="col-sm-2" *ngFor="let fetish of user.fetishes">
+            <span class="label label-default">{{ fetish.name }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

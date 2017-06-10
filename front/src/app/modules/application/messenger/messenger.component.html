@@ -1,15 +1,11 @@
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-<div class="container">
+<div class="row">
+  <app-conversation-list></app-conversation-list>
 
-  <div class="row">
-    <app-conversation-list></app-conversation-list>
+  <div class="message-wrap col-sm-8">
 
-    <div class="message-wrap col-sm-8">
+    <app-message-list></app-message-list>
 
-      <app-message-list></app-message-list>
-
-      <app-message-send [user]="user"></app-message-send>
-    </div>
+    <app-message-send [user]="user"></app-message-send>
   </div>
 </div>

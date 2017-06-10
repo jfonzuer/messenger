@@ -52,7 +52,7 @@ public class ProdDatabaseCLR implements CommandLineRunner {
         Collection<Fetish> fetishes = Arrays.asList(new Fetish.FetishBuilder().setId(1L).createFetish(), new Fetish.FetishBuilder().setId(1L).createFetish());
         Country c1 = Country.Builder.country().withId(1L).build();
         Area a1 = new Area.AreaBuilder().setId(1L).createArea();
-        UserType ut1 = UserType.Builder.anUserType().withId(1L).build();
+        UserType ut2 = UserType.Builder.anUserType().withId(2L).build();
 
         if (userRepository.findByEmail("contact@dominapp.com") == null) {
 
@@ -68,7 +68,7 @@ public class ProdDatabaseCLR implements CommandLineRunner {
                     .withFetishes(fetishes)
                     .withArea(a1)
                     .withCountry(c1)
-                    .withType(ut1)
+                    .withType(ut2)
                     .withReportedAsFake(0L)
                     .withLastActivityDatetime(LocalDateTime.now())
                     .withLastReportDate(LocalDate.now().minusDays(1L))
