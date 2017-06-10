@@ -4,7 +4,7 @@
   <br>
   <a class="pointer" (click)="cancelSendImage()">Annuler</a>
 </div>
-<form (ngSubmit)="send()" #sendForm="ngForm">
+<form (ngSubmit)="send()" #sendForm="ngForm" ngNativeValidate>
   <div class="send-wrap" *ngIf="!sendImage && !isUserBlocked">
     <textarea #sendTextArea (keyup.enter)="sendEnter()" name="content" required class="form-control send-message" rows="3" placeholder="Envoyer un message ..." [(ngModel)]="message.content"></textarea>
   </div>

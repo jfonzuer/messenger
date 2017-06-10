@@ -191,9 +191,10 @@ public class UserService {
         user = userRepository.save(user);
 
         // if user is domina
-        if (!MessengerUtils.isDomina(user)) {
+        // TODO when payment is active uncomment
+        //if (MessengerUtils.isDomina(user)) {
             userRoleRepository.save(new UserRole(user, "ROLE_PREMIUM"));
-        }
+        //}
 
         userRoleRepository.save(new UserRole(user, "ROLE_USER"));
 

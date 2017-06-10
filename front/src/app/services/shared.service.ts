@@ -3,6 +3,7 @@ import {User} from "../model/user";
 import {Observable, Observer} from "rxjs";
 import {Router} from "@angular/router";
 import {CoolLocalStorage} from "angular2-cool-storage";
+import {LoggerService} from "./logger.service";
 
 @Injectable()
 export class SharedService {
@@ -14,7 +15,7 @@ export class SharedService {
   private userObserver: Observer<User>;
 
 
-  constructor (private localStorageService: CoolLocalStorage, private router: Router) {
+  constructor (private localStorageService: CoolLocalStorage, private router: Router, private logger: LoggerService) {
     this.unseenNumberVisitsRefresh = new Observable<boolean>(observer => this.unseenVisitsObserver = observer).share();
     this.userRefresh = new Observable<User>(observer => this.userObserver = observer).share();
   }
@@ -57,7 +58,7 @@ export class SharedService {
 
   isPremium() {
     let user:User = <User> this.getCurrentUser();
-    //console.debug("isPremium ", user.authorities.find(a => a == "ROLE_PREMIUM") != null)
+    this.logger.log("shared service: is Premium", user.authorities.find(a => a == "ROLE_PREMIUM") != null)
     return user.authorities.find(a => a == "ROLE_PREMIUM") != null;
   }
 

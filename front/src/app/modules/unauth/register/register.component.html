@@ -1,11 +1,11 @@
 <div class="container">
-  <form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm">
+  <form class="form-horizontal" (ngSubmit)="send(sendForm.form.valid)" #sendForm="ngForm" ngNativeValidate>
     <fieldset>
       <legend>Créer un compte :</legend>
 
       <div class="form-group">
         <div class="col-sm-8">
-          <input type="text" class="form-control" required placeholder="Nom d'utilisateur" (keyup.enter)="updateInformation(informationForm.form.valid)" name="username" [(ngModel)]="user.username">
+          <input type="text" class="form-control" required placeholder="Nom d'utilisateur" minlength="4" maxlength="15" (keyup.enter)="updateInformation(informationForm.form.valid)" name="username" [(ngModel)]="user.username">
         </div>
       </div>
 
@@ -23,7 +23,77 @@
 
       <div class="form-group">
         <div class="col-sm-8">
-          <input id="password" type="password" class="form-control" minlength="6" required placeholder="Mot de passe (au moins 6 caractères)" name="password" [(ngModel)]="password">
+          <input id="password" type="password" class="form-control" required placeholder="Mot de passe (au moins 6 caractères)" name="password" [(ngModel)]="password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-8" *ngIf="constants">
+          <label>Type :</label>
+          <select class="form-control" [(ngModel)]="user.userType.id" name="userType" required>
+            <option *ngFor="let type of constants.userTypes" [value]="type.id">{{ type.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-8" *ngIf="constants">
+          <label>Pays :</label>
+          <select class="form-control" [(ngModel)]="user.country.id" name="country" required>
+            <option *ngFor="let country of constants.countries" [value]="country.id">{{ country.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-8" *ngIf="constants">
+          <label>Région :</label>
+          <select class="form-control" [(ngModel)]="user.area.id" name="area" required [ngSwitch]="user.country.id">
+            <ng-container *ngSwitchCase="1">
+              <option *ngFor="let area of constants.franceAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="2">
+              <option *ngFor="let area of constants.belgiumAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="3">
+              <option *ngFor="let area of constants.luxemburgAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="4">
+              <option *ngFor="let area of constants.swissAreas" [value]="area.id">{{ area.name }}</option>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-8" *ngIf="constants">
+          <label>Pratiques :</label>
+          <div class="radio">
+            <label *ngFor="let fetish of constants.fetishes; let i = index">
+              <input type="checkbox" name="fetishes"  value="{{ option }}" [checked]="selectedFetishId.indexOf(fetish.id) >= 0" (change)="fetishService.updateCheckedFetishes(fetish, $event, selectedFetishId)">
+              {{ fetish.name }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-8">
+          <label>Description :</label>
+          <textarea class="form-control" rows="4" name="description" (keyup.enter)="send(sendForm.form.valid)" [(ngModel)]="user.description" required></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-8">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="terms"  required [(ngModel)]="terms"><app-terms></app-terms>
+            </label>
+          </div>
         </div>
       </div>
 

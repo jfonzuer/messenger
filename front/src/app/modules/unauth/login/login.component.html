@@ -5,10 +5,10 @@
   }
 </style>
 <ul class="nav navbar-nav navbar-right unauth-navbar-right">
-  <li><input type="email" name="email" class="form-control" (keyup.enter)="send()" placeholder="Email" [(ngModel)]="authentication.email" required autofocus></li>
+  <li><input type="email" name="email" class="form-control" (keyup.enter)="send()" placeholder="Email" [(ngModel)]="authentication.email" autofocus></li>
   <li>&nbsp; &nbsp;</li>
   <li>
-    <input type="password" name="password" (keyup.enter)="send()" [(ngModel)]="authentication.password" class="form-control" placeholder="Mot de passe" required>
+    <input type="password" name="password" (keyup.enter)="send()" [(ngModel)]="authentication.password" class="form-control" placeholder="Mot de passe">
     <a [routerLink]="['/unauth/password/forgotten']" class="unauth-li-a forgot-password">Mot de passe oublié ?</a>
   </li>
   <li>&nbsp; &nbsp;</li>
