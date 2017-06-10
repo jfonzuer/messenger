@@ -79,11 +79,12 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-3" *ngFor="let user of users">
+  <div class="col-sm-3 profile-box" *ngFor="let user of users">
     <a [routerLink]="['/app/profile', user.id ]">
       <img src="{{ uploadImageUrl }}{{ user.images[0].url }}/image" class="medium-image img-circle center-block">
-      <h3 class="text-center text-primary">{{ user.username }}</h3>
-      <p class="text-center">Age: {{ user.age }} ans, <strong>{{ user.area.name }}, {{ user.country.name}} <span class="flag-icon flag-icon-{{ user.country.flag }}"></span></strong></p>
+      <h5 class="text-center text-primary">{{ user.username }}</h5>
+      <p class="text-center">Age: {{ user.age }} ans, <strong>{{ user.area.name }} </strong></p>
+      <p class="text-center"><strong>{{ user.country.name}} <span class="flag-icon flag-icon-{{ user.country.flag }}"></span></strong></p>
       <p class="text-center" *ngIf="search.keyword && searched" [innerHTML]="user.description"></p>
     </a>
   </div>
