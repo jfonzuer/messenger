@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface MessageRepository extends JpaRepository<Message, Long> {
     Page<Message> findByConversationOrderByIdDesc(Conversation conversation, Pageable pageable);
-    Page<Message> findByConversationAndUserOneAndIsDeletedByUserOneOrConversationAndUserTwoAndIsDeletedByUserTwoOrderByIdDesc(Conversation conversation1, User userOne1, Boolean isDeletedByUserOne, Conversation conversation2, User userTwo, Boolean isDeletedByUserTwo, Pageable p);
+    Page<Message> findByConversationAndUserOneAndIsDeletedByUserOneOrConversationAndUserTwoAndIsDeletedByUserTwoOrderByIdAsc(Conversation conversation1, User userOne1, Boolean isDeletedByUserOne, Conversation conversation2, User userTwo, Boolean isDeletedByUserTwo, Pageable p);
 
     List<Message> findTop1ByOrderByIdDesc();
     List<Message> findByConversation(Conversation conversation);

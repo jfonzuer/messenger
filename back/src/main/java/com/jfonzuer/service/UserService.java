@@ -185,7 +185,8 @@ public class UserService {
         user.setReportedAsFake(0L);
         user.setLastActivityDatetime(LocalDateTime.now());
         user.setLastReportDate(LocalDate.now().minusDays(1));
-        user.setActivated(false);
+        // TODO: sécurité désactivé du à la difficulté de valdier son compte
+        user.setActivated(true);
         user.setNotifyVisit(true);
         user.setNotifyMessage(true);
         user = userRepository.save(user);

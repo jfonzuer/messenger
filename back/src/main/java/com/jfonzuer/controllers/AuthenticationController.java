@@ -78,10 +78,9 @@ public class AuthenticationController {
         }
         LOGGER.debug("user.getActivated() {}", user.getActivated());
 
-        // TODO debug functionnality
-//        if (!user.getActivated()) {
-//            throw new AccountNotActivatedException("Vous n'avez pas encore activé votre compte");
-//        }
+        if (!user.getActivated()) {
+            throw new AccountNotActivatedException("Vous n'avez pas encore activé votre compte");
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

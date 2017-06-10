@@ -153,7 +153,6 @@ public class UserDto {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", description='" + description + '\'' +
                 ", birthDate='" + birthDate + '\'' +
                 ", fetishes=" + fetishes +
                 ", authorities=" + authorities +

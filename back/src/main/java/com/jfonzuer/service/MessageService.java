@@ -78,7 +78,7 @@ public class MessageService {
 
     public Page<MessageDto> getByConversationAndUser(Conversation c, User u, Pageable p) {
         return messageRepository
-                .findByConversationAndUserOneAndIsDeletedByUserOneOrConversationAndUserTwoAndIsDeletedByUserTwoOrderByIdDesc(c, u, false, c, u, false, p)
+                .findByConversationAndUserOneAndIsDeletedByUserOneOrConversationAndUserTwoAndIsDeletedByUserTwoOrderByIdAsc(c, u, false, c, u, false, p)
                 .map(m -> MessageMapper.toDto(m));
     }
     
