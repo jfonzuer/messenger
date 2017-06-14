@@ -9,7 +9,7 @@
     <a [routerLink]="['/app/profile', selectedConversation.userTwo.id ]"><strong>{{ selectedConversation.userTwo.username}}</strong></a>
   </div>
   <div class="col-sm-4">
-    <app-last-activity [lastActivityDatetime]="selectedConversation.userTwo.lastActivityDatetime"></app-last-activity>
+    <app-last-activity></app-last-activity>
   </div>
 
   <div class="col-sm-4">
@@ -34,7 +34,14 @@
   <div class="media msg" *ngFor="let message of messages; let i = index">
     <div class="media-body">
       <p [ngClass]="{'align-right': message.source.id !== selectedConversation.userOne.id }" *ngIf="!messages[i-1] || (messages[i-1] && messages[i-1].source.id != message.source.id)">{{ message.source.username }}</p>
-      <small [ngClass]="{'pull-right other-user-message': message.source.id !== selectedConversation.userOne.id }"  class="message" *ngIf="message.type == 'TEXT'">
+
+      <!-- connected user message -->
+      <small *ngIf="message.type == 'TEXT' && message.source.id == selectedConversation.userOne.id" class="pull-left message">
+        {{ message.content }}
+      </small>
+
+      <!-- other user message -->
+      <small *ngIf="message.type == 'TEXT' && message.source.id !== selectedConversation.userOne.id" class="pull-right other-user-message message">
         {{ message.content }}
       </small>
 

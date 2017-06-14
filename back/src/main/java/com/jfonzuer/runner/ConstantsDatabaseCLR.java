@@ -3,7 +3,6 @@ package com.jfonzuer.runner;
 import com.jfonzuer.entities.*;
 import com.jfonzuer.repository.*;
 import com.jfonzuer.utils.MessengerUtils;
-import org.ektorp.CouchDbConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -28,11 +22,11 @@ import java.util.stream.Stream;
  * Created by pgm on 19/09/16.
  */
 @Component
-@Profile("!prod")
+@Profile("dev")
 @Order(1)
-public class DatabaseCLR implements CommandLineRunner {
+public class ConstantsDatabaseCLR implements CommandLineRunner {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseCLR.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConstantsDatabaseCLR.class);
 
     private final FetishRepository fetishRepository;
     private final UserTypeRepository userTypeRepository;
@@ -43,7 +37,7 @@ public class DatabaseCLR implements CommandLineRunner {
     private String defaultImage;
 
     @Autowired
-    public DatabaseCLR(FetishRepository fetishRepository, UserTypeRepository userTypeRepository, CountryRepository countryRepository, AreaRepository areaRepository) {
+    public ConstantsDatabaseCLR(FetishRepository fetishRepository, UserTypeRepository userTypeRepository, CountryRepository countryRepository, AreaRepository areaRepository) {
         this.fetishRepository = fetishRepository;
         this.userTypeRepository = userTypeRepository;
         this.countryRepository = countryRepository;
@@ -147,6 +141,8 @@ public class DatabaseCLR implements CommandLineRunner {
         Area a60 = new Area.AreaBuilder().setName("Vaud").setCountry(c4).createArea();
         Area a61 = new Area.AreaBuilder().setName("Zoug").setCountry(c4).createArea();
         Area a62 = new Area.AreaBuilder().setName("Zurich").setCountry(c4).createArea();
+
+        Area a63 = new Area.AreaBuilder().setName("Rhônes-Alpes").setCountry(c1).createArea();
 
         List<Area> areas = Arrays.asList(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62);
         areas.stream().forEach(areaRepository::save);

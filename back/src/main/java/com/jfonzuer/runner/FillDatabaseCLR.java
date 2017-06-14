@@ -23,9 +23,9 @@ import java.util.stream.Stream;
  * Created by pgm on 16/04/17.
  */
 @Component
-@Profile("!prod")
+@Profile({"dev", "preprod"})
 @Order(2)
-public class DevDatabaseCLR implements CommandLineRunner {
+public class FillDatabaseCLR implements CommandLineRunner {
 
     @Value("${image.default.name}")
     private String defaultImage;
@@ -39,7 +39,7 @@ public class DevDatabaseCLR implements CommandLineRunner {
     private final VisitRepository visitRepository;
 
     @Autowired
-    public DevDatabaseCLR(PasswordEncoder encoder, UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, ImageRepository imageRepository, UserRoleRepository userRoleRepository, VisitRepository visitRepository) {
+    public FillDatabaseCLR(PasswordEncoder encoder, UserRepository userRepository, ConversationRepository conversationRepository, MessageRepository messageRepository, ImageRepository imageRepository, UserRoleRepository userRoleRepository, VisitRepository visitRepository) {
         this.encoder = encoder;
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
@@ -84,8 +84,8 @@ public class DevDatabaseCLR implements CommandLineRunner {
                 .withActivated(true)
                 .build();
         User u2 = User.Builder.anUser()
-                .withEmail("u1@gmail.com")
-                .withUsername("user2")
+                .withEmail("u2@gmail.com")
+                .withUsername("member2")
                 .withPassword(encoder.encode("test"))
                 .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .withEnabled(true)
@@ -103,7 +103,7 @@ public class DevDatabaseCLR implements CommandLineRunner {
                 .withActivated(true)
                 .build();
         User u3 = User.Builder.anUser()
-                .withEmail("u2@gmail.com")
+                .withEmail("u3@gmail.com")
                 .withUsername("member3")
                 .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .withPassword(encoder.encode("test"))
@@ -115,7 +115,7 @@ public class DevDatabaseCLR implements CommandLineRunner {
                 .withCountry(c3)
                 .withType(ut1)
                 .withReportedAsFake(15L)
-                .withLastActivityDatetime(LocalDateTime.now())
+                .withLastActivityDatetime(LocalDateTime.now().minusHours(1))
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
@@ -123,7 +123,7 @@ public class DevDatabaseCLR implements CommandLineRunner {
                 .build();
 
         User u4 = User.Builder.anUser()
-                .withEmail("u3@gmail.com")
+                .withEmail("u4@gmail.com")
                 .withUsername("member4")
                 .withLastPasswordResetDate(new Date(System.currentTimeMillis() - 100000000))
                 .withPassword(encoder.encode("test"))
@@ -135,7 +135,7 @@ public class DevDatabaseCLR implements CommandLineRunner {
                 .withCountry(c1)
                 .withType(ut2)
                 .withReportedAsFake(20L)
-                .withLastActivityDatetime(LocalDateTime.now())
+                .withLastActivityDatetime(LocalDateTime.now().minusHours(7))
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)

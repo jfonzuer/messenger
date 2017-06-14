@@ -19,6 +19,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 /**
@@ -54,6 +55,7 @@ public class MessageWebSocketController {
     @MessageMapping("/ws-conversation-endpoint/{id}")
     public void addMessage(@DestinationVariable String id, MessageDto dto, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         LOGGER.debug("add message dto : {}" + dto);
+
         User sender = (User) headerAccessor.getSessionAttributes().get("connectedUser");
         Locale locale = (Locale) headerAccessor.getSessionAttributes().get("locale");
 
@@ -69,21 +71,27 @@ public class MessageWebSocketController {
             throw new IllegalArgumentException(e.getMessage());
         }
 
+        Conversation conversation = conversationService.updateConversation(c, sender, dto);
+
+        // on met à jour la date de dernière activité du sender
+        sender.setLastActivityDatetime(LocalDateTime.now());
+        userRepository.save(sender);
+
+        // on met à jour le last message by de la target
         target.setLastMessageBy(sender);
         userRepository.save(target);
 
-        Conversation conversation = conversationService.updateConversation(c, sender, dto);
-        LOGGER.debug("send conversation via websockets {}", conversation);
         this.webSocketService.sendToConversationsUsers(conversation);
+
 
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.TEXT);
         message = messageService.saveMessage(message, c.getUserOne(), c.getUserTwo());
 
         // send email if sender is not last sender
-        if (!sender.equals(target.getLastMessageBy())) {
+        //if (!sender.equals(target.getLastMessageBy())) {
             asyncService.executeAsync(() -> mailService.sendMessageNotification(locale, MessengerUtils.getOtherUser(c, sender), sender));
-        }
+        //}
         this.template.convertAndSend("/ws-conversation-broker/conversation/" + id, MessageMapper.toDto(message));
     }
 }

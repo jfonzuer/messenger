@@ -146,16 +146,6 @@ CREATE TABLE `image` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `image`
---
-
-LOCK TABLES `image` WRITE;
-/*!40000 ALTER TABLE `image` DISABLE KEYS */;
-INSERT INTO `image` VALUES (1,1,'profile.png',1);
-/*!40000 ALTER TABLE `image` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `message`
 --
 
@@ -266,15 +256,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'','1990-01-01','','contact@dominapp.com','','\0','2017-06-10 13:36:56','2017-06-09 09:50:16','2017-06-09',NULL,'','','$2a$10$2k4mv0kNLTyiy61yLGLZ/.A/.f8no4tAadD/BWglxVQj6r0wIZY0u',0,NULL,'Jack',1,1,NULL,NULL,1);
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_blocked_users`
@@ -320,16 +301,6 @@ CREATE TABLE `user_fetishes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_fetishes`
---
-
-LOCK TABLES `user_fetishes` WRITE;
-/*!40000 ALTER TABLE `user_fetishes` DISABLE KEYS */;
-INSERT INTO `user_fetishes` VALUES (1,1),(1,1);
-/*!40000 ALTER TABLE `user_fetishes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `user_role`
 --
 
@@ -345,16 +316,6 @@ CREATE TABLE `user_role` (
   CONSTRAINT `FK859n2jvi8ivhui0rl0esws6o` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_role`
---
-
-LOCK TABLES `user_role` WRITE;
-/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,'ROLE_USER',1),(2,'ROLE_ADMIN',1),(3,'ROLE_PREMIUM',1);
-/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_type`

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Dominapp</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>Bonjour <span th:text="${userName}"></span></p>
+<p>Notre application n'a plus été disponible pendant quelques heures. Veuillez nous excuser pour cette interruption de service.</p>
+<p>Dominapp, a été lancé tout récemment et va donc beaucoup évoluer ces prochaines semaines.</p>
+<p>Nous espérons néanmoins, qu'en l'état actuelle, l'application vous semble prometteuse, ou du moins satisfaisante.</p>
+<p>N'hésitez pas à nous faire parvenir vos suggestions à contact@dominapp.com</p>
+<p><a th:href="${loginUrl}">connectez vous à nouveau à l'application</a> pour découvrir de nouveaux profils.</p>
+<p>L'équipe <strong>Dominapp</strong></p>
+</body>
+</html>

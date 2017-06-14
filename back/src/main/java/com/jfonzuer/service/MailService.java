@@ -183,6 +183,28 @@ public class MailService {
         }
     }
 
+    public void sendDownTimeMail(Locale locale, User user) {
+        try {
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+            final Context ctx = new Context(locale);
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            ctx.setVariable("userName", user.getUsername());
+            ctx.setVariable("loginUrl", loginUrl);
+            helper.setFrom(this.fromEmail);
+            setTo(helper, user.getEmail());
+            helper.setSubject("[Dominapp] Dominapp est de nouveau en ligne");
+            final String htmlContent = templateEngine.process("mail/downtime", ctx);
+            helper.setText(htmlContent, true);
+            LOGGER.debug("Send downtime mail to : {}", user.getEmail());
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            LOGGER.error("Error when sending downtime mail to : {}", user.getEmail(), e);
+        }
+    }
+
     private void setTo(MimeMessageHelper helper, String email) throws MessagingException {
         if (profile.equals("dev")) {
             LOGGER.debug("dev profile, sending mail to {}", sendTo);

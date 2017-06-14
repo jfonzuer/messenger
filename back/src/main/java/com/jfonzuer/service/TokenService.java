@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -25,7 +26,7 @@ public class TokenService {
 
     public void save(User user, String token) {
         // on supprime les tokens déjà créés pour cet utilisateur
-        tokenRepository.getAllByUser(user).stream().forEach(t -> tokenRepository.delete(t));
-        tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(1L)));
+        //tokenRepository.geByUserWhereExpiryDateBefore(user, LocalDate.now()).stream().forEach(t -> tokenRepository.delete(t));
+        tokenRepository.save(new Token(token, user, LocalDate.now().plusDays(2L)));
     }
 }

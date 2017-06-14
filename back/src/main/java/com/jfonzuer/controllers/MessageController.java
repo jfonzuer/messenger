@@ -2,7 +2,9 @@ package com.jfonzuer.controllers;
 
 import com.jfonzuer.dto.MessageDto;
 import com.jfonzuer.dto.mapper.MessageMapper;
-import com.jfonzuer.entities.*;
+import com.jfonzuer.entities.Conversation;
+import com.jfonzuer.entities.Message;
+import com.jfonzuer.entities.User;
 import com.jfonzuer.repository.MessageRepository;
 import com.jfonzuer.service.*;
 import com.jfonzuer.utils.MessengerUtils;
@@ -12,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -109,9 +110,9 @@ public class MessageController {
         messageRepository.save(message);
 
         // send email if sender is not last sender
-        if (!sender.equals(target.getLastMessageBy())) {
+        //if (!sender.equals(target.getLastMessageBy())) {
             asyncService.executeAsync(() -> mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender));
-        }
+        //}
 
         userService.updateLastMessageBy(target, sender);
         return  MessageMapper.toDto(message);

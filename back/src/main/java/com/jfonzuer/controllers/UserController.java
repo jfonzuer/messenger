@@ -120,9 +120,9 @@ public class UserController {
         User reportedUser = userService.findByIdOrThrowException(id);
 
         // if user has reported another user in the last 24 hours
-        if (!user.getLastReportDate().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("Vous avez déjà signalé un utilisateur lors des 24 dernières heures");
-        }
+//        if (!user.getLastReportDate().isBefore(LocalDate.now())) {
+//            throw new IllegalArgumentException("Vous avez déjà signalé un utilisateur lors des 24 dernières heures");
+//        }
         
         // increment number of reports, last report date and save both users
         reportedUser.setReportedAsFake(reportedUser.getReportedAsFake() + 1);

@@ -49,7 +49,7 @@ public class ConstantsController {
         constantsResponse.setCountries(countryRepository.findAll().stream().map(CountryMapper::toDto).collect(Collectors.toList()));
         constantsResponse.setUserTypes(userTypeRepository.findAll().stream().map(UserTypeMapper::toDto).collect(Collectors.toList()));
         constantsResponse.setFetishes(fetishRepository.findAll().stream().map(FetishMapper::toDto).collect(Collectors.toList()));
-        constantsResponse.setFranceAreas(areaRepository.findByCountry(france).stream().map(AreaMapper::toDto).collect(Collectors.toList()));
+        constantsResponse.setFranceAreas(areaRepository.findByCountryOrderByNameAsc(france).stream().map(AreaMapper::toDto).collect(Collectors.toList()));
         constantsResponse.setBelgiumAreas(areaRepository.findByCountry(belgium).stream().map(AreaMapper::toDto).collect(Collectors.toList()));
         constantsResponse.setLuxemburgAreas(areaRepository.findByCountry(lux).stream().map(AreaMapper::toDto).collect(Collectors.toList()));
         constantsResponse.setSwissAreas(areaRepository.findByCountry(swiss).stream().map(AreaMapper::toDto).collect(Collectors.toList()));

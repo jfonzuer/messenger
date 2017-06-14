@@ -1,0 +1,15 @@
+set SQL_SAFE_UPDATES = 0;
+set @user_id = 264 ;
+delete from message where user_one_id = @user_id or user_two_id = @user_id;
+delete from conversation where user_one_id = @user_id or user_two_id = @user_id;
+delete from image where user_id = @user_id;
+delete from token where user_id = @user_id;
+delete from user_blocked_users where user_id = @user_id;
+delete from user_fetishes where user_id = @user_id;
+delete from user_role where user_id = @user_id;
+delete from visit where visitor_id = @user_id or visited_id = @user_id;
+delete from user_blocked_users where user_id = @user_id or blocked_users_id = @user_id;
+update user set last_message_by_id = NULL where last_message_by_id = @user_id;
+update user set last_visited_by_id = NULL where last_visited_by_id = @user_id;
+delete from `messenger`.`user` where id = @user_id;
+set SQL_SAFE_UPDATES = 1;

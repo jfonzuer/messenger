@@ -52,8 +52,10 @@ public class ConversationSubscribeInterceptor extends ChannelInterceptorAdapter 
                 Conversation conversation = conversationRepository.findOne(id);
 
                 if (conversation == null) {
-                    throw new ResourceNotFoundException("La conversation n'existe pas");
+                    LOGGER.error("La conversation d'id {} n'existe pas", id);
+                    //throw new ResourceNotFoundException("La conversation d'id {} n'existe pas");
                 }
+
                 // TODO SECURE IN AN OTHER MANNER : connectedUser is not obviously equals to the request user
 //                if (!conversationService.isUserPartOfConversation(conversation, connectedUser)) {
 //                    throw new UnauthorizedException("L'utilisateur ne fait pas partie de la discussion");

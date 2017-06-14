@@ -116,6 +116,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   private changeConversation(conversation: Conversation) {
     this.selectedConversation = conversation;
+    this.logger.log("message list, change conversation event, conversation", conversation);
     this.pager = null;
     this.getMessages(this.selectedConversation.userTwo.id);
     this.isRead = this.selectedConversation.readByUserTwo;
@@ -128,7 +129,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   private getMessages(userId : number) {
     this.messageService.getMessages(userId, this.pager).then((response: any) => {
-      this.logger.log('getMessages', response);
+      this.logger.log('message list component getMessages', response);
 
       this.concatMessage(response);
       this.pager = new Pager(response.number, response.last, response.size, 10);

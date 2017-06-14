@@ -30,6 +30,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   visitsRefreshSubscription:any;
   userRefreshSubscription:any;
 
+  unseenVisitsSubscriptionTimer: any;
+  unseenConversationSubscriptionTimer: any;
+
   // timers
   unreadConversationsTimer:Observable<number>;
   unseenVisitsTimer:Observable<number>;
@@ -55,12 +58,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.updateUnreadConversations();
     this.getUnseenVisits();
 
-    // TODO A ACTIVER
-    //this.unreadConversationsTimer = Observable.timer(0, 60000);
-    //this.unreadConversationsTimer.subscribe(t => this.getUnreadConversations());
-
-    //this.unseenVisitsTimer = Observable.timer(0, 60000);
-    //this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
+    // this.unreadConversationsTimer = Observable.timer(0, 60000);
+    // this.unreadConversationsTimer.subscribe(t => this.updateUnreadConversations());
+    //
+    // this.unseenVisitsTimer = Observable.timer(0, 60000);
+    // this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
 
     this.user = <User> this.localStorageService.getObject('user');
     this.isUserAdmin = this.sharedService.isAdmin(this.user);
@@ -97,5 +99,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.receiveMessageSubscription.unsubscribe();
     this.visitsRefreshSubscription.unsubscribe();
     this.userRefreshSubscription.unsubscribe();
+
+    // this.unseenConversationSubscriptionTimer.unsubscribe();
+    // this.unseenVisitsSubscriptionTimer.unsubscribe();
   }
 }

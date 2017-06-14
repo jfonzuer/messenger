@@ -178,6 +178,7 @@ public class UserService {
     public void createUser(User user, String password) {
         throwExceptionIfUnderaged(user.getBirthDate());
 
+        user.setUsername(user.getUsername().trim());
         user.setPassword(passwordEncoder.encode(password));
         user.setEnabled(true);
         user.setBlocked(false);
@@ -185,8 +186,9 @@ public class UserService {
         user.setReportedAsFake(0L);
         user.setLastActivityDatetime(LocalDateTime.now());
         user.setLastReportDate(LocalDate.now().minusDays(1));
+
         // TODO: sécurité désactivé du à la difficulté de valdier son compte
-        user.setActivated(true);
+        user.setActivated(false);
         user.setNotifyVisit(true);
         user.setNotifyMessage(true);
         user = userRepository.save(user);
