@@ -82,7 +82,7 @@ public class MessageController {
     }
 
 
-    @RequestMapping(value = "/{conversationId}/{messageId}",method = RequestMethod.GET)
+    @GetMapping(value = "/{conversationId}/{messageId}")
     public List<MessageDto> getPreviousMessageFromConversation(HttpServletRequest request, @PathVariable("conversationId") Long conversationId, @PathVariable("messageId") Long messageId, Pageable p) {
 
         User currentUser = userService.getUserFromToken(request);
@@ -98,7 +98,6 @@ public class MessageController {
         return conversation == null ? null : messageService.getPreviousMessageFromConversation(conversation, currentUser, messageId);
     }
 
-
     /**
      * endpoint permettant de post un message de type image dans une conversation
      * @param request
@@ -106,7 +105,7 @@ public class MessageController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/image", method = RequestMethod.POST)
+    @PostMapping(value = "/image")
     public MessageDto addImage(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file, @RequestParam(value = "id") Long id) {
 
         User sender = userService.getUserFromToken(request);

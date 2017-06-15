@@ -70,7 +70,8 @@ public class ConversationService {
     }
 
     public void deleteByIdAndUser(Long conversationId, User user) {
-        Conversation conversation = conversationRepository.findByIdAndUserOneOrUserTwo(conversationId, user, user);
+        LOGGER.debug("delete conversation, id : {}", conversationId);
+        Conversation conversation = conversationRepository.getOne(conversationId);
 
         if (MessengerUtils.isUserOne(user, conversation)) {
             conversation.setDeletedByUserOne(true);
@@ -88,6 +89,8 @@ public class ConversationService {
     }
 
     public void updateConversationIsRead(Conversation c, User user) {
+        LOGGER.debug("update isRead conversation of id {}", c.getId());
+
         if (MessengerUtils.isUserOne(user, c) && c.getReadByUserOne().equals(Boolean.FALSE)) {
             c.setReadByUserOne(true);
             conversationRepository.save(c);

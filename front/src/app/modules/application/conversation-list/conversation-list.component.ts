@@ -50,7 +50,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     this.getConversations();
   }
 
-  onSelect(conversation : Conversation) {
+  setSelectedConversation(conversation : Conversation) {
     if (conversation.id != this.selectedConversation.id) {
       conversation.readByUserOne = true;
       this.selectedConversation = conversation;
@@ -87,9 +87,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
 
       this.logger.log('update conversation pager', this.pager);
 
-      // on refresh le readByUserTwo
-      let selectedConversation = this.conversations.find(c => c.id == this.selectedConversation.id);
-      this.messengerService.changeConversationRead(selectedConversation ? selectedConversation.readByUserTwo : this.selectedConversation.readByUserTwo);
     }).catch(error => this.toastr.error(error));
   }
 

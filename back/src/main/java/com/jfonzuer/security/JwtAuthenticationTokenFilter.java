@@ -2,7 +2,11 @@ package com.jfonzuer.security;
 
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.entities.User;
+import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.UserRepository;
+import com.jfonzuer.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,9 +30,10 @@ import java.util.Collections;
 
 public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
-
     @Autowired
     private UserRepository userRepository;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -47,6 +52,12 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 
             User user = userRepository.findByEmail(username);
+
+            if (!user.getEnabled()) {
+                LOGGER.debug("user with id {} is desactivated", user.getId());
+                throw new UnauthorizedException("Votre compte a été désactivé. Contactez nous à l'adresse suivante : contact@dominapp.com");
+            }
+
             user.setAuthorities(UserMapper.mapToGrantedAuthorities(user.getUserRoles()));
 
             if (jwtTokenUtil.validateToken(authToken, user)) {

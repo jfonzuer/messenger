@@ -6,6 +6,7 @@ import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.Message;
 import com.jfonzuer.entities.MessageType;
 import com.jfonzuer.entities.User;
+import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.UserRepository;
 import com.jfonzuer.service.*;
 import com.jfonzuer.utils.MessengerUtils;
@@ -57,6 +58,7 @@ public class MessageWebSocketController {
         LOGGER.debug("add message dto : {}" + dto);
 
         User sender = (User) headerAccessor.getSessionAttributes().get("connectedUser");
+
         Locale locale = (Locale) headerAccessor.getSessionAttributes().get("locale");
 
         // TODO : refactor endpoint
@@ -82,7 +84,6 @@ public class MessageWebSocketController {
         userRepository.save(target);
 
         this.webSocketService.sendToConversationsUsers(conversation);
-
 
         Message message = MessageMapper.fromDto(dto);
         message.setType(MessageType.TEXT);

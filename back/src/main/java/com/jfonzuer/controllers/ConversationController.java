@@ -121,7 +121,7 @@ public class ConversationController {
      */
     //TODO : uncomment to activate premium
     //@PreAuthorize("hasRole('PREMIUM')")
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public void deleteConversation(HttpServletRequest request, @PathVariable Long id) {
         User currentUser = userService.getUserFromToken(request);
         subscriptionService.checkSubscriptionAsync(currentUser);
@@ -133,7 +133,7 @@ public class ConversationController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/unread", method = RequestMethod.GET)
+    @GetMapping(value = "/unread")
     public Long getUnreadNumerConversations(HttpServletRequest request) {
         User user = userService.getUserFromToken(request);
         return this.conversationRepository.countByUserOneAndIsReadByUserOne(user, false) +  this.conversationRepository.countByUserTwoAndIsReadByUserTwo(user, false);

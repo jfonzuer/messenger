@@ -51,7 +51,7 @@
     </div>
     <small  [ngClass]="{'pull-right': message.source.id !== selectedConversation.userOne.id }" class="time" *ngIf="!messages[i+1] || (messages[i+1] && messages[i+1].source.id != message.source.id)"><i class="fa fa-clock-o"></i> {{ message.sendSince }}</small>
   </div>
-  <small class="pull-right time" [innerHTML]="isRead ? 'Lu' : 'Envoyé'" ></small>
+  <small *ngIf="messages[messages.length].id !== selectedConversation.userOne.id" class="pull-right time" [innerHTML]="isRead ? 'Lu' : 'Envoyé'" ></small>
 </div>
 
 

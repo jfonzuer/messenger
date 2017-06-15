@@ -9,7 +9,7 @@
     <a class="pull-left">
       <img class="media-object" style="width: 50px; height: 50px;" src="{{ uploadImageUrl }}{{ conversation.userTwo.images[0].url }}/image">
     </a>
-    <div class="media-body" style="cursor: pointer" (click)="onSelect(conversation)">
+    <div class="media-body" style="cursor: pointer" (click)="setSelectedConversation(conversation)">
 
       <h5 class="media-heading" *ngIf="conversation.readByUserOne">{{ conversation.userTwo.username }}</h5>
 

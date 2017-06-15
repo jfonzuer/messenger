@@ -8,6 +8,7 @@ import com.jfonzuer.dto.mapper.SearchMapper;
 import com.jfonzuer.dto.mapper.UserMapper;
 import com.jfonzuer.dto.response.InformationUpdateDto;
 import com.jfonzuer.entities.*;
+import com.jfonzuer.exception.UnauthorizedException;
 import com.jfonzuer.repository.*;
 import com.jfonzuer.security.JwtTokenUtil;
 import com.jfonzuer.utils.MessengerUtils;
@@ -298,14 +299,21 @@ public class UserService {
         }
     }
 
+    public void throwExceptionIfDesactivated(User user) {
+        if (!user.getEnabled()) {
+            LOGGER.debug("user with id {} is desactivated", user.getId());
+            throw new UnauthorizedException("Votre compte a été désactivé. Contactez nous à l'adresse suivante : contact@dominapp.com");
+        }
+    }
+
     public void throwExceptionIfBlocked(User sender, User target) {
 
-        if (target.getBlockedUsers() != null /* && target.getBlockedUsers().contains(sender) */) {
-            long nb = target.getBlockedUsers().stream().filter(u -> u.equals(sender)).count();
-            LOGGER.debug("nb of blocked user = {}", nb);
-            if (nb == 1l) {
+        if (target.getBlockedUsers() != null && target.getBlockedUsers().contains(sender)) {
+            //long nb = target.getBlockedUsers().stream().filter(u -> u.equals(sender)).count();
+            //LOGGER.debug("nb of blocked user = {}", nb);
+            //if (nb == 1l) {
                 throw new IllegalArgumentException("Vous ne pouvez pas envoyer de message à cet utilisateur");
-            }
+            //}
         }
     }
 

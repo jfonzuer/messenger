@@ -163,7 +163,8 @@ public class FillDatabaseCLR implements CommandLineRunner {
         UserRole us5 = new UserRole(u3, "ROLE_USER");
         UserRole us6 = new UserRole(u4, "ROLE_USER");
         UserRole us7 = new UserRole(u4, "ROLE_PREMIUM");
-        Stream.of(us1, us2, us3, us4, us5, us6, us7).forEach(us -> userRoleRepository.save(us));
+        UserRole us8 = new UserRole(u3, "ROLE_PREMIUM");
+        Stream.of(us1, us2, us3, us4, us5, us6, us7, us8).forEach(us -> userRoleRepository.save(us));
 
         // visits
         Visit v1 = new Visit(LocalDate.now(), u2, u1, false);
