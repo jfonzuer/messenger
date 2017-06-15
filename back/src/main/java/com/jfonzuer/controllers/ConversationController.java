@@ -89,7 +89,7 @@ public class ConversationController {
             throw new IllegalArgumentException();
         }
         Conversation conversation = conversationService.createConversationAndAddMessage(userOne, userTwo, messageDto);
-        webSocketService.sendToConversationsUsers(conversation);
+        webSocketService.sendToConversationsToOtherUser(conversation);
         asyncService.executeAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
         return ConversationMapper.toDto(conversation, userOne);
     }

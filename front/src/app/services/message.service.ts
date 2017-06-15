@@ -16,15 +16,27 @@ export class MessageService {
     this.baseUrl = environment.baseUrl;
   }
 
-  getMessages(userId:number, pager:Pager) {
+  getMessages(userId:number) {
 
     let headers = this.authenticationService.getHeaders();
-    let queryParams = '?l=' + environment.pagerSize;
-    if (pager) {
-      queryParams = queryParams.concat('&p=' + pager.page);
-    }
 
-    return this.http.get(this.baseUrl + 'messages/' + userId + queryParams, {headers: headers})
+    return this.http.get(this.baseUrl + 'messages/' + userId, {headers: headers})
+      .toPromise()
+      .then((response: Response) => {
+        this.rs.handleResponse(response);
+        if (response.text()) {
+          return response.json();
+        }
+        return [];
+      })
+      .catch(this.rs.handleError);
+  }
+
+  getPreviousMessages(userId:number, lastMessageId: number) {
+
+    let headers = this.authenticationService.getHeaders();
+
+    return this.http.get(this.baseUrl + 'messages/' + userId + '/' + lastMessageId, {headers: headers})
       .toPromise()
       .then((response: Response) => {
         this.rs.handleResponse(response);

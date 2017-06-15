@@ -140,11 +140,20 @@
 			<version>${org.ektorp.version}</version>
 		</dependency>
 
+		<!-- for thymeleaf email -->
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
 			<version>1.9.22</version>
 		</dependency>
+
+		<!-- for stream utils -->
+		<dependency>
+			<groupId>com.aol.cyclops</groupId>
+			<artifactId>cyclops-core</artifactId>
+			<version>7.3.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>

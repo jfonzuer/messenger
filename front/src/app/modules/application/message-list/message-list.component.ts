@@ -26,7 +26,6 @@ export class MessageListComponent implements OnInit, OnDestroy {
   selectedConversation: Conversation;
   selectedImage: Message;
   messages: Message[] = [];
-  pager: Pager;
 
   formatMessageTimer: Observable<number>;
 
@@ -39,6 +38,7 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   isRead: boolean;
   isUserBlocked: boolean;
+  hasPreviousMessage: boolean;
   uploadImageUrl: string;
 
   constructor(private messageService: MessageService, private messengerService: MessengerService, private datetimeService: DatetimeService,
@@ -56,6 +56,8 @@ export class MessageListComponent implements OnInit, OnDestroy {
     this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => this.addConversation(conversation));
     this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(message => this.addMessage(message));
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => { this.isRead = false; } );
+
+    this.hasPreviousMessage = true;
   }
 
   block() {
@@ -87,7 +89,6 @@ export class MessageListComponent implements OnInit, OnDestroy {
   addConversation(conversation: Conversation) {
     this.logger.log('addConversation event', conversation);
 
-    this.pager = null;
     this.selectedConversation = conversation;
     this.getMessages(this.selectedConversation.userTwo.id);
   }
@@ -99,25 +100,24 @@ export class MessageListComponent implements OnInit, OnDestroy {
       this.conversationService.remove(this.selectedConversation).then().catch(error => this.toastr.error(error));
       this.selectedConversation = null;
       this.messages = [];
-      this.pager = null;
     }
   }
   scrollUp() {
-    this.pager.page = this.pager.page + 1;
-    this.getMessages(this.selectedConversation.userTwo.id);
+    this.getPreviousMessage(this.selectedConversation.userTwo.id);
   }
 
   private addMessage(message: Message) {
-     this.logger.log('receive Message', message);
+    this.logger.log('receive Message', message);
 
     message.sendSince = moment(message.sendDate).fromNow();
     this.messages.push(message);
   }
 
   private changeConversation(conversation: Conversation) {
+    this.hasPreviousMessage = true;
+    this.messages = [];
     this.selectedConversation = conversation;
     this.logger.log("message list, change conversation event, conversation", conversation);
-    this.pager = null;
     this.getMessages(this.selectedConversation.userTwo.id);
     this.isRead = this.selectedConversation.readByUserTwo;
     this.defineTimers(this.selectedConversation.id);
@@ -128,11 +128,10 @@ export class MessageListComponent implements OnInit, OnDestroy {
   }
 
   private getMessages(userId : number) {
-    this.messageService.getMessages(userId, this.pager).then((response: any) => {
+    this.messageService.getMessages(userId).then((response: any) => {
       this.logger.log('message list component getMessages', response);
 
       this.concatMessage(response);
-      this.pager = new Pager(response.number, response.last, response.size, 10);
 
       // trigger conversation loaded event
       this.messengerService.conversationLoaded();
@@ -140,12 +139,25 @@ export class MessageListComponent implements OnInit, OnDestroy {
       .catch(e => error => this.toastr.error(e));
   }
 
-  private concatMessage(response: any) {
-    if (response.content) {
-      const messages: Message[] = response.content;
-      this.datetimeService.formatMessages(messages);
-      this.pager == null ? this.messages = messages : this.messages = messages.concat(this.messages);
+  private getPreviousMessage(userId) {
+
+    if (this.messages.length > 0) {
+      this.logger.log('message list component getPreviousMessage with lastMessageId', this.messages[0].id);
+      this.messageService.getPreviousMessages(userId, this.messages[0].id).then((response: any) => {
+        this.logger.log('message list component getPreviousMessage', response);
+        if (response.length == 0) {
+          this.hasPreviousMessage = false;
+        }
+        this.concatMessage(response);
+      })
+        .catch(e => error => this.toastr.error(e));
     }
+  }
+
+  private concatMessage(response: any) {
+    const messages: Message[] = response;
+    this.datetimeService.formatMessages(messages);
+    this.messages.length > 0 ? this.messages = messages.concat(this.messages) : this.messages = messages;
   }
 
   private defineTimers(userId: number): void {

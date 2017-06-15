@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  pagerSize: 1,
+  pagerSize: 15,
   paymentApiUrl: 'https://domine-app-test.chargebeeportal.com',
   baseUrl: 'http://localhost:8080/',
   uploadImageUrl: 'http://localhost:5984/images/',

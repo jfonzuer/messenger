@@ -38,4 +38,10 @@ public class WebSocketService {
         this.template.convertAndSend(conversationEndpoint + conversation.getUserOne().getId(), ConversationMapper.toDto(conversation, conversation.getUserOne()));
         this.template.convertAndSend(conversationEndpoint + conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
     }
+
+    public void sendToConversationsToOtherUser(Conversation conversation) {
+        LOGGER.debug("conversationEndpoint + conversation.getUserOne().getId() = {}", conversationEndpoint + conversation.getUserOne().getId());
+        LOGGER.debug("conversationEndpoint + conversation.getUserOne().getId() = {}", conversationEndpoint + conversation.getUserTwo().getId());
+        this.template.convertAndSend(conversationEndpoint + conversation.getUserTwo().getId(), ConversationMapper.toDto(conversation, conversation.getUserTwo()));
+    }
 }

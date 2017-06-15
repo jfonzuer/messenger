@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -62,11 +63,10 @@ public class MessageController {
      * endpoint de récupérer les messages par id de conversation
      * @param request
      * @param id
-     * @param p
      * @return
      */
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public Page<MessageDto> getByConversation(HttpServletRequest request, @PathVariable Long id, Pageable p) {
+    public List<MessageDto> getByConversation(HttpServletRequest request, @PathVariable Long id) {
 
         User currentUser = userService.getUserFromToken(request);
         subscriptionService.checkSubscriptionAsync(currentUser);
@@ -78,8 +78,26 @@ public class MessageController {
             conversationService.updateConversationIsRead(conversation, currentUser);
         }
         // on retourne null si la conversation n'existe pas
-        return conversation == null ? null : messageService.getByConversationAndUser(conversation, currentUser, p);
+        return conversation == null ? null : messageService.getByConversationAndUser(conversation, currentUser);
     }
+
+
+    @RequestMapping(value = "/{conversationId}/{messageId}",method = RequestMethod.GET)
+    public List<MessageDto> getPreviousMessageFromConversation(HttpServletRequest request, @PathVariable("conversationId") Long conversationId, @PathVariable("messageId") Long messageId, Pageable p) {
+
+        User currentUser = userService.getUserFromToken(request);
+        subscriptionService.checkSubscriptionAsync(currentUser);
+
+        // check if conversation exists and if user is part of this
+        Conversation conversation = conversationService.getConversationByIdAndUser(conversationId, currentUser);
+
+        if (conversation != null) {
+            conversationService.updateConversationIsRead(conversation, currentUser);
+        }
+        // on retourne null si la conversation n'existe pas
+        return conversation == null ? null : messageService.getPreviousMessageFromConversation(conversation, currentUser, messageId);
+    }
+
 
     /**
      * endpoint permettant de post un message de type image dans une conversation

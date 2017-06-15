@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from "@angular/core";
 import * as moment from "moment/moment";
 import {MessengerService} from "../../../services/messenger.service";
 import {Conversation} from "../../../model/conversation";
+import {LoggerService} from "../../../services/logger.service";
 
 @Component({
   selector: 'app-last-activity',
@@ -15,8 +16,8 @@ export class LastActivityComponent implements OnInit {
 
   changeConversationSubscription: any;
 
-  constructor(private messengerService: MessengerService) {
-    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.formatLastActivity(conversation.userTwo.lastActivityDatetime));
+  constructor(private messengerService: MessengerService, private logger: LoggerService) {
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.formatLastActivity(conversation.userTwo.lastActivityDatetime)});
   }
 
   ngOnInit() {
@@ -25,6 +26,8 @@ export class LastActivityComponent implements OnInit {
 
   formatLastActivity(activity: string) {
     let now = moment();
+
+    this.logger.log("formatLastActivity ", activity);
     //console.debug("lastActivityDatetime", this.lastActivityDatetime);
     let lastActivityDatetime = moment(activity);
     var duration = moment.duration(now.diff(lastActivityDatetime));

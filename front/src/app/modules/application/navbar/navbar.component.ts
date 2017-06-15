@@ -58,11 +58,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.updateUnreadConversations();
     this.getUnseenVisits();
 
-    // this.unreadConversationsTimer = Observable.timer(0, 60000);
-    // this.unreadConversationsTimer.subscribe(t => this.updateUnreadConversations());
-    //
-    // this.unseenVisitsTimer = Observable.timer(0, 60000);
-    // this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
+    if (environment.production) {
+      this.unreadConversationsTimer = Observable.timer(0, 60000);
+      this.unseenConversationSubscriptionTimer = this.unreadConversationsTimer.subscribe(t => this.updateUnreadConversations());
+
+      this.unseenVisitsTimer = Observable.timer(0, 60000);
+      this.unseenVisitsSubscriptionTimer = this.unseenVisitsTimer.subscribe(t => this.getUnseenVisits());
+    }
+
 
     this.user = <User> this.localStorageService.getObject('user');
     this.isUserAdmin = this.sharedService.isAdmin(this.user);
@@ -100,7 +103,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.visitsRefreshSubscription.unsubscribe();
     this.userRefreshSubscription.unsubscribe();
 
-    // this.unseenConversationSubscriptionTimer.unsubscribe();
-    // this.unseenVisitsSubscriptionTimer.unsubscribe();
+    if (environment.production) {
+      this.unseenConversationSubscriptionTimer.unsubscribe();
+      this.unseenVisitsSubscriptionTimer.unsubscribe();
+    }
   }
 }

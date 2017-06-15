@@ -9,7 +9,7 @@
     <a [routerLink]="['/app/profile', selectedConversation.userTwo.id ]"><strong>{{ selectedConversation.userTwo.username}}</strong></a>
   </div>
   <div class="col-sm-4">
-    <app-last-activity></app-last-activity>
+    <app-last-activity [lastActivityDatetime]="selectedConversation.userTwo.lastActivityDatetime"></app-last-activity>
   </div>
 
   <div class="col-sm-4">
@@ -28,8 +28,8 @@
 </div>
 
 <div class="msg-wrap" *ngIf="messages.length > 0">
-  <div class="text-center" *ngIf="pager && !pager.last">
-    <a class="btn btn-sm" (click)="scrollUp()"><span class="glyphicon glyphicon-chevron-up"></span></a>
+  <div class="text-center">
+    <a class="btn btn-sm"><span *ngIf="hasPreviousMessage" class="glyphicon glyphicon-chevron-up" (click)="scrollUp()"></span></a>
   </div>
   <div class="media msg" *ngFor="let message of messages; let i = index">
     <div class="media-body">
