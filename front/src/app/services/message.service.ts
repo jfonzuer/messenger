@@ -6,13 +6,14 @@ import {environment} from "../../environments/environment";
 import {Message} from "../model/message";
 import {Pager} from "../model/pager";
 import {RequestService} from "./request.service";
+import {DatetimeService} from "./datetime.service";
 
 @Injectable()
 export class MessageService {
 
   private baseUrl:string;
 
-  constructor (private http:Http, router: Router, private authenticationService : AuthenticationService, private rs:RequestService) {
+  constructor (private http:Http, router: Router, private authenticationService : AuthenticationService, private rs:RequestService, private datetimeService: DatetimeService) {
     this.baseUrl = environment.baseUrl;
   }
 

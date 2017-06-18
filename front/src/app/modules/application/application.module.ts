@@ -38,6 +38,7 @@ import {PremiumGuardService} from "../../services/guard/premium-guard.service";
 import {LastActivityComponent} from "./last-activity/last-activity.component";
 import {AboutComponent} from "./about/about.component";
 import {LoggerService} from "../../services/logger.service";
+import { ModalComponent } from './modal/modal.component';
 /**
  * Created by pgmatz on 28/10/16.
  */
@@ -72,7 +73,8 @@ import {LoggerService} from "../../services/logger.service";
     AdminComponent,
     PremiumComponent,
     LastActivityComponent,
-    AboutComponent
+    AboutComponent,
+    ModalComponent
   ],
   providers: [
     ConversationService,

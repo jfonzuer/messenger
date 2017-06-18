@@ -1,6 +1,8 @@
 package com.jfonzuer.controllers;
 
+import com.jfonzuer.dto.ConversationMessageDto;
 import com.jfonzuer.dto.MessageDto;
+import com.jfonzuer.dto.mapper.ConversationMapper;
 import com.jfonzuer.dto.mapper.MessageMapper;
 import com.jfonzuer.entities.Conversation;
 import com.jfonzuer.entities.Message;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by pgm on 21/09/16.
@@ -65,20 +68,28 @@ public class MessageController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public List<MessageDto> getByConversation(HttpServletRequest request, @PathVariable Long id) {
+    @GetMapping(value = "/{id}")
+    public ConversationMessageDto getByConversation(HttpServletRequest request, @PathVariable Long id) {
 
         User currentUser = userService.getUserFromToken(request);
         subscriptionService.checkSubscriptionAsync(currentUser);
 
         // check if conversation exists and if user is part of this
         Conversation conversation = conversationService.getConversationByIdAndUser(id, currentUser);
+        LOGGER.debug("Get conversation with id = {} : ", conversation.getId(), conversation);
 
         if (conversation != null) {
             conversationService.updateConversationIsRead(conversation, currentUser);
         }
-        // on retourne null si la conversation n'existe pas
-        return conversation == null ? null : messageService.getByConversationAndUser(conversation, currentUser);
+
+        if (conversation == null) {
+            return null;
+        }
+
+        return ConversationMessageDto.Builder.builder()
+                .withConversation(ConversationMapper.toDto(conversation, currentUser))
+                .withMessages(messageService.getByConversationAndUser(conversation, currentUser))
+                .build();
     }
 
 

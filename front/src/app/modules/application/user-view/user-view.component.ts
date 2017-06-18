@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from "@angular/core";
+import {Component, Input, OnInit, ViewContainerRef} from "@angular/core";
 import {User} from "../../../model/user";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
@@ -14,11 +14,11 @@ import {Image} from "../../../model/image";
 export class UserViewComponent implements OnInit {
   user:User;
   loading:boolean = true;
-  uploadImageUrl:string;
-  selectedImage:Image;
+  uploadImageUrl = environment.uploadImageUrl;
+
+  selectedImage: Image;
 
   constructor(private route:ActivatedRoute, private userService:UserService, private toastr: ToastsManager, vRef: ViewContainerRef) {
-    this.uploadImageUrl = environment.uploadImageUrl;
     this.toastr.setRootViewContainerRef(vRef);
   }
 
@@ -30,5 +30,9 @@ export class UserViewComponent implements OnInit {
 
   report(id:number) {
     this.userService.report(id).then(response => this.toastr.success(response.message)).catch(e => this.toastr.error(e));
+  }
+
+  closeImage() {
+    this.selectedImage = null;
   }
 }

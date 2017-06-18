@@ -1,7 +1,6 @@
-import {Component, OnDestroy, OnInit, ViewContainerRef} from "@angular/core";
+import {Component, Input, OnDestroy, OnInit, ViewContainerRef} from "@angular/core";
 import {Message} from "../../../model/message";
 import {MessageService} from "../../../services/message.service";
-import {Pager} from "../../../model/pager";
 import {Observable} from "rxjs";
 import {MessengerService} from "../../../services/messenger.service";
 import {DatetimeService} from "../../../services/datetime.service";
@@ -23,9 +22,11 @@ import {LoggerService} from "../../../services/logger.service";
 })
 export class MessageListComponent implements OnInit, OnDestroy {
 
-  selectedConversation: Conversation;
+  @Input() selectedConversation: Conversation;
+  @Input() messages: Message[] = [];
+
   selectedImage: Message;
-  messages: Message[] = [];
+
 
   formatMessageTimer: Observable<number>;
 
@@ -88,9 +89,6 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   addConversation(conversation: Conversation) {
     this.logger.log('addConversation event', conversation);
-
-    this.selectedConversation = conversation;
-    this.getMessages(this.selectedConversation.userTwo.id);
   }
 
   deleteConversation() : void {
@@ -115,28 +113,10 @@ export class MessageListComponent implements OnInit, OnDestroy {
 
   private changeConversation(conversation: Conversation) {
     this.hasPreviousMessage = true;
-    this.messages = [];
     this.selectedConversation = conversation;
-    this.logger.log("message list, change conversation event, conversation", conversation);
-    this.getMessages(this.selectedConversation.userTwo.id);
-    this.isRead = this.selectedConversation.readByUserTwo;
     this.defineTimers(this.selectedConversation.id);
-
     this.isUserBlocked = this.sharedService.isUserBlocked(conversation.userTwo);
-
     this.logger.log('isUserBlocked', this.isUserBlocked);
-  }
-
-  private getMessages(userId : number) {
-    this.messageService.getMessages(userId).then((response: any) => {
-      this.logger.log('message list component getMessages', response);
-
-      this.concatMessage(response);
-
-      // trigger conversation loaded event
-      this.messengerService.conversationLoaded();
-    })
-      .catch(e => error => this.toastr.error(e));
   }
 
   private getPreviousMessage(userId) {
@@ -148,16 +128,12 @@ export class MessageListComponent implements OnInit, OnDestroy {
         if (response.length == 0) {
           this.hasPreviousMessage = false;
         }
-        this.concatMessage(response);
+        const messages = response as Message[];
+        this.datetimeService.formatMessages(messages);
+        this.messages.length > 0 ? this.messages = messages.concat(this.messages) : this.messages = messages;
       })
         .catch(e => error => this.toastr.error(e));
     }
-  }
-
-  private concatMessage(response: any) {
-    const messages: Message[] = response;
-    this.datetimeService.formatMessages(messages);
-    this.messages.length > 0 ? this.messages = messages.concat(this.messages) : this.messages = messages;
   }
 
   private defineTimers(userId: number): void {

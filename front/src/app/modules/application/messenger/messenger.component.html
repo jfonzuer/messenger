@@ -1,10 +1,9 @@
-
 <div class="row">
-  <app-conversation-list></app-conversation-list>
+  <app-conversation-list [selectedConversation]="selectedConversation"></app-conversation-list>
 
   <div class="message-wrap col-sm-8">
 
-    <app-message-list></app-message-list>
+    <app-message-list [selectedConversation]="selectedConversation" [messages]="messages"></app-message-list>
 
     <app-message-send [user]="user"></app-message-send>
   </div>

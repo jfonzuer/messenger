@@ -109,7 +109,7 @@ public class MailService {
 
             final String htmlContent = templateEngine.process("mail/message", ctx);
             helper.setText(htmlContent, true);
-            LOGGER.debug("Send message notification mail to : {}", user.getEmail());
+            LOGGER.debug("Send message notification mail to : {}  with id {}", user.getEmail(), user.getId());
 
             javaMailSender.send(mimeMessage);
 

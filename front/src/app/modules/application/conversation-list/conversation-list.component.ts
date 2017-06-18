@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef, OnDestroy} from "@angular/core";
+import {Component, Input, OnDestroy, OnInit, ViewContainerRef} from "@angular/core";
 import {ConversationService} from "../../../services/conversation.service";
 import {SharedService} from "../../../services/shared.service";
 import {Conversation} from "../../../model/conversation";
@@ -17,12 +17,12 @@ import {LoggerService} from "../../../services/logger.service";
 export class ConversationListComponent implements OnInit, OnDestroy {
 
   conversations: Conversation[] = [];
-  selectedConversation:Conversation;
+  @Input() selectedConversation:Conversation;
 
   // filter
   name:string;
 
-  uploadImageUrl:string;
+  uploadImageUrl:string = environment.uploadImageUrl;
   pager:Pager;
 
   // subscriptions
@@ -34,7 +34,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
 
   constructor(private conversationService: ConversationService, private sharedService: SharedService, private messengerService:MessengerService,
               private toastr: ToastsManager, vRef: ViewContainerRef, private logger: LoggerService) {
-    this.uploadImageUrl = environment.uploadImageUrl;
+
     this.toastr.setRootViewContainerRef(vRef);
 
     this.deleteConversationSubscription = this.messengerService.deleteConversationObservable.subscribe(conversation => this.conversations = this.conversations.filter(c => c.id != conversation.id));
@@ -52,8 +52,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
 
   setSelectedConversation(conversation : Conversation) {
     if (conversation.id != this.selectedConversation.id) {
-      conversation.readByUserOne = true;
-      this.selectedConversation = conversation;
       this.messengerService.changeConversation(conversation);
     }
   }
@@ -74,7 +72,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
 
   // utilisé lorsque l'utilisateur initie une conversation
   private addConversation(conversation:Conversation) {
-    this.selectedConversation = conversation;
     this.conversations = [conversation].concat(this.conversations);
   }
 

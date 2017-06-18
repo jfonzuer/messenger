@@ -18,7 +18,7 @@ import {Title} from "@angular/platform-browser";
 })
 export class NavbarComponent implements OnInit, OnDestroy {
 
-  uploadImageUrl:string;
+  uploadImageUrl:string = environment.uploadImageUrl;
   user:User;
   isUserAdmin:boolean;
 
@@ -39,18 +39,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   receiveMessageSubscription:any;
   conversationLoadedSubscription:any;
+  updateConversationSubscription: any;
 
 
   constructor(private localStorageService: CoolLocalStorage, private authenticationService: AuthenticationService, private sharedService: SharedService,
               private conversationService: ConversationService, private  router: Router, private visitService: VisitService, private messengerService:MessengerService,
               private titleService: Title) {
-    this.uploadImageUrl = environment.uploadImageUrl;
   }
 
   ngOnInit() {
 
     this.receiveMessageSubscription = this.messengerService.receiveMessageObservable.subscribe(() => this.updateUnreadConversations());
     this.conversationLoadedSubscription = this.messengerService.conversationLoadedObservable.subscribe(() => this.updateUnreadConversations());
+    this.updateConversationSubscription = this.messengerService.updateConversationObservable.subscribe(() => this.updateUnreadConversations());
 
     this.visitsRefreshSubscription = this.sharedService.unseenNumberVisitsRefresh.subscribe(refresh => { this.getUnseenVisits(); });
     this.userRefreshSubscription = this.sharedService.userRefresh.subscribe(user => { this.user = user; });

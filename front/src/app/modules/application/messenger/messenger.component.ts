@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef, OnDestroy} from "@angular/core";
+import {Component, OnDestroy, OnInit, ViewContainerRef} from "@angular/core";
 import "moment/locale/fr";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Conversation} from "../../../model/conversation";
@@ -10,6 +10,8 @@ import {environment} from "../../../../environments/environment";
 import {CoolLocalStorage} from "angular2-cool-storage";
 import {ToastsManager} from "ng2-toastr";
 import {LoggerService} from "../../../services/logger.service";
+import {MessageService} from "../../../services/message.service";
+import {DatetimeService} from "../../../services/datetime.service";
 var SockJS = require('sockjs-client');
 var Stomp = require('stompjs');
 
@@ -20,8 +22,11 @@ var Stomp = require('stompjs');
 })
 export class MessengerComponent implements OnInit, OnDestroy {
   user:User;
-  baseUrl:string;
+  baseUrl:string = environment.baseUrl;
   stompClient:any;
+
+  messages: Message[] = [];
+  selectedConversation:Conversation;
 
   // subscriptions
   addMessageSubscription:any;
@@ -33,16 +38,16 @@ export class MessengerComponent implements OnInit, OnDestroy {
   conversationSubscription:any;
   errorSubscription:any;
 
-  selectedConversation:Conversation;
+  constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef, private conversationService: ConversationService, private messageService: MessageService,
+              private messengerService:MessengerService, private localStorageService:CoolLocalStorage, private logger: LoggerService, private datetimeService: DatetimeService) {
 
-  constructor(private route:ActivatedRoute, private toastr: ToastsManager, vRef: ViewContainerRef, private conversationService: ConversationService,
-              private messengerService:MessengerService, private localStorageService:CoolLocalStorage, private logger: LoggerService) {
-    this.baseUrl = environment.baseUrl;
     this.toastr.setRootViewContainerRef(vRef);
     // si on ajoute un message et que la conversation existe, on send le message via websocket sinon on l'envoit via une requête.
     this.addMessageSubscription = this.messengerService.addMessageObservable.subscribe(message => this.selectedConversation.id ? this.send(message) : null );
-    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => { this.connect(conversation.id ? conversation.id : null); this.selectedConversation = conversation ;});
-    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.connect(conversation.id); this.selectedConversation = conversation});
+
+    this.addConversationSubscription = this.messengerService.addConversationObservable.subscribe(conversation => { this.changeConversation(conversation)});
+
+    this.changeConversationSubscription = this.messengerService.changeConversationObservable.subscribe(conversation => this.changeConversation(conversation));
   }
 
   ngOnInit() {
@@ -69,6 +74,31 @@ export class MessengerComponent implements OnInit, OnDestroy {
     if (message.content != '') {
       this.stompClient.send('/app/ws-conversation-endpoint/' + this.selectedConversation.id, {}, JSON.stringify(message));
     }
+  }
+
+  changeConversation(conversation: Conversation) {
+    this.connect(conversation.id ? conversation.id : null);
+
+    this.messages = [];
+    this.selectedConversation = conversation;
+    this.logger.log("messenger component, change conversation event, conversation", conversation);
+    this.getMessages(this.selectedConversation.userTwo.id);
+  }
+
+  private getMessages(userId : number) {
+    this.messageService.getMessages(userId).then((response: any) => {
+      this.logger.log('message list component getMessages', response);
+
+      this.selectedConversation = response.conversation;
+      const messages = response.messages as Message[];
+
+      this.datetimeService.formatMessages(messages);
+      this.messages.length > 0 ? this.messages = messages.concat(this.messages) : this.messages = messages;
+
+      // trigger conversation loaded event
+      this.messengerService.conversationLoaded();
+    })
+      .catch(e => error => this.toastr.error(e));
   }
 
   connect(conversationId) {

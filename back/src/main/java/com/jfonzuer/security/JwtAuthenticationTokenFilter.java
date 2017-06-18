@@ -49,11 +49,13 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
 
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 
             User user = userRepository.findByEmail(username);
+            LOGGER.debug("found user with id {}", user.getId());
 
-            if (!user.getEnabled()) {
+            if (user.getBlocked()) {
                 LOGGER.debug("user with id {} is desactivated", user.getId());
                 throw new UnauthorizedException("Votre compte a été désactivé. Contactez nous à l'adresse suivante : contact@dominapp.com");
             }

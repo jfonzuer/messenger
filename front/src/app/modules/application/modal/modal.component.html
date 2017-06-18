@@ -1,0 +1,7 @@
+<!-- The Modal -->
+<div (keyup)="onKey($event)">
+  <div id="myModal" [ngClass]="{display: selectedImage != null }" class="modal">
+    <span class="close" (click)="close()">&times;</span>
+    <img *ngIf="selectedImage" (click)="selectedImage = image" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}/image">
+  </div>
+</div>

@@ -75,9 +75,12 @@ public class ConversationService {
 
         if (MessengerUtils.isUserOne(user, conversation)) {
             conversation.setDeletedByUserOne(true);
+            conversation.setReadByUserOne(true);
             messageService.deleteByUserOne(conversation);
         } else {
+            conversation.setReadByUserTwo(true);
             conversation.setDeletedByUserTwo(true);
+            conversation.setReadByUserTwo(true);
             messageService.deleteByUserTwo(conversation);
         }
 

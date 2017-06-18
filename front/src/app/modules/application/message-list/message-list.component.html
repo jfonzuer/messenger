@@ -1,3 +1,6 @@
+<!--<pre>{{ selectedConversation | json }}</pre>-->
+<!--<pre>{{ messages | json }}</pre>-->
+
 <!-- The Modal -->
 <div id="myModal" [ngClass]="{display: selectedImage != null }" class="modal">
   <span class="close" (click)="selectedImage = null">&times;</span>
@@ -51,7 +54,7 @@
     </div>
     <small  [ngClass]="{'pull-right': message.source.id !== selectedConversation.userOne.id }" class="time" *ngIf="!messages[i+1] || (messages[i+1] && messages[i+1].source.id != message.source.id)"><i class="fa fa-clock-o"></i> {{ message.sendSince }}</small>
   </div>
-  <small class="pull-right time" [innerHTML]="isRead ? 'Lu' : 'Envoyé'" ></small>
+  <small *ngIf="messages.length > 0 && messages[messages.length - 1].source.id == selectedConversation.userOne.id" class="pull-right time" [innerHTML]="isRead ? 'Lu' : 'Envoyé'" ></small>
 </div>
 
 

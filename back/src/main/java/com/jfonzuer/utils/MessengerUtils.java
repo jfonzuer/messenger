@@ -68,7 +68,7 @@ public class MessengerUtils {
         }
         else if (isUserTwo(u, c) && c.getReadByUserOne().equals(Boolean.TRUE)) {
             c.setReadByUserOne(false);
-            c.setReadByUserOne(true);
+            c.setReadByUserTwo(true);
         }
     }
 

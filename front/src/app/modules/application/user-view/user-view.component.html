@@ -1,8 +1,4 @@
-<!-- The Modal -->
-<div id="myModal" [ngClass]="{display: selectedImage != null }" class="modal">
-  <span class="close" (click)="selectedImage = null">&times;</span>
-  <img *ngIf="selectedImage" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}/image">
-</div>
+<app-modal [selectedImage]="selectedImage" (imageClosed)="closeImage($event)"></app-modal>
 
 <div class="thumbnail" style="padding: 20px;">
   <div class="row">
