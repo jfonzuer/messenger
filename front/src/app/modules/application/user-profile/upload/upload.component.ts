@@ -106,4 +106,8 @@ export class UploadComponent implements OnInit {
   checkOrder() {
     this.user.images[0].url == 'profile.png' ? this.orderNumber = 1 : this.orderNumber = this.user.images.length + 1;
   }
+
+  closeImage() {
+    this.selectedImage = null;
+  }
 }

@@ -141,6 +141,9 @@ export class MessageListComponent implements OnInit, OnDestroy {
     this.formatMessageTimer.subscribe(t => { this.datetimeService.formatMessages(this.messages); });
   }
 
+  closeImage() {
+    this.selectedImage = null;
+  }
 
   public ngOnDestroy(): void {
     this.changeConversationSubscription.unsubscribe();

@@ -1,11 +1,4 @@
-<!--<pre>{{ selectedConversation | json }}</pre>-->
-<!--<pre>{{ messages | json }}</pre>-->
-
-<!-- The Modal -->
-<div id="myModal" [ngClass]="{display: selectedImage != null }" class="modal">
-  <span class="close" (click)="selectedImage = null">&times;</span>
-  <img *ngIf="selectedImage" class="modal-content" src="{{ uploadImageUrl }}{{ selectedImage.url }}/image">
-</div>
+<app-modal [selectedImage]="selectedImage" (imageClosed)="closeImage($event)"></app-modal>
 
 <div class="col-sm-12" *ngIf="selectedConversation">
   <div class="col-sm-4">
