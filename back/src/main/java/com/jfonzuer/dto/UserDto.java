@@ -45,6 +45,14 @@ public class UserDto {
     private List<UserDto> blockedUsers;
 
     @NotNull
+    private Integer height;
+
+    @NotNull
+    private Integer weight;
+
+    private String search;
+
+    @NotNull
     private CountryDto country;
 
     @NotNull
@@ -53,7 +61,7 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDatetime, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, CountryDto country, AreaDto area) {
+    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDatetime, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, Integer height, Integer weight, String search, CountryDto country, AreaDto area) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -70,6 +78,9 @@ public class UserDto {
         this.enabled = enabled;
         this.isBlocked = isBlocked;
         this.blockedUsers = blockedUsers;
+        this.height = height;
+        this.weight = weight;
+        this.search = search;
         this.country = country;
         this.area = area;
     }
@@ -147,6 +158,18 @@ public class UserDto {
         return area;
     }
 
+    public Integer getHeight() {
+        return height;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
     @Override
     public String toString() {
         return "UserDto{" +
@@ -177,13 +200,16 @@ public class UserDto {
         private Boolean enabled;
         private Boolean isBlocked;
         private List<UserDto> blockedUsers;
+        private Integer height;
+        private Integer weight;
+        private String search;
         private CountryDto country;
         private AreaDto area;
 
         private Builder() {
         }
 
-        public static Builder anUserDto() {
+        public static Builder builder() {
             return new Builder();
         }
 
@@ -267,6 +293,21 @@ public class UserDto {
             return this;
         }
 
+        public Builder withHeight(Integer height) {
+            this.height = height;
+            return this;
+        }
+
+        public Builder withWeight(Integer weight) {
+            this.weight = weight;
+            return this;
+        }
+
+        public Builder withSearch(String search) {
+            this.search = search;
+            return this;
+        }
+
         public Builder withCountry(CountryDto country) {
             this.country = country;
             return this;
@@ -278,7 +319,7 @@ public class UserDto {
         }
 
         public UserDto build() {
-            UserDto userDto = new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDatetime, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, country, area);
+            UserDto userDto = new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDatetime, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, height, weight, search, country, area);
             return userDto;
         }
     }

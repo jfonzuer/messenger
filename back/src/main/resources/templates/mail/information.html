@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Dominapp</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>Bonjour <span th:text="${userName}"></span></p>
+<p>L'application a été lancé il y a maintenant plus d'une semaine.</p>
+<p>Dans un premier temps, de nombreux bugs ont dû être corrigés, notamment au niveau du chat et nous nous excusons pour cela.</p>
+<p>Nous avons également connu une vague d'inscription de fake. Nous allons renforcer notre processus d'inscription. Nous veillons à désactiver les compte des fakes le plus rapidement possible.</p>
+<p>De nouvelles fonctionalités viennent d'être mises en place :</p>
+<p>Il est maintenant possible de renseigner son poids et taille ainsi que de rechercher selon ces critères.</p>
+<p>Il est également possible de renseigner une section "Recherche" dans le profil utilisateur, pour mieux découper sa présentation.</p>
+<p>Il sera également à l'avenir possible de désactiver la réception de ces mails réguliers d'informations par rapport à l'application.</p>
+<p>N'hésitez pas à nous faire parvenir vos suggestions à contact@dominapp.com</p>
+<p><a th:href="${loginUrl}">connectez vous à nouveau à l'application</a> pour découvrir de nouveaux profils.</p>
+<p>L'équipe <strong>Dominapp</strong></p>
+</body>
+</html>

@@ -2,6 +2,20 @@
   <fieldset>
 
     <div class="form-group">
+      <div class="col-sm-8">
+        <label>Taille (cm) :</label>
+        <input type="text" class="form-control" pattern="1[1-9][0-9]|2[0-9][0-9]" required placeholder="Taille (cm)" name="height" [(ngModel)]="user.height">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-8">
+        <label>Poids (kg) :</label>
+        <input type="text" class="form-control" pattern="[1-9][0-9]|1[0-9][0-9]" required placeholder="Poids (kg)" name="weight" [(ngModel)]="user.weight">
+      </div>
+    </div>
+
+    <div class="form-group">
       <div class="col-sm-8" *ngIf="constants">
         <label>Pays :</label>
         <select class="form-control" [(ngModel)]="user.country.id" name="country" required>
@@ -49,6 +63,13 @@
       <div class="col-sm-8">
         <label>Description :</label>
         <textarea class="form-control" rows="4" name="description" [(ngModel)]="user.description" autofocus required></textarea>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-8">
+        <label>Recherche :</label>
+        <textarea class="form-control" rows="4" name="search" (keyup.enter)="send(sendForm.form.valid)" [(ngModel)]="user.search" required></textarea>
       </div>
     </div>
 

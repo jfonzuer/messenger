@@ -50,9 +50,6 @@ public class ConversationController {
     @Autowired
     private SubscriptionService subscriptionService;
 
-    @Autowired
-    private AsyncService asyncService;
-
     /**
      * Endpoint permettant de retourner la liste des conversations
      * @param request
@@ -64,7 +61,7 @@ public class ConversationController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<ConversationDto> getAll(HttpServletRequest request, Pageable p) {
         User user = userService.getUserFromToken(request);
-        subscriptionService.checkSubscriptionAsync(user);
+        subscriptionService.checkSubscription(user);
         return conversationRepository.findByUserOneAndIsDeletedByUserOneOrUserTwoAndIsDeletedByUserTwoOrderByLastModifiedDesc(user, false, user, false, p).map(c -> ConversationMapper.toDto(c, user));
     }
 
@@ -79,7 +76,7 @@ public class ConversationController {
     @RequestMapping(method = RequestMethod.POST)
     public ConversationDto add(HttpServletRequest request, @RequestBody UserMessageDto dto) {
         User userOne = userService.getUserFromToken(request);
-        subscriptionService.checkSubscriptionAsync(userOne);
+        subscriptionService.checkSubscription(userOne);
 
         MessageDto messageDto = dto.getMessage();
         User userTwo = UserMapper.fromDto(dto.getUser());
@@ -90,7 +87,7 @@ public class ConversationController {
         }
         Conversation conversation = conversationService.createConversationAndAddMessage(userOne, userTwo, messageDto);
         webSocketService.sendToConversationsToOtherUser(conversation);
-        asyncService.executeAsync(() -> mailService.sendMessageNotification(request.getLocale(), userTwo, userOne));
+        mailService.sendMessageNotification(request.getLocale(), userTwo, userOne);
         return ConversationMapper.toDto(conversation, userOne);
     }
 
@@ -107,7 +104,7 @@ public class ConversationController {
         LOGGER.info(" in getConversationBetweenCurrentUserAndSpecifiedUser ");
         User currentUser = userService.getUserFromToken(request);
         LOGGER.debug("currentUser = {}", currentUser);
-        subscriptionService.checkSubscriptionAsync(currentUser);
+        subscriptionService.checkSubscription(currentUser);
         User specifiedUser = userRepository.findOne(id);
         LOGGER.debug("specifiedUser = {}", specifiedUser);
         Conversation conversation = conversationService.getConversationOrCreateOne(currentUser, specifiedUser);
@@ -124,7 +121,7 @@ public class ConversationController {
     @DeleteMapping(value = "/{id}")
     public void deleteConversation(HttpServletRequest request, @PathVariable Long id) {
         User currentUser = userService.getUserFromToken(request);
-        subscriptionService.checkSubscriptionAsync(currentUser);
+        subscriptionService.checkSubscription(currentUser);
         conversationService.deleteByIdAndUser(id, currentUser);
     }
 

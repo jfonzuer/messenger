@@ -58,13 +58,12 @@ public class UserService {
     private final TokenRepository tokenRepository;
     private final MailService mailService;
     private final VisitRepository visitRepository;
-    private final AsyncService asyncService;
 
     @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, UserRoleRepository userRoleRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, TokenRepository tokenRepository, MailService mailService, VisitRepository visitRepository, AsyncService asyncService) {
+    public UserService(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, UserRoleRepository userRoleRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, TokenRepository tokenRepository, MailService mailService, VisitRepository visitRepository) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
@@ -73,7 +72,6 @@ public class UserService {
         this.tokenRepository = tokenRepository;
         this.mailService = mailService;
         this.visitRepository = visitRepository;
-        this.asyncService = asyncService;
     }
 
     public void updateLastActivityDate(User user) {
@@ -168,7 +166,9 @@ public class UserService {
     public Page<UserDto> search(HttpServletRequest request, SearchDto searchDto, Pageable p) {
         User user = userRepository.findByEmail(jwtTokenUtil.getUsernameFromToken(request.getHeader(tokenHeader)));
         Search search = SearchMapper.fromDto(searchDto);
-        Page<User> users = userRepository.search(user.getId(), search.getUserType(), search.getCountry(), search.getArea(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(), p);
+        LOGGER.debug("search users with search params {}", search);
+        Page<User> users = userRepository.search(user.getId(), search.getUserType(), search.getCountry(), search.getArea(), search.getKeyword(), search.getBirthDateOne(), search.getBirthDateTwo(),
+                search.getHeightOne(), search.getHeightTwo(), search.getWeightOne(), search.getWeightTwo(), p);
         return users.map(UserMapper::toDto);
     }
 
@@ -187,8 +187,6 @@ public class UserService {
         user.setReportedAsFake(0L);
         user.setLastActivityDatetime(LocalDateTime.now());
         user.setLastReportDate(LocalDate.now().minusDays(1));
-
-        // TODO: sécurité désactivé du à la difficulté de valdier son compte
         user.setActivated(false);
         user.setNotifyVisit(true);
         user.setNotifyMessage(true);
@@ -220,7 +218,7 @@ public class UserService {
             visitRepository.save(new Visit.VisitBuilder().setVisited(visited).setIsSeenByVisited(false).setVisitor(visitor).setVisitedDate(LocalDate.now()).createVisit());
             visited.setLastVisitedBy(visitor);
             userRepository.save(visited);
-            asyncService.executeAsync(() -> mailService.sendVisitNotification(request.getLocale(), visited, visitor));
+            mailService.sendVisitNotification(request.getLocale(), visited, visitor);
         }
         return UserMapper.toDto(visited);
     }
@@ -234,6 +232,9 @@ public class UserService {
     public UserDto updateProfile(User user, UserDto dto) {
         User updatedUser = UserMapper.fromDto(dto);
         user.setDescription(updatedUser.getDescription());
+        user.setHeight(dto.getHeight());
+        user.setWeight(dto.getWeight());
+        user.setSearch(dto.getSearch());
         user.setArea(updatedUser.getArea());
         user.setCountry(updatedUser.getCountry());
         user.setFetishes(updatedUser.getFetishes());

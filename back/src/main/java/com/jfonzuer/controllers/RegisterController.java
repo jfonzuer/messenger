@@ -43,9 +43,6 @@ public class RegisterController {
     private MailService mailService;
 
     @Autowired
-    private AsyncService asyncService;
-
-    @Autowired
     private TokenService tokenService;
 
     /**
@@ -86,7 +83,7 @@ public class RegisterController {
         }
         String token = UUID.randomUUID().toString();
         tokenService.save(user, token);
-        asyncService.executeAsync(() -> mailService.sendResetTokenEmail(request.getLocale(), token, user));
+        mailService.sendResetTokenEmail(request.getLocale(), token, user);
     }
 
     @PostMapping(value = "resend/activation/email")

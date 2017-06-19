@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,15 +45,14 @@ public class SubscriptionService {
 
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
-    private final AsyncService asyncService;
 
     @Autowired
-    public SubscriptionService(UserRoleRepository userRoleRepository, UserRepository userRepository, AsyncService asyncService) {
+    public SubscriptionService(UserRoleRepository userRoleRepository, UserRepository userRepository) {
         this.userRoleRepository = userRoleRepository;
         this.userRepository = userRepository;
-        this.asyncService = asyncService;
     }
 
+    @Async
     public void checkSubscription(User user) {
 
         // if user is submissive, has subscription and was last time checked more that 12 hours
@@ -108,9 +108,5 @@ public class SubscriptionService {
             }
         }
         return exists;
-    }
-
-    public void checkSubscriptionAsync(User user) {
-        asyncService.executeAsync(() -> checkSubscription(user));
     }
 }

@@ -1,6 +1,7 @@
 package com.jfonzuer.service;
 
 import com.jfonzuer.entities.User;
+import com.jfonzuer.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,14 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,11 +55,15 @@ public class MailService {
     @Autowired
     TemplateEngine templateEngine;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Value("${app.url}")
     public void setLoginUrl(String appUrl) {
         String loginUrl = appUrl + "unauth/login";
     }
 
+    @Async
     public void sendVisitNotification(Locale locale, User visited, User visitor) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -88,6 +95,7 @@ public class MailService {
         }
     }
 
+    @Async
     public void sendMessageNotification(Locale locale, User user, User sender) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -118,6 +126,7 @@ public class MailService {
         }
     }
 
+    @Async
     public void sendRegisterNotification(Locale locale, User user, String token) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -143,6 +152,7 @@ public class MailService {
         }
     }
 
+    @Async
     public void sendResetTokenEmail(Locale locale, String token, User user) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -162,6 +172,8 @@ public class MailService {
             LOGGER.error("Error when sending reset token mail to : {}", user.getEmail(), e);
         }
     }
+
+    @Async
     public void sendActivationMail(Locale locale, String token, User user) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -183,7 +195,8 @@ public class MailService {
         }
     }
 
-    public void sendDownTimeMail(Locale locale, User user) {
+    @Async
+    public void sendInformationEmail(Locale locale, User user) {
         try {
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -194,17 +207,34 @@ public class MailService {
             ctx.setVariable("loginUrl", loginUrl);
             helper.setFrom(this.fromEmail);
             setTo(helper, user.getEmail());
-            helper.setSubject("[Dominapp] Dominapp est de nouveau en ligne");
-            final String htmlContent = templateEngine.process("mail/downtime", ctx);
+            helper.setSubject("[Dominapp] Informations");
+            final String htmlContent = templateEngine.process("mail/information", ctx);
             helper.setText(htmlContent, true);
-            LOGGER.debug("Send downtime mail to : {}", user.getEmail());
+            LOGGER.debug("Send regular email to : {}", user.getEmail());
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            LOGGER.error("Error when sending downtime mail to : {}", user.getEmail(), e);
+            LOGGER.error("Error when sending regular email to : {}", user.getEmail(), e);
         }
     }
 
+    @Async
+    public void sendInformationToAll() {
+        List<User> userList = userRepository.findAll();
+
+        for (User user: userList) {
+            try {
+                sendInformationEmail(Locale.FRANCE, user);
+                LOGGER.debug("Sending notification email to {}", user.getEmail());
+                Thread.sleep(15000);
+            } catch (Exception e) {
+                LOGGER.error("Exception ", e);
+            }
+        }
+
+    }
+
+    @Async
     private void setTo(MimeMessageHelper helper, String email) throws MessagingException {
         if (profile.equals("dev")) {
             LOGGER.debug("dev profile, sending mail to {}", sendTo);

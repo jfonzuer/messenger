@@ -30,6 +30,7 @@ export class SearchComponent implements OnInit {
 
   ageOne:number = 18;
   ageTwo:number = 99;
+
   constants:Constant;
   area:Area = new Area(0);
   country:Country = new Country(0);
@@ -37,6 +38,11 @@ export class SearchComponent implements OnInit {
   constructor(private userService: UserService, private sharedService: SharedService, private route:ActivatedRoute, private datetimeService:DatetimeService, private toastr: ToastsManager, vRef: ViewContainerRef) {
     this.uploadImageUrl = environment.uploadImageUrl;
     this.toastr.setRootViewContainerRef(vRef);
+
+    this.search.heightOne = 0;
+    this.search.heightTwo = 220;
+    this.search.weightOne = 0;
+    this.search.weightTwo = 120;
   }
 
   ngOnInit() {

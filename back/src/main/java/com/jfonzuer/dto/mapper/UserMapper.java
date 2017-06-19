@@ -19,11 +19,14 @@ public class UserMapper {
     // methode ne mappant pas les entitès liés
     public static UserDto toLightDto(User user) {
 
-        return UserDto.Builder.anUserDto()
+        return UserDto.Builder.builder()
                 .withId(user.getId())
                 .withUsername(user.getUsername())
                 .withEmail(user.getEmail())
                 .withDescription(user.getDescription())
+                .withSearch(user.getSearch())
+                .withHeight(user.getHeight())
+                .withWeight(user.getWeight())
                 .withBirthDate(user.getBirthDate() == null ? null : user.getBirthDate().toString())
                 .withArea(user.getArea() == null ? null : AreaMapper.toDto(user.getArea()))
                 .withImages(user.getImages() == null ? null : user.getImages().stream().map(ImageMapper::toDto).collect(Collectors.toList()))
@@ -37,11 +40,14 @@ public class UserMapper {
     }
 
     public static UserDto toDto(User user) {
-        return UserDto.Builder.anUserDto()
+        return UserDto.Builder.builder()
                 .withId(user.getId())
                 .withUsername(user.getUsername())
                 .withEmail(user.getEmail())
                 .withDescription(user.getDescription())
+                .withSearch(user.getSearch())
+                .withHeight(user.getHeight())
+                .withWeight(user.getWeight())
                 .withBirthDate(user.getBirthDate().toString())
                 .withFetishes(user.getFetishes().stream().map(f -> FetishMapper.toDto(f)).collect(Collectors.toList()))
                 .withArea(AreaMapper.toDto(user.getArea()))
@@ -60,12 +66,15 @@ public class UserMapper {
     }
 
     public static User fromDto(UserDto dto) {
-        return dto != null ? User.Builder.anUser()
+        return dto != null ? User.Builder.builder()
                 .withId((dto.getId() == null) ? null : dto.getId())
                 .withEmail(dto.getEmail())
                 .withUsername(dto.getUsername())
                 .withBirthDate(dto.getBirthDate() == null ? null : DateMapper.toLocalDate(dto.getBirthDate()))
                 .withDescription(dto.getDescription())
+                .withSearch(dto.getSearch())
+                .withHeight(dto.getHeight())
+                .withWeight(dto.getWeight())
                 .withCountry(dto.getCountry() == null ? null : CountryMapper.fromDto(dto.getCountry()))
                 .withArea(dto.getArea() == null ? null : AreaMapper.fromDto(dto.getArea()))
                 .withFetishes(dto.getFetishes() == null ? null : dto.getFetishes().stream().map(FetishMapper::fromDto).collect(Collectors.toList()))

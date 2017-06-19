@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ViewContainerRef} from "@angular/core";
+import {Component, Input, OnInit, ViewContainerRef} from "@angular/core";
 import {UserService} from "../../../../services/user.service";
 import {User} from "../../../../model/user";
 import {SharedService} from "../../../../services/shared.service";

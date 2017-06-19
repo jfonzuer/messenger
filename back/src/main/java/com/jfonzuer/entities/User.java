@@ -35,6 +35,9 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String search;
+
     @Column(nullable = false)
     private Boolean enabled;
 
@@ -101,10 +104,16 @@ public class User implements UserDetails, Serializable {
     @Column
     private Timestamp lastSubscriptionCheck;
 
+    @Column(nullable = false)
+    private Integer weight;
+
+    @Column(nullable = false)
+    private Integer height;
+
     public User() {
     }
 
-    public User(String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDateTime lastActivityDatetime, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, Boolean activated, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers, String subscriptionId, Timestamp lastSubscriptionCheck) {
+    public User(String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDateTime lastActivityDatetime, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, Boolean activated, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers, String subscriptionId, Timestamp lastSubscriptionCheck, Integer weight, Integer height, String search) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -131,6 +140,9 @@ public class User implements UserDetails, Serializable {
         this.blockedUsers = blockedUsers;
         this.subscriptionId = subscriptionId;
         this.lastSubscriptionCheck = lastSubscriptionCheck;
+        this.weight = weight;
+        this.height = height;
+        this.search = search;
     }
 
     @Override
@@ -368,6 +380,30 @@ public class User implements UserDetails, Serializable {
         this.lastSubscriptionCheck = lastSubscriptionCheck;
     }
 
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -397,6 +433,7 @@ public class User implements UserDetails, Serializable {
         return result;
     }
 
+
     public static final class Builder {
         private Long id;
         private String username;
@@ -425,11 +462,14 @@ public class User implements UserDetails, Serializable {
         private Set<User> blockedUsers;
         private String subscriptionId;
         private Timestamp lastSubscriptionCheck;
+        private Integer weight;
+        private Integer height;
+        private String search;
 
         private Builder() {
         }
 
-        public static Builder anUser() {
+        public static Builder builder() {
             return new Builder();
         }
 
@@ -568,6 +608,21 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
+        public Builder withWeight(Integer weight) {
+            this.weight = weight;
+            return this;
+        }
+
+        public Builder withHeight(Integer height) {
+            this.height = height;
+            return this;
+        }
+
+        public Builder withSearch(String search) {
+            this.search = search;
+            return this;
+        }
+
         public User build() {
             User user = new User();
             user.setId(id);
@@ -597,6 +652,9 @@ public class User implements UserDetails, Serializable {
             user.setBlockedUsers(blockedUsers);
             user.setSubscriptionId(subscriptionId);
             user.setLastSubscriptionCheck(lastSubscriptionCheck);
+            user.setWeight(weight);
+            user.setHeight(height);
+            user.setSearch(search);
             return user;
         }
     }

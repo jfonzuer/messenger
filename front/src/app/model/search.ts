@@ -12,4 +12,8 @@ export class Search {
   userType:UserType;
   birthDateOne:string;
   birthDateTwo:string;
+  heightOne: number;
+  heightTwo: number;
+  weightOne: number;
+  weightTwo: number;
 }

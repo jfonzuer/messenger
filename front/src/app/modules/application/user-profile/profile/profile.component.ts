@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ViewContainerRef} from "@angular/core";
+import {Component, Input, OnInit, ViewContainerRef} from "@angular/core";
 import {User} from "../../../../model/user";
 import {UserService} from "../../../../services/user.service";
 import {FetishService} from "../../../../services/fetish.service";
@@ -28,7 +28,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.selectedFetishId = this.fetishService.initIdList(this.user.fetishes);
   }
-
 
   updateCheckedFetishes(fetish, event) {
     this.fetishService.updateCheckedFetishes(fetish, event, this.selectedFetishId);

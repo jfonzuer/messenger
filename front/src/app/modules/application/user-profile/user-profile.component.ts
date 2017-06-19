@@ -21,6 +21,7 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
     this.route.data.forEach((data:any) => {
       this.user = data.user;
+      console.log(this.user);
       // si data n'est pas un array, il contient alors une erreur
       data.constants instanceof Object ? this.constants = data.constants : this.toastr.error("Erreur de connexion");
     });

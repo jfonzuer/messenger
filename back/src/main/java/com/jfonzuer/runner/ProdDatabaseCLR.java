@@ -56,7 +56,7 @@ public class ProdDatabaseCLR implements CommandLineRunner {
 
         if (userRepository.findByEmail("contact@dominapp.com") == null) {
 
-            User u1 = User.Builder.anUser()
+            User u1 = User.Builder.builder()
                     .withEmail("contact@dominapp.com")
                     .withBirthDate(LocalDate.of(1990, 1, 1))
                     .withUsername("Jack")

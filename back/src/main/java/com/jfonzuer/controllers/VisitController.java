@@ -49,7 +49,7 @@ public class VisitController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<VisitDto> getAllVisitsByUser(HttpServletRequest request, Pageable p) {
         User visited = userService.getUserFromToken(request);
-        subscriptionService.checkSubscriptionAsync(visited);
+        subscriptionService.checkSubscription(visited);
         return visitService.getAll(visited, p);
     }
 

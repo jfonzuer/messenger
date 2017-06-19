@@ -28,4 +28,7 @@ export class User {
   notifyVisit:boolean;
   notifyMessage:boolean;
   blockedUsers:User[];
+  height: number;
+  weight: number;
+  search: string;
 }

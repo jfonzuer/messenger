@@ -28,10 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.type = :type and u.enabled = true and u.isBlocked = false and u.id <> :id and (:country is null  or u.country = :country) " +
             "and (:area is null  or u.area = :area) " +
-            "and (:keyword is null or lower(u.description) like concat('%', lower(:keyword), '%') or lower(u.username) like concat('%', lower(:keyword) ,'%')) " +
+            "and (:keyword is null or (lower(u.description) like concat('%', lower(:keyword), '%') or lower(u.username) like concat('%', lower(:keyword) ,'%'))) " +
             "and ((:dateOne is null and :dateTwo is null) or (u.birthDate between :dateOne and :dateTwo)) " +
+            "and ((:heightOne is null and :heightTwo is null) or (u.height between :heightOne and :heightTwo)) " +
+            "and ((:weightOne is null and :weightTwo is null) or (u.weight between :weightOne and :weightTwo)) " +
             "order by u.lastActivityDatetime desc ")
-    Page<User> search(@Param("id") Long id, @Param("type") UserType type, @Param("country") Country country, @Param("area") Area area, @Param("keyword") String keyword, @Param("dateOne") LocalDate dateOne, @Param("dateTwo") LocalDate dateTwo, Pageable p);
+    Page<User> search(@Param("id") Long id, @Param("type") UserType type, @Param("country") Country country, @Param("area") Area area, @Param("keyword") String keyword, @Param("dateOne") LocalDate dateOne,
+                      @Param("dateTwo") LocalDate dateTwo, @Param("heightOne") Integer heightOne, @Param("heightTwo") Integer heightTwo, @Param("weightOne") Integer weightOne, @Param("weightTwo") Integer weightTwo, Pageable p);
 
     List<User> findByReportedAsFakeGreaterThanOrderByReportedAsFakeDesc(Long reportedTime);
     List<User> findTop20ByTypeOrderByIdDesc(UserType userType);

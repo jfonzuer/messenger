@@ -29,10 +29,14 @@
       </div>
       <div class="col-sm-6">
         <h4><strong>{{ user.username }}</strong></h4>
-        <h5>{{ user.age }} ans, <strong>{{ user.area.name }}, {{ user.country.name}} <span class="flag-icon flag-icon-{{ user.country.flag }}"></span></strong></h5>
+        <h5>{{ user.age }} ans, {{ user.weight }}kg, {{ user.height}}cm</h5>
+        <h6><strong>{{ user.area.name }}, {{ user.country.name}} <span class="flag-icon flag-icon-{{ user.country.flag }}"></span></strong></h6>
         <br>
         <h4>Description :</h4>
         <p>{{ user.description }}</p>
+        <br>
+        <h4>Recherche:</h4>
+        <p>{{ user.search }}</p>
         <br>
         <h4>Pratique(s) :</h4>
         <div class="row">

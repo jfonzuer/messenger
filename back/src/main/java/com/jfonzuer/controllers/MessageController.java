@@ -54,9 +54,6 @@ public class MessageController {
     private WebSocketService webSocketService;
 
     @Autowired
-    private AsyncService asyncService;
-
-    @Autowired
     private ImageService imageService;
 
     @Autowired
@@ -72,7 +69,7 @@ public class MessageController {
     public ConversationMessageDto getByConversation(HttpServletRequest request, @PathVariable Long id) {
 
         User currentUser = userService.getUserFromToken(request);
-        subscriptionService.checkSubscriptionAsync(currentUser);
+        subscriptionService.checkSubscription(currentUser);
 
         // check if conversation exists and if user is part of this
         Conversation conversation = conversationService.getConversationByIdAndUser(id, currentUser);
@@ -97,7 +94,7 @@ public class MessageController {
     public List<MessageDto> getPreviousMessageFromConversation(HttpServletRequest request, @PathVariable("conversationId") Long conversationId, @PathVariable("messageId") Long messageId, Pageable p) {
 
         User currentUser = userService.getUserFromToken(request);
-        subscriptionService.checkSubscriptionAsync(currentUser);
+        subscriptionService.checkSubscription(currentUser);
 
         // check if conversation exists and if user is part of this
         Conversation conversation = conversationService.getConversationByIdAndUser(conversationId, currentUser);
@@ -120,7 +117,7 @@ public class MessageController {
     public MessageDto addImage(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file, @RequestParam(value = "id") Long id) {
 
         User sender = userService.getUserFromToken(request);
-        subscriptionService.checkSubscriptionAsync(sender);
+        subscriptionService.checkSubscription(sender);
 
         Conversation conversation = conversationService.returnConversationOrThrowException(id);
 
@@ -139,7 +136,7 @@ public class MessageController {
 
         // send email if sender is not last sender
         //if (!sender.equals(target.getLastMessageBy())) {
-            asyncService.executeAsync(() -> mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender));
+        mailService.sendMessageNotification(request.getLocale(), MessengerUtils.getOtherUser(conversation, sender), sender);
         //}
 
         userService.updateLastMessageBy(target, sender);
