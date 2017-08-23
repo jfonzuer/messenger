@@ -84,6 +84,7 @@ public class FillDatabaseCLR implements CommandLineRunner {
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
+                .withNotifyOther(true)
                 .withActivated(true)
                 .build();
         User u2 = User.Builder.builder()
@@ -106,6 +107,7 @@ public class FillDatabaseCLR implements CommandLineRunner {
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
+                .withNotifyOther(true)
                 .withActivated(true)
                 .build();
         User u3 = User.Builder.builder()
@@ -129,6 +131,7 @@ public class FillDatabaseCLR implements CommandLineRunner {
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
                 .withActivated(true)
+                .withNotifyOther(true)
                 .build();
 
         User u4 = User.Builder.builder()
@@ -151,6 +154,7 @@ public class FillDatabaseCLR implements CommandLineRunner {
                 .withLastReportDate(LocalDate.now().minusDays(1L))
                 .withNotifyMessage(true)
                 .withNotifyVisit(true)
+                .withNotifyOther(true)
                 .withActivated(true)
                 // last subscription 1 day ago
                 .withLastSubscriptionCheck(Timestamp.from(Instant.now().minusSeconds(24 * 3600)))

@@ -27,6 +27,7 @@ export class User {
   authorities:string[];
   notifyVisit:boolean;
   notifyMessage:boolean;
+  notifyOther: boolean;
   blockedUsers:User[];
   height: number;
   weight: number;

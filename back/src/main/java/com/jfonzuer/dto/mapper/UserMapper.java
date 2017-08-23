@@ -61,6 +61,7 @@ public class UserMapper {
                 .withReportedAsFake(user.getReportedAsFake())
                 .withNotifyVisit(user.getNotifyVisit())
                 .withNotifyMessage(user.getNotifyMessage())
+                .withNotifyOther(user.getNotifyOther())
                 .withBlockedUsers(user.getBlockedUsers() != null ? user.getBlockedUsers().stream().map(UserMapper::toDto).collect(Collectors.toList()) : null)
                 .build();
     }

@@ -15,8 +15,6 @@ import java.util.Map;
 @Configuration
 public class CustomErrorViewResolver implements ErrorViewResolver {
 
-
-
     @Override
     public ModelAndView resolveErrorView(HttpServletRequest httpServletRequest, HttpStatus httpStatus, Map<String, Object> map) {
         String returnView = "app/index";

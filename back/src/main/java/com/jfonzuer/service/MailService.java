@@ -224,9 +224,11 @@ public class MailService {
 
         for (User user: userList) {
             try {
-                sendInformationEmail(Locale.FRANCE, user);
-                LOGGER.debug("Sending notification email to {}", user.getEmail());
-                Thread.sleep(15000);
+                if (user.getNotifyOther()) {
+                    sendInformationEmail(Locale.FRANCE, user);
+                    LOGGER.debug("Sending notification email to {}", user.getEmail());
+                    Thread.sleep(15000);
+                }
             } catch (Exception e) {
                 LOGGER.error("Exception ", e);
             }

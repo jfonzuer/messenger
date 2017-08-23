@@ -31,7 +31,7 @@ public class ExceptionHandlingController extends ResponseEntityExceptionHandler 
         return handleExceptionInternal(ex, message, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = { AccountNotActivatedException.class })
+    @ExceptionHandler(AccountNotActivatedException.class)
     public ResponseEntity<Object> uploadError(RuntimeException ex, WebRequest request) {
         // TODO use logger
         ex.printStackTrace();
@@ -40,7 +40,7 @@ public class ExceptionHandlingController extends ResponseEntityExceptionHandler 
         return handleExceptionInternal(ex, new ExceptionDto(message), headers, HttpStatus.LOCKED, request);
     }
 
-    @ExceptionHandler(value = { FileUploadBase.FileSizeLimitExceededException.class })
+    @ExceptionHandler(FileUploadBase.FileSizeLimitExceededException.class)
     ResponseEntity<?> uploadError(HttpServletRequest request, Throwable ex) {
         HttpStatus status = getStatus(request);
         return new ResponseEntity<>(new CustomErrorType(status.value(), ex.getMessage()), status);

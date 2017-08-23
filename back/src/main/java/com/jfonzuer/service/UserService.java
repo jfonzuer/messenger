@@ -190,6 +190,7 @@ public class UserService {
         user.setActivated(false);
         user.setNotifyVisit(true);
         user.setNotifyMessage(true);
+        user.setNotifyOther(true);
         user = userRepository.save(user);
 
         // if user is domina

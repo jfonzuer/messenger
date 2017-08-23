@@ -6,6 +6,7 @@ package com.jfonzuer.dto;
 public class AlertsDto {
     private boolean notifyVisit;
     private boolean notifyMessage;
+    private boolean notifyOther;
 
     public AlertsDto() {
     }
@@ -16,5 +17,9 @@ public class AlertsDto {
 
     public boolean isNotifyMessage() {
         return notifyMessage;
+    }
+
+    public boolean isNotifyOther() {
+        return notifyOther;
     }
 }

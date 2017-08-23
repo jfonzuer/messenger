@@ -74,6 +74,7 @@ public class ProdDatabaseCLR implements CommandLineRunner {
                     .withLastReportDate(LocalDate.now().minusDays(1L))
                     .withNotifyMessage(true)
                     .withNotifyVisit(true)
+                    .withNotifyOther(true)
                     .withActivated(true)
                     .build();
 

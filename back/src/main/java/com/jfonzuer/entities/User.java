@@ -84,6 +84,9 @@ public class User implements UserDetails, Serializable {
     private Boolean notifyVisit;
 
     @Column(nullable = false)
+    private Boolean notifyOther;
+
+    @Column(nullable = false)
     private Boolean isBlocked;
 
     @Column(nullable = false)
@@ -113,11 +116,12 @@ public class User implements UserDetails, Serializable {
     public User() {
     }
 
-    public User(String username, String password, String email, String description, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDateTime lastActivityDatetime, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean isBlocked, Boolean activated, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers, String subscriptionId, Timestamp lastSubscriptionCheck, Integer weight, Integer height, String search) {
+    public User(String username, String password, String email, String description, String search, Boolean enabled, Date lastPasswordResetDate, LocalDate birthDate, Collection<Fetish> fetishes, Country country, Area area, Collection<Image> images, UserType type, Set<UserRole> userRoles, LocalDateTime lastActivityDatetime, Long reportedAsFake, LocalDate lastReportDate, Collection<? extends GrantedAuthority> authorities, Boolean notifyMessage, Boolean notifyVisit, Boolean notifyOther, Boolean isBlocked, Boolean activated, User lastVisitedBy, User lastMessageBy, Set<User> blockedUsers, String subscriptionId, Timestamp lastSubscriptionCheck, Integer weight, Integer height) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.description = description;
+        this.search = search;
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.birthDate = birthDate;
@@ -133,6 +137,7 @@ public class User implements UserDetails, Serializable {
         this.authorities = authorities;
         this.notifyMessage = notifyMessage;
         this.notifyVisit = notifyVisit;
+        this.notifyOther = notifyOther;
         this.isBlocked = isBlocked;
         this.activated = activated;
         this.lastVisitedBy = lastVisitedBy;
@@ -142,7 +147,6 @@ public class User implements UserDetails, Serializable {
         this.lastSubscriptionCheck = lastSubscriptionCheck;
         this.weight = weight;
         this.height = height;
-        this.search = search;
     }
 
     @Override
@@ -404,6 +408,14 @@ public class User implements UserDetails, Serializable {
         this.search = search;
     }
 
+    public Boolean getNotifyOther() {
+        return notifyOther;
+    }
+
+    public void setNotifyOther(Boolean notifyOther) {
+        this.notifyOther = notifyOther;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -440,6 +452,7 @@ public class User implements UserDetails, Serializable {
         private String password;
         private String email;
         private String description;
+        private String search;
         private Boolean enabled;
         private Date lastPasswordResetDate;
         private LocalDate birthDate;
@@ -455,6 +468,7 @@ public class User implements UserDetails, Serializable {
         private Collection<? extends GrantedAuthority> authorities;
         private Boolean notifyMessage;
         private Boolean notifyVisit;
+        private Boolean notifyOther;
         private Boolean isBlocked;
         private Boolean activated;
         private User lastVisitedBy;
@@ -464,7 +478,6 @@ public class User implements UserDetails, Serializable {
         private Timestamp lastSubscriptionCheck;
         private Integer weight;
         private Integer height;
-        private String search;
 
         private Builder() {
         }
@@ -495,6 +508,11 @@ public class User implements UserDetails, Serializable {
 
         public Builder withDescription(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder withSearch(String search) {
+            this.search = search;
             return this;
         }
 
@@ -573,6 +591,11 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
+        public Builder withNotifyOther(Boolean notifyOther) {
+            this.notifyOther = notifyOther;
+            return this;
+        }
+
         public Builder withIsBlocked(Boolean isBlocked) {
             this.isBlocked = isBlocked;
             return this;
@@ -618,19 +641,15 @@ public class User implements UserDetails, Serializable {
             return this;
         }
 
-        public Builder withSearch(String search) {
-            this.search = search;
-            return this;
-        }
-
         public User build() {
             User user = new User();
+            user.setBlocked(this.isBlocked);
             user.setId(id);
-            user.setBlocked(isBlocked);
             user.setUsername(username);
             user.setPassword(password);
             user.setEmail(email);
             user.setDescription(description);
+            user.setSearch(search);
             user.setEnabled(enabled);
             user.setLastPasswordResetDate(lastPasswordResetDate);
             user.setBirthDate(birthDate);
@@ -646,6 +665,7 @@ public class User implements UserDetails, Serializable {
             user.setAuthorities(authorities);
             user.setNotifyMessage(notifyMessage);
             user.setNotifyVisit(notifyVisit);
+            user.setNotifyOther(notifyOther);
             user.setActivated(activated);
             user.setLastVisitedBy(lastVisitedBy);
             user.setLastMessageBy(lastMessageBy);
@@ -654,7 +674,6 @@ public class User implements UserDetails, Serializable {
             user.setLastSubscriptionCheck(lastSubscriptionCheck);
             user.setWeight(weight);
             user.setHeight(height);
-            user.setSearch(search);
             return user;
         }
     }

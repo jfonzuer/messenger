@@ -24,6 +24,7 @@ export class AlertsComponent implements OnInit {
   ngOnInit() {
     this.alerts.notifyMessage = this.user.notifyMessage;
     this.alerts.notifyVisit = this.user.notifyVisit;
+    this.alerts.notifyOther = this.user.notifyOther;
   }
 
   send() {
@@ -46,6 +47,7 @@ export class AlertsComponent implements OnInit {
   private setAlerts(alerts:Alerts) {
     this.user.notifyMessage = alerts.notifyMessage;
     this.user.notifyVisit = alerts.notifyVisit;
+    this.user.notifyOther = alerts.notifyOther;
     this.sharedService.refreshUser(this.user);
   }
 }

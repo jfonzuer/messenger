@@ -143,6 +143,7 @@ public class UserController {
         User user = userService.getUserFromToken(request);
         user.setNotifyMessage(alerts.isNotifyMessage());
         user.setNotifyVisit(alerts.isNotifyVisit());
+        user.setNotifyOther(alerts.isNotifyOther());
         user = userRepository.save(user);
         return new ResponseDto("Vos préférences ont été mises à jour");
     }

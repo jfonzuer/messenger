@@ -24,6 +24,7 @@ rm -r back/src/main/resources/static
 mkdir -p back/src/main/resources/static
 cp -r front/dist/* back/src/main/resources/static/
 cp front/dist/index.html back/src/main/resources/templates/app/index.html
+cp front/src/styles.css back/src/main/resources/static/
 cp back/src/main/resources/robots.txt back/src/main/resources/static/robots.txt
 
 # rebuild l'image

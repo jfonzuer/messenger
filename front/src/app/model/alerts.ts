@@ -5,4 +5,5 @@
 export class Alerts {
   notifyVisit:boolean;
   notifyMessage:boolean;
+  notifyOther: boolean;
 }

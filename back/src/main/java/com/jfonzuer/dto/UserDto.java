@@ -38,6 +38,8 @@ public class UserDto {
 
     private Boolean notifyVisit;
 
+    private Boolean notifyOther;
+
     private Boolean enabled;
 
     private Boolean isBlocked;
@@ -61,7 +63,7 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDatetime, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, Integer height, Integer weight, String search, CountryDto country, AreaDto area) {
+    public UserDto(Long id, String username, String email, String description, String birthDate, List<FetishDto> fetishes, List<String> authorities, List<ImageDto> images, UserTypeDto userType, String lastActivityDatetime, Long reportedAsFake, Boolean notifyMessage, Boolean notifyVisit, Boolean notifyOther, Boolean enabled, Boolean isBlocked, List<UserDto> blockedUsers, Integer height, Integer weight, String search, CountryDto country, AreaDto area) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -75,6 +77,7 @@ public class UserDto {
         this.reportedAsFake = reportedAsFake;
         this.notifyMessage = notifyMessage;
         this.notifyVisit = notifyVisit;
+        this.notifyOther = notifyOther;
         this.enabled = enabled;
         this.isBlocked = isBlocked;
         this.blockedUsers = blockedUsers;
@@ -170,6 +173,10 @@ public class UserDto {
         return search;
     }
 
+    public Boolean getNotifyOther() {
+        return notifyOther;
+    }
+
     @Override
     public String toString() {
         return "UserDto{" +
@@ -197,6 +204,7 @@ public class UserDto {
         private Long reportedAsFake;
         private Boolean notifyMessage;
         private Boolean notifyVisit;
+        private Boolean notifyOther;
         private Boolean enabled;
         private Boolean isBlocked;
         private List<UserDto> blockedUsers;
@@ -278,6 +286,11 @@ public class UserDto {
             return this;
         }
 
+        public Builder withNotifyOther(Boolean notifyOther) {
+            this.notifyOther = notifyOther;
+            return this;
+        }
+
         public Builder withEnabled(Boolean enabled) {
             this.enabled = enabled;
             return this;
@@ -319,7 +332,7 @@ public class UserDto {
         }
 
         public UserDto build() {
-            UserDto userDto = new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDatetime, reportedAsFake, notifyMessage, notifyVisit, enabled, isBlocked, blockedUsers, height, weight, search, country, area);
+            UserDto userDto = new UserDto(id, username, email, description, birthDate, fetishes, authorities, images, userType, lastActivityDatetime, reportedAsFake, notifyMessage, notifyVisit, notifyOther, enabled, isBlocked, blockedUsers, height, weight, search, country, area);
             return userDto;
         }
     }
